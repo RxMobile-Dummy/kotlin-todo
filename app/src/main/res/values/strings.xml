@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RemindMe</string>
+    <string name="notification_channel">remindMe</string>
+</resources>
