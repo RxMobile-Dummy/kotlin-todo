@@ -37,7 +37,7 @@ ext.versions = [
 
         // di
         hiltVersion          : '2.40.5',
-        hiltComposeNavigation: '`1.0.0`',
+        hiltComposeNavigation: '1.0.0',
 
         // network
         retrofitVersion      : '2.9.0',

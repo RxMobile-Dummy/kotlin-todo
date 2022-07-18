@@ -1,7 +1,8 @@
-package com.remindme.model
+package com.remindme.task.model
 
 import java.lang.ref.Reference
 import java.util.Calendar
+import javax.inject.Inject
 
 /**
  * Data class to represent a Task.
@@ -15,8 +16,9 @@ import java.util.Calendar
  * @property creationDate the date of creation of the task
  * @property completedDate the date of completion of the task
  * @property isRepeating indicates if the task is repeating
+ * @property alarmInterval the interval between the repeating
  */
-data class Task (
+data class Task @Inject constructor(
     val id: Int? =0,
     val completed: Boolean = false,
     val title: String,
@@ -26,4 +28,5 @@ data class Task (
     val creationDate: Calendar? = null,
     val completedDate: Calendar? = null,
     val isRepeating: Boolean = false,
+    val alarmInterval: AlarmInterval? = null
 )

@@ -5,6 +5,7 @@ plugins {
     id 'com.google.gms.google-services' // Google services Gradle plugin
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
 }
 apply from: '../dependencies.gradle'
 
@@ -29,10 +30,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug{
-            applicationIdSuffix ".debug"
-            versionNameSuffix "-debug"
-        }
+//        debug{
+//            applicationIdSuffix ".debug"
+//            versionNameSuffix "-debug"
+//        }
 
     }
     compileOptions {
@@ -40,13 +41,17 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
+//        freeCompilerArgs = freeCompilerArgs.toMutableList().apply {
+//            add("-opt-in=kotlin.RequiresOptIn")
+//            add("-Xuse-experimental=androidx.compose.ui.text.ExperimentalTextApi")
+//        }
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion= "1.2.0"
     }
     packagingOptions {
         resources {
@@ -60,31 +65,26 @@ android {
 
     flavorDimensions "default"
     productFlavors{
-        remindme_st{
-            dimension 'default'
-            applicationId "com.remindme"
-            minSdkVersion 21
-            targetSdkVersion 32
-            buildConfigField "String", "HOST_URL", "\"host url 1\""
-        }
-        remindme_dev{
-            dimension 'default'
-            applicationId "com.remindme"
-            minSdkVersion 21
-            targetSdkVersion 32
-            buildConfigField "String", "HOST_URL", "\"host url 1\""
+//        remindme_st{
+//            dimension 'default'
+//            applicationId "com.remindme"
+//            minSdkVersion 21
+//            targetSdkVersion 32
+//            buildConfigField "String", "HOST_URL", "\"host url 1\""
+//        }
+//        remindme_dev{
+//            dimension 'default'
+//            applicationId "com.remindme"
+//            minSdkVersion 21
+//            targetSdkVersion 32
+//            buildConfigField "String", "HOST_URL", "\"host url 1\""
+//
+//
+//        }
 
-
-        }
-        remindme{
-            dimension 'default'
-            applicationId "com.remindme"
-            minSdkVersion 21
-            targetSdkVersion 32
-            buildConfigField "String", "HOST_URL", "\"host url 1\""
-
-
-        }
+    }
+    kapt {
+        correctErrorTypes = true
     }
 }
 
@@ -101,9 +101,11 @@ dependencies {
     implementation "androidx.compose.animation:animation:$compose_version"
     implementation "androidx.compose.runtime:runtime:$compose_version"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
-    implementation "androidx.navigation:navigation-compose:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling:$versions.composeVersion"
-    implementation "androidx.constraintlayout:constraintlayout-compose:$versions.composeVersion"
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha10"
+    implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
+    implementation "androidx.compose.material:material-icons-extended:1.2.0-rc03"
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.20.2")
     // architecture components
     implementation "androidx.room:room-ktx:$versions.roomVersion"
     kapt "androidx.room:room-compiler:$versions.roomVersion"
@@ -120,12 +122,18 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
 
+    //core
+    implementation("com.google.android.play:core:1.10.3")
+    //logcat
+    implementation("com.squareup.logcat:logcat:0.1")
+
+
     // hilt
-    implementation "com.google.dagger:hilt-android:$versions.hiltVersion"
-    implementation "androidx.hilt:hilt-navigation-compose:$versions.hiltComposeNavigation"
-    kapt "com.google.dagger:hilt-compiler:$versions.hiltVersion"
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$versions.hiltVersion"
-    kaptAndroidTest "com.google.dagger:hilt-compiler:$versions.hiltVersion"
+    implementation "com.google.dagger:hilt-android:2.42"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+    kapt "com.google.dagger:hilt-compiler:2.42"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:2.42"
+    kaptAndroidTest "com.google.dagger:hilt-compiler:2.42"
 
     // network
     implementation "com.github.skydoves:sandwich:$versions.sandwichVersion"
@@ -133,12 +141,28 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$versions.retrofitVersion"
     testImplementation "com.squareup.okhttp3:mockwebserver:$versions.okhttpVersion"
 
+    // Coroutines(includes kotlin flow)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0")
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+    implementation(project(":features:todotask"))
+    implementation(project(":domain"))
+    implementation(project(":libraries:designsystem"))
+    implementation(project(":libraries:core"))
+    implementation(project(":libraries:splitInstall"))
+    implementation(project(":libraries:navigation"))
+    implementation(project(":features:preference"))
+    implementation(project(":features:category-api"))
+
+    kapt("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.3.0")
 
 
 

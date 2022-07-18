@@ -15,3 +15,13 @@ dependencyResolutionManagement {
 rootProject.name = "RemindMe"
 include ':app'
 include ':features:todotask'
+include ':features:category-api'
+include ':domain'
+include ':libraries'
+include ':libraries:designsystem'
+include ':libraries:core'
+include ':features:alarm-api'
+include ':libraries:splitInstall'
+include ':libraries:navigation'
+include ':features:preference'
+include ':features:search'
