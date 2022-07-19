@@ -8,10 +8,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val loadAppTheme: LoadAppTheme,
     private val mapper: AppThemeOptionsMapper
 ) : ViewModel() {
 
-    fun loadCurrentTheme(): Flow<AppThemeOptions> = loadAppTheme().map { mapper.toViewData(it) }
+     fun loadCurrentTheme(): Flow<AppThemeOptions> = loadAppTheme().map { mapper.toViewData(it) }
 }

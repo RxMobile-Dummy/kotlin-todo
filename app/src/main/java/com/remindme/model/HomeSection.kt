@@ -20,8 +20,8 @@ enum class HomeSection(
     val icon: ImageVector
 )
 {
-    Tasks("Tasks".toInt(), Icons.Outlined.Check),
-    Search("Category".toInt(), Icons.Outlined.Search),
-    Categories("More".toInt(), Icons.Outlined.Bookmark),
-    Settings("Search".toInt(), Icons.Outlined.MoreHoriz)
+    Tasks(R.string.home_title_tasks, Icons.Outlined.Check),
+    Search(R.string.home_title_search, Icons.Outlined.Search),
+    Categories(R.string.home_title_categories, Icons.Outlined.Bookmark),
+    Settings(R.string.home_title_settings, Icons.Outlined.MoreHoriz)
 }

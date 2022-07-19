@@ -18,12 +18,12 @@ interface PreferencesRepository {
      *
      * @param theme the theme to be updated
      */
-     fun updateAppTheme(theme: AppThemeOptions)
+    suspend fun updateAppTheme(theme: AppThemeOptions)
 
     /**
      * Loads the current app theme.
      *
      * @return flow of [AppThemeOptions]
      */
-     fun loadAppTheme(): Flow<AppThemeOptions>
+      fun loadAppTheme(): Flow<AppThemeOptions>
 }

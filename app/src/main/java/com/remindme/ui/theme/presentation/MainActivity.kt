@@ -23,20 +23,18 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 internal class MainActivity : ComponentActivity() {
 
-    //internal val mainViewModel=  hiltViewModel<MainViewModel>()
-  //  private val mainViewModel by viewModels<MainViewModel>()
- //   private val mainViewModel : MainViewModel by viewModels()
+    private val mainViewModel : MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-           // val isDarkTheme = rememberIsDarkTheme()
-           // updateTheme(isDarkTheme)
+            val isDarkTheme = rememberIsDarkTheme()
+            updateTheme(isDarkTheme)
 
-//            RemindMeTheme(darkTheme = isDarkTheme) {
-//                NavGraph()
-//            }
+            RemindMeTheme(darkTheme = isDarkTheme) {
+                NavGraph()
+            }
         }
     }
 
@@ -49,19 +47,19 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
-//    @Composable
-//    private fun rememberIsDarkTheme(viewModel: MainViewModel = mainViewModel): Boolean {
-//        val isSystemDarkTheme = isSystemInDarkTheme()
-//
-//        val theme by remember(viewModel) {
-//            viewModel.loadCurrentTheme()
-//        }.collectAsState(initial = AppThemeOptions.SYSTEM)
-//
-//        val isDarkTheme = when (theme) {
-//            AppThemeOptions.LIGHT -> false
-//            AppThemeOptions.DARK -> true
-//            AppThemeOptions.SYSTEM -> isSystemDarkTheme
-//        }
-//        return isDarkTheme
-//    }
+    @Composable
+    private fun rememberIsDarkTheme(viewModel: MainViewModel = mainViewModel): Boolean {
+        val isSystemDarkTheme = isSystemInDarkTheme()
+
+        val theme by remember(viewModel) {
+            viewModel.loadCurrentTheme()
+        }.collectAsState(initial = AppThemeOptions.SYSTEM)
+
+        val isDarkTheme = when (theme) {
+            AppThemeOptions.LIGHT -> false
+            AppThemeOptions.DARK -> true
+            AppThemeOptions.SYSTEM -> isSystemDarkTheme
+        }
+        return isDarkTheme
+    }
 }

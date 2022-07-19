@@ -8,7 +8,7 @@ import com.remindme.domain.model.AppThemeOptions as DomainThemeOptions
  * Maps AppThemeOptions between Repository and DataStore.
  */
 
- class AppThemeOptionsMapper() {
+ class AppThemeOptionsMapper @Inject constructor() {
 
     /**
      * Maps AppThemeOptions from DataStore to Domain.
@@ -17,6 +17,7 @@ import com.remindme.domain.model.AppThemeOptions as DomainThemeOptions
      *
      * @return the converted object
      */
+
     fun toViewData(appThemeOptions: DomainThemeOptions): ViewDataThemeOptions =
         when (appThemeOptions) {
             DomainThemeOptions.LIGHT -> ViewDataThemeOptions.LIGHT
