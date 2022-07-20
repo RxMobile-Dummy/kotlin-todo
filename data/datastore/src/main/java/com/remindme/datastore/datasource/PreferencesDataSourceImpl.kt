@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import com.remindme.datastore.model.AppThemeOptions as DataStoreThemeOptions
 
-internal class PreferencesDataSourceImpl @Inject constructor(
+class PreferencesDataSourceImpl @Inject constructor(
     private val context: Context,
     private val mapper: AppThemeOptionsMapper
 ) : PreferencesDataSource {

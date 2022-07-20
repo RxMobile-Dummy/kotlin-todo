@@ -7,7 +7,7 @@ import com.remindme.domain.usecase.task.UncompleteTask
 import com.remindme.domain.usecase.task.UpdateTaskStatus
 import javax.inject.Inject
 
-internal class UpdateTaskStatusImpl @Inject constructor(
+class UpdateTaskStatusImpl @Inject constructor(
     private val taskRepository: TaskRepository,
     private val glanceInteractor: GlanceInteractor,
     private val completeTask: CompleteTask,

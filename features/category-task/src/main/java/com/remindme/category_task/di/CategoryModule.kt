@@ -35,7 +35,7 @@ import javax.inject.Singleton
 //}
 @Module
 @InstallIn(SingletonComponent::class)
-object CategoryModule {
+class CategoryModule {
 
     @Provides
     fun provideCategoryListViewModelImpl(

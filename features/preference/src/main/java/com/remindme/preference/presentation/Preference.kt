@@ -64,17 +64,20 @@ private fun PreferenceLoader(
     onTrackerClick: () -> Unit,
     viewModel: PreferenceViewModel = hiltViewModel()
 ) {
+
     val theme by remember(viewModel) {
         viewModel.loadCurrentTheme()
     }.collectAsState(initial = AppThemeOptions.SYSTEM)
 
-    PreferenceContent(
-        modifier = modifier,
-        onAboutClick = onAboutClick,
-        onTrackerClick = onTrackerClick,
-        theme = theme,
-        onThemeUpdate = viewModel::updateTheme
-    )
+    theme.let {
+        PreferenceContent(
+            modifier = modifier,
+            onAboutClick = onAboutClick,
+            onTrackerClick = onTrackerClick,
+            theme = theme,
+            onThemeUpdate = viewModel::updateTheme
+        )
+    }
 }
 
 @Composable

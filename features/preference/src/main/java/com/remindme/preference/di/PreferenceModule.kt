@@ -1,3 +1,14 @@
+import com.remindme.domain.usecase.preferences.LoadAppTheme
+import com.remindme.domain.usecase.preferences.UpdateAppTheme
+import com.remindme.preference.AppThemeOptionsMapper
+import com.remindme.preference.presentation.PreferenceViewModel
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
 //package com.remindme.preference.di
 //
 //import com.remindme.domain.usecase.category.LoadAllCategories
@@ -24,24 +35,22 @@
 ////
 ////    factory { AppThemeOptionsMapper() }
 ////}
-//@Module
-//@InstallIn(SingletonComponent::class)
-//object PreferenceModule {
-//
-//    @Provides
-//    @ViewModelScoped
-//    fun getPreferenceViewModel(
-//        updateAppTheme: UpdateAppTheme,
-//        loadAppTheme: LoadAppTheme,
-//        appThemeOptionsMapper:AppThemeOptionsMapper
-//    ): PreferenceViewModel {
-//        return PreferenceViewModel(updateAppTheme, loadAppTheme,appThemeOptionsMapper)
-//    }
-//
-//    @Provides
-//    @Singleton
-//    fun appThemeOptionsMapper(
-//    ): AppThemeOptionsMapper {
-//        return AppThemeOptionsMapper()
-//    }
-//}
+@Module
+@InstallIn(SingletonComponent::class)
+class PreferenceModule {
+
+    @Provides
+    fun getPreferenceViewModel(
+        updateAppTheme: UpdateAppTheme,
+        loadAppTheme: LoadAppTheme,
+        appThemeOptionsMapper: AppThemeOptionsMapper
+    ): PreferenceViewModel {
+        return PreferenceViewModel(updateAppTheme, loadAppTheme,appThemeOptionsMapper)
+    }
+
+    @Provides
+    fun appThemeOptionsMapper(
+    ): AppThemeOptionsMapper {
+        return AppThemeOptionsMapper()
+    }
+}

@@ -14,7 +14,7 @@ internal class TrackerActivity : ComponentActivity()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        injectDynamicFeature()
+        //injectDynamicFeature()
 
         setContent {
             RemindMeTheme {

@@ -1,6 +1,7 @@
 package com.remindme.domain.usecase.preferences
 
 import com.remindme.domain.model.AppThemeOptions
+import com.remindme.domain.repository.TaskWithCategoryRepository
 import javax.inject.Inject
 
 /**
@@ -8,7 +9,7 @@ import javax.inject.Inject
  *
  * @property preferencesRepository the preferences repository
  */
-class UpdateAppTheme(private val preferencesRepository: PreferencesRepository) {
+class UpdateAppTheme @Inject constructor(private val preferencesRepository: PreferencesRepository) {
 
     /**
      * Updates the current app theme.

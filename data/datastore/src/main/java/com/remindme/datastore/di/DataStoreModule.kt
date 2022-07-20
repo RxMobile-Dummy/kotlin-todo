@@ -41,7 +41,6 @@ object DataStoreModule {
 
 
     @Provides
-    @Singleton
     fun appThemeOptionMapper(
     ): AppThemeOptionsMapper {
         return AppThemeOptionsMapper()

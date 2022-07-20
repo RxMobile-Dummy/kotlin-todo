@@ -27,22 +27,22 @@ import javax.inject.Singleton
 //    // Mappers
 //    factory { TaskSearchMapper() }
 //}
-//@Module
-//@InstallIn(SingletonComponent::class)
-//object SearchModule {
-//
-//    @Provides
-//    fun getSearchViewModel(
-//        searchTasksByName: SearchTasksByName,
-//        taskSearchMapper: TaskSearchMapper
-//    ): SearchViewModel {
-//        return SearchViewModel(searchTasksByName, taskSearchMapper)
-//    }
-//
-//
-//    @Provides
-//    fun taskSearchMapper(
-//    ): TaskSearchMapper {
-//        return TaskSearchMapper()
-//    }
-//}
+@Module
+@InstallIn(SingletonComponent::class)
+class SearchModule {
+
+    @Provides
+    fun getSearchViewModel(
+        searchTasksByName: SearchTasksByName,
+        taskSearchMapper: TaskSearchMapper
+    ): SearchViewModel {
+        return SearchViewModel(searchTasksByName, taskSearchMapper)
+    }
+
+
+    @Provides
+    fun taskSearchMapper(
+    ): TaskSearchMapper {
+        return TaskSearchMapper()
+    }
+}

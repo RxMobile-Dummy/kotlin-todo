@@ -1,12 +1,13 @@
 package com.remindme.task.mapper
 
+import javax.inject.Inject
 import com.remindme.domain.model.Task as DomainTask
 import com.remindme.task.model.Task as ViewTask
 
 /**
  * Maps Tasks between Domain and View.
  */
-class TaskMapper(private val alarmIntervalMapper: AlarmIntervalMapper) {
+class TaskMapper @Inject constructor(private val alarmIntervalMapper: AlarmIntervalMapper) {
 
     /**
      * Maps Task from Domain to View.

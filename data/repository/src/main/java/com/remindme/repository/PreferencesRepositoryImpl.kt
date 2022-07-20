@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
- class PreferencesRepositoryImpl @Inject constructor(
+class PreferencesRepositoryImpl @Inject constructor(
     private val dataSource: PreferencesDataSource,
     private val mapper: AppThemeOptionsMapper
 ) : PreferencesRepository {

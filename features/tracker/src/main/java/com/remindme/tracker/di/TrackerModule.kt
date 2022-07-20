@@ -43,7 +43,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object TrackerModule {
+class TrackerModule {
 
     @Provides
     @ViewModelScoped
@@ -55,7 +55,6 @@ object TrackerModule {
     }
 
     @Provides
-    @Singleton
     fun trackerMapper(
     ): TrackerMapper {
         return TrackerMapper()
