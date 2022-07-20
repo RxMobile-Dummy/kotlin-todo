@@ -6,7 +6,7 @@ import com.remindme.domain.usecase.alarm.UpdateTaskAsRepeating
 import mu.KLogging
 import javax.inject.Inject
 
-internal class UpdateTaskAsRepeatingImpl @Inject constructor(
+class UpdateTaskAsRepeatingImpl @Inject constructor(
     private val taskRepository: TaskRepository
 ) : UpdateTaskAsRepeating {
 

@@ -32,7 +32,7 @@ import javax.inject.Singleton
 //}
 @Module
 @InstallIn(SingletonComponent::class)
-object GlanceModule {
+class GlanceModule {
 
     @Provides
     @ViewModelScoped
@@ -45,13 +45,11 @@ object GlanceModule {
     }
 
     @Provides
-    @Singleton
     fun glanceInteractor(
     ): GlanceInteractor {
         return GlanceInteractorImpl()
     }
     @Provides
-    @Singleton
     fun taskMapper(
     ): TaskMapper {
         return TaskMapper()

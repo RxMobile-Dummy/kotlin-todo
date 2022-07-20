@@ -164,6 +164,13 @@ dependencies {
     implementation(project(":libraries:navigation"))
     implementation(project(":features:preference"))
     implementation(project(":features:category-api"))
+    //new
+    implementation(project(":features:category-task"))
+    implementation(project(":features:glance"))
+    implementation(project(":features:searchTask"))
+    implementation(project(":features:tracker"))
+    implementation(project(":features:alarm"))
+    implementation(project(":features:alarm-api"))
 
     implementation(project(":data:datastore"))
     implementation(project(":data:local"))

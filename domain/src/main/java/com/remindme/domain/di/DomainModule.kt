@@ -11,18 +11,14 @@ import com.remindme.domain.repository.TaskRepository
 import com.remindme.domain.repository.TaskWithCategoryRepository
 import com.remindme.domain.usecase.alarm.CancelAlarm
 import com.remindme.domain.usecase.alarm.RescheduleFutureAlarms
-import com.remindme.domain.usecase.alarm.ScheduleAlarm
 import com.remindme.domain.usecase.alarm.ScheduleNextAlarm
-import com.remindme.domain.usecase.alarm.ShowAlarm
 import com.remindme.domain.usecase.alarm.SnoozeAlarm
-import com.remindme.domain.usecase.alarm.UpdateTaskAsRepeating
 import com.remindme.domain.usecase.alarm.implementation.CancelAlarmImpl
 import com.remindme.domain.usecase.alarm.implementation.ScheduleAlarmImpl
 import com.remindme.domain.usecase.alarm.implementation.UpdateTaskAsRepeatingImpl
 import com.remindme.domain.usecase.category.AddCategory
 import com.remindme.domain.usecase.category.DeleteCategory
 import com.remindme.domain.usecase.category.LoadAllCategories
-import com.remindme.domain.usecase.category.LoadCategory
 import com.remindme.domain.usecase.category.UpdateCategory
 import com.remindme.domain.usecase.category.implementation.AddCategoryImpl
 import com.remindme.domain.usecase.category.implementation.DeleteCategoryImpl
@@ -33,35 +29,17 @@ import com.remindme.domain.usecase.preferences.PreferencesRepository
 import com.remindme.domain.usecase.preferences.UpdateAppTheme
 import com.remindme.domain.usecase.search.SearchTasksByName
 import com.remindme.domain.usecase.search.implementation.SearchTasksByNameImpl
-import com.remindme.domain.usecase.task.AddTask
-import com.remindme.domain.usecase.task.CompleteTask
-import com.remindme.domain.usecase.task.DeleteTask
-import com.remindme.domain.usecase.task.LoadTask
-import com.remindme.domain.usecase.task.UncompleteTask
-import com.remindme.domain.usecase.task.UpdateTask
-import com.remindme.domain.usecase.task.UpdateTaskCategory
-import com.remindme.domain.usecase.task.UpdateTaskDescription
-import com.remindme.domain.usecase.task.UpdateTaskStatus
-import com.remindme.domain.usecase.task.UpdateTaskTitle
-import com.remindme.domain.usecase.task.implementation.AddTaskImpl
-import com.remindme.domain.usecase.task.implementation.LoadTaskImpl
-import com.remindme.domain.usecase.task.implementation.UpdateTaskCategoryImpl
-import com.remindme.domain.usecase.task.implementation.UpdateTaskDescriptionImpl
-import com.remindme.domain.usecase.task.implementation.UpdateTaskImpl
-import com.remindme.domain.usecase.task.implementation.UpdateTaskStatusImpl
-import com.remindme.domain.usecase.task.implementation.UpdateTaskTitleImpl
+import com.remindme.domain.usecase.task.*
+import com.remindme.domain.usecase.task.implementation.*
 import com.remindme.domain.usecase.taskwithcategory.LoadCompletedTasks
 import com.remindme.domain.usecase.taskwithcategory.LoadUncompletedTasks
 import com.remindme.domain.usecase.taskwithcategory.implementation.LoadUncompletedTasksImpl
 import com.remindme.domain.usecase.tracker.LoadCompletedTasksByPeriod
 import com.remindme.domain.usecase.tracker.implementation.LoadCompletedTasksByPeriodImpl
-import dagger.Binds
-import dagger.Component
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 //import org.koin.dsl.module
 
@@ -80,7 +58,7 @@ import javax.inject.Singleton
 //    factory<UpdateTask> { UpdateTaskImpl(get(), get()) }
 //    factory<UpdateTaskTitle> { UpdateTaskTitleImpl(get(), get(), get()) }
 //    factory<UpdateTaskDescription> { UpdateTaskDescriptionImpl(get(), get()) }
-                //    factory<UpdateTaskCategory> { UpdateTaskCategoryImpl(get(), get()) }
+//    factory<UpdateTaskCategory> { UpdateTaskCategoryImpl(get(), get()) }
 //
 //    // Category Use Cases
 //    factory<DeleteCategory> { DeleteCategoryImpl(get()) }
@@ -115,172 +93,234 @@ import javax.inject.Singleton
 //    // Providers
 //    factory<CalendarProvider> { CalendarProviderImpl() }
 //}
-//@Module
-//@InstallIn(SingletonComponent::class)
-//abstract  class  DomainModule {
-//
-//    @Binds
-//    abstract fun getAddTask(
-//        addTaskImpl: AddTaskImpl
-//    ): AddTask
-//
-//
-//
-//    @Binds
-//    abstract fun getCategoryRepository(
-//    ): CompleteTask
-//
-//
-//    @Binds
-//    abstract fun getUncompleteTask(
-//    ): UncompleteTask
-//
-//
-//    @Binds
-//    abstract fun getUpdateTaskStatus(
-//        ): UpdateTaskStatus
-//
-//    @Binds
-//    abstract fun getLoadTask(
-//        loadTaskImpl: LoadTaskImpl
-//    ): LoadTask
-//
-//    @Binds
-//    abstract fun getDeleteTask(
-//    ): DeleteTask
-//
-//    @Binds
-//    abstract fun getUpdatedTask(
-//        updateTaskImpl: UpdateTaskImpl
-//    ): UpdateTask
-//
-//
-//    @Binds
-//    abstract fun getUpdateTaskTitle(
-//        loadTask: LoadTask,
-//        updateTask: UpdateTask,
-//        glanceInteractor: GlanceInteractor,
-//        updateTaskTitleImpl: UpdateTaskTitleImpl
-//    ): UpdateTaskTitle
-//
-//
-//
-//    @Binds
-//    abstract fun getUpdateTaskDescription(
-//        loadTask: LoadTask,
-//        updateTask: UpdateTask,
-//        updateTaskDescriptionImpl: UpdateTaskDescriptionImpl
-//        ): UpdateTaskDescription
-//
-//    @Binds
-//    abstract fun getUpdateTaskCategory(
-//        loadTask: LoadTask,
-//        updateTask: UpdateTask,
-//        updateTaskCategoryImpl: UpdateTaskCategoryImpl
-//
-//        ): UpdateTaskCategory
-//
-//    //usecases
-//
-//    @Binds
-//      abstract  fun getDeleteCategory(
-//        categoryRepository: CategoryRepository,
-//        deleteCategoryImpl: DeleteCategoryImpl
-//    ): DeleteCategory
-//
-//    @Binds
-//
-//    abstract fun getLoadAllCategories(
-//        categoryRepository: CategoryRepository,
-//        loadAllCategoriesImpl: LoadAllCategoriesImpl
-//    ): LoadAllCategories
-//
-//    @Binds
-//    abstract fun getLoadCategory(
+@Module
+@InstallIn(SingletonComponent::class)
+class DomainModule {
+
+    @Provides
+    fun getCompleteTask(
+        taskRepository: TaskRepository,
+        notificationInteractor: NotificationInteractor,
+        alarmInteractor: AlarmInteractor,
+        calendarProvider: CalendarProvider
+    ): CompleteTask {
+        return CompleteTask(
+            taskRepository,
+            alarmInteractor,
+            notificationInteractor,
+            calendarProvider
+        )
+    }
+
+
+    @Provides
+    fun getAddTask(
+        taskRepository: TaskRepository,
+        glanceInteractor: GlanceInteractor
+    ): AddTask {
+        return AddTaskImpl(taskRepository, glanceInteractor)
+    }
+
+
+    @Provides
+    fun getUnCompleteTask(
+        taskRepository: TaskRepository
+    ): UncompleteTask {
+        return UncompleteTask(taskRepository)
+    }
+
+    @Provides
+    fun getUpdateTaskStatus(
+         taskRepository: TaskRepository,
+         glanceInteractor: GlanceInteractor,
+         completeTask: CompleteTask,
+         uncompleteTask: UncompleteTask
+    ): UpdateTaskStatus {
+        return UpdateTaskStatusImpl(taskRepository, glanceInteractor,completeTask,uncompleteTask)
+    }
+
+    @Provides
+    fun getLoadTask(
+        taskRepository: TaskRepository
+    ): LoadTask {
+        return LoadTaskImpl(taskRepository)
+    }
+
+    @Provides
+    fun getDeleteTask(
+        taskRepository: TaskRepository,
+        alarmInteractor: AlarmInteractor
+    ): DeleteTask {
+        return DeleteTask(taskRepository, alarmInteractor)
+    }
+
+    @Provides
+    fun getUpdatedTask(
+        taskRepository: TaskRepository,
+        glanceInteractor: GlanceInteractor
+    ): UpdateTask {
+        return UpdateTaskImpl(taskRepository, glanceInteractor)
+    }
+
+
+    @Provides
+    fun getUpdateTaskTitle(
+        loadTask: LoadTask,
+        updateTask: UpdateTask,
+        glanceInteractor: GlanceInteractor
+    ): UpdateTaskTitle {
+        return UpdateTaskTitleImpl(loadTask, updateTask, glanceInteractor)
+    }
+
+    @Provides
+    fun getUpdateTaskDescription(
+        loadTask: LoadTask,
+        updateTask: UpdateTask
+    ): UpdateTaskDescription {
+        return UpdateTaskDescriptionImpl(loadTask, updateTask)
+    }
+
+    @Provides
+    fun getUpdateTaskCategory(
+        loadTask: LoadTask,
+        updateTask: UpdateTask
+    ): UpdateTaskCategory {
+        return UpdateTaskCategoryImpl(loadTask, updateTask)
+    }
+
+
+    @Provides
+    fun getDeleteCategory(
+        categoryRepository: CategoryRepository
+    ): DeleteCategory {
+        return DeleteCategoryImpl(categoryRepository)
+    }
+
+    @Provides
+    fun getLoadAllCategories(
+        categoryRepository: CategoryRepository
+    ): LoadAllCategories {
+        return LoadAllCategoriesImpl(categoryRepository)
+    }
+
+//    @Provides
+//     fun getLoadCategory(
 //        categoryRepository: CategoryRepository
-//    ): LoadCategory
-//
-//    @Binds
-//    abstract fun getAddCategory(
-//        categoryRepository: CategoryRepository,
-//        addCategoryImpl: AddCategoryImpl
-//    ): AddCategory
-//
-//    @Binds
-//    abstract fun getAddCategory(
-//        addCategoryImpl: AddCategoryImpl
-//    ): AddCategory
-//
-//
-//    @Binds
-//    abstract fun getUpdateCategory(
-//        categoryRepository: CategoryRepository,
-//        updateCategoryImpl: UpdateCategoryImpl
-//    ): UpdateCategory
-//
-//    @Binds
-//    abstract fun getSearchRepository(
-//        searchRepository: SearchRepository,
-//        searchTasksByNameImpl: SearchTasksByNameImpl
-//    ): SearchTasksByName
-//
-//    @Binds
-//    abstract  fun getLoadCompletedTasks(
-//        taskWithCategoryRepository: TaskWithCategoryRepository
-//    ): LoadCompletedTasks
-//
-//    @Binds
-//    abstract  fun getLoadUncompletedTasks(
-//        taskWithCategoryRepository: TaskWithCategoryRepository,
-//    loadUncompletedTasksImpl: LoadUncompletedTasksImpl
-//    ): LoadUncompletedTasks<TaskWithCategoryRepository>
-//
-//    @Binds
-//    abstract fun getCancelAlarm(
-//        cancelAlarmImpl: CancelAlarmImpl
-//    ): CancelAlarm
-//
-//
-//    @Binds
-//    abstract fun getRescheduleFutureAlarms(
-//    ): RescheduleFutureAlarms
-//
-//    @Binds
-//    abstract fun getScheduleAlarm(
-//        taskRepository: TaskRepository,
-//        alarmInteractor: AlarmInteractor,
-//        scheduleAlarmImpl: ScheduleAlarmImpl
-//    ): ScheduleAlarm
-//
-//    @Binds
-//    abstract fun getSnoozeAlarm(
-//        calendarProvider: CalendarProvider,
-//        notificationInteractor: NotificationInteractor,
-//        alarmInteractor: AlarmInteractor,
-//    ): SnoozeAlarm
-//
-//    @Binds
-//    abstract fun getUpdateTaskAsRepeating(
-//        taskRepository: TaskRepository
-//    ): UpdateTaskAsRepeating
-//
-//    @Binds
-//    abstract fun getLoadCompletedTasksByPeriod(
-//        loadCompletedTasksByPeriodImpl: LoadCompletedTasksByPeriodImpl
-//    ): LoadCompletedTasksByPeriod
-//
-//    @Binds
-//    abstract fun getUpdateAppTheme(
-//        preferencesRepository: PreferencesRepository
-//    ): UpdateAppTheme
-//
-//    @Binds
-//    abstract fun getLoadAppTheme(
-//        preferencesRepository: PreferencesRepository
-//    ): LoadAppTheme
-//
-//    @Binds
-//    abstract fun getCalendarProvider(
-//        calendarProviderImpl: CalendarProviderImpl
-//    ): CalendarProvider
-//}
+//    ): CategoryRepository{
+//         return CategoryRepository
+//     }
+
+    @Provides
+    fun getAddCategory(
+        categoryRepository: CategoryRepository
+    ): AddCategory {
+        return AddCategoryImpl(categoryRepository)
+    }
+
+
+    @Provides
+    fun getUpdateCategory(
+        categoryRepository: CategoryRepository
+    ): UpdateCategory {
+        return UpdateCategoryImpl(categoryRepository)
+    }
+
+    @Provides
+    fun getSearchRepository(
+        searchRepository: SearchRepository
+
+    ): SearchTasksByName {
+        return SearchTasksByNameImpl(searchRepository)
+    }
+
+    @Provides
+    fun getLoadCompletedTasks(
+        repository: TaskWithCategoryRepository
+    ): LoadCompletedTasks {
+        return LoadCompletedTasks(repository)
+    }
+
+    @Provides
+    fun getLoadUncompletedTasks(
+        repository: TaskWithCategoryRepository
+    ): LoadUncompletedTasks {
+        return LoadUncompletedTasksImpl(repository)
+    }
+
+
+    @Provides
+    fun getCancelAlarm(
+        taskRepository: TaskRepository,
+        alarmInteractor: AlarmInteractor
+    ): CancelAlarm {
+        return CancelAlarmImpl(taskRepository, alarmInteractor)
+    }
+
+
+    @Provides
+    fun getRescheduleFutureAlarms(
+        taskRepository: TaskRepository,
+        alarmInteractor: AlarmInteractor,
+        calendarProvider: CalendarProvider,
+        scheduleNextAlarm: ScheduleNextAlarm
+    ): RescheduleFutureAlarms {
+        return RescheduleFutureAlarms(
+            taskRepository,
+            alarmInteractor,
+            calendarProvider,
+            scheduleNextAlarm
+        )
+    }
+
+    @Provides
+    fun getScheduleAlarm(
+        taskRepository: TaskRepository,
+        alarmInteractor: AlarmInteractor
+    ): ScheduleAlarmImpl {
+        return ScheduleAlarmImpl(taskRepository, alarmInteractor)
+    }
+
+    @Provides
+    fun getSnoozeAlarm(
+        calendarProvider: CalendarProvider,
+        notificationInteractor: NotificationInteractor,
+        alarmInteractor: AlarmInteractor
+    ): SnoozeAlarm {
+        return SnoozeAlarm(calendarProvider, notificationInteractor, alarmInteractor)
+    }
+
+    @Provides
+    fun getUpdateTaskAsRepeating(
+        taskRepository: TaskRepository
+    ): UpdateTaskAsRepeatingImpl {
+        return UpdateTaskAsRepeatingImpl(taskRepository)
+    }
+
+    @Provides
+    fun getLoadCompletedTasksByPeriod(
+        repository: TaskWithCategoryRepository
+    ): LoadCompletedTasksByPeriod {
+        return LoadCompletedTasksByPeriodImpl(repository)
+    }
+
+    @Provides
+    fun getUpdateAppTheme(
+        preferencesRepository: PreferencesRepository
+    ): UpdateAppTheme {
+        return UpdateAppTheme(preferencesRepository)
+    }
+
+
+    @Provides
+     fun getLoadAppTheme(
+        preferencesRepository: PreferencesRepository
+    ): LoadAppTheme{
+         return LoadAppTheme(preferencesRepository)
+     }
+
+    @Provides
+    fun getCalendarProvider(
+    ): CalendarProviderImpl {
+        return CalendarProviderImpl()
+    }
+}

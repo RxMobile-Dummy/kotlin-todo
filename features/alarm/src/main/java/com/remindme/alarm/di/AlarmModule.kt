@@ -43,23 +43,20 @@ import javax.inject.Singleton
 //}
 @Module
 @InstallIn(SingletonComponent::class)
-object AlarmModule{
+class AlarmModule{
     @Provides
-    @Singleton
     fun taskNotificationScheduler(
         @ApplicationContext context: Context,
     ): TaskNotificationScheduler {
         return TaskNotificationScheduler(context)
     }
     @Provides
-    @Singleton
     fun taskNotificationChannel(
         @ApplicationContext context: Context,
         ): TaskNotificationChannel {
         return TaskNotificationChannel(context)
     }
     @Provides
-    @Singleton
     fun taskNotification(
         @ApplicationContext context: Context,
             taskNotificationChannel: TaskNotificationChannel
@@ -67,20 +64,17 @@ object AlarmModule{
         return TaskNotification(context,taskNotificationChannel)
     }
     @Provides
-    @Singleton
     fun taskMapper(
     ): TaskMapper {
         return TaskMapper()
     }
     @Provides
-    @Singleton
     fun alarmInteractor(
         taskNotificationScheduler: TaskNotificationScheduler
     ): AlarmInteractor {
         return AlarmInteractorImpl(taskNotificationScheduler)
     }
     @Provides
-    @Singleton
     fun notificationInteractor(
         taskNotification: TaskNotification,
         taskMapper: TaskMapper
@@ -88,13 +82,11 @@ object AlarmModule{
         return NotificationInteractorImpl(taskNotification,taskMapper)
     }
     @Provides
-    @Singleton
     fun getAndroidVersion(
     ): AndroidVersion {
         return AndroidVersionImpl()
     }
     @Provides
-    @Singleton
     fun getAlarmPermission(
         alarmManager: AlarmManager,
         androidVersion: AndroidVersion

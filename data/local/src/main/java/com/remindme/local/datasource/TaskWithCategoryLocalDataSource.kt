@@ -11,7 +11,7 @@ import javax.inject.Inject
 /**
  * Local implementation of [TaskWithCategoryDataSource].
  */
-internal class TaskWithCategoryLocalDataSource @Inject constructor(
+class TaskWithCategoryLocalDataSource @Inject constructor(
     daoProvider: DaoProvider,
     private val mapper: TaskWithCategoryMapper
 ) : TaskWithCategoryDataSource {

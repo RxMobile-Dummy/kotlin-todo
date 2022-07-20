@@ -1,12 +1,13 @@
 package com.remindme.task.mapper
 
+import javax.inject.Inject
 import com.remindme.domain.model.TaskWithCategory as DomainTaskWithCategory
 import com.remindme.task.model.TaskWithCategory as ViewTaskWithCategory
 
 /**
  * Maps Task With Category between View and Domain.
  */
-class TaskWithCategoryMapper(
+class TaskWithCategoryMapper @Inject constructor(
     private val taskMapper: TaskMapper,
     private val categoryMapper: CategoryMapper
 ) {

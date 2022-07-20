@@ -79,12 +79,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object LocalModule {
-
     @Provides
     fun getTaskDataSource(
         daoProvider: DaoProvider,
         taskMapper: TaskMapper
-    ): TaskLocalDataSource {
+    ): TaskDataSource {
         return TaskLocalDataSource(daoProvider, taskMapper)
     }
 
@@ -97,12 +96,13 @@ object LocalModule {
     }
 
     @Provides
-    fun getTaskCategoryDataSource(
+     fun getTaskCategoryDataSource(
         daoProvider: DaoProvider,
-        taskWithCategoryMapper: TaskWithCategoryMapper
-    ): TaskWithCategoryDataSource {
-        return TaskWithCategoryLocalDataSource(daoProvider, taskWithCategoryMapper)
-    }
+     mapper: TaskWithCategoryMapper
+    ): TaskWithCategoryDataSource{
+         return TaskWithCategoryLocalDataSource(daoProvider,mapper)
+     }
+
     @Provides
     fun searchDataSource(
         daoProvider: DaoProvider,
@@ -113,14 +113,12 @@ object LocalModule {
 
 
     @Provides
-    @Singleton
     fun alarmIntervalMapper(
     ): AlarmIntervalMapper {
         return AlarmIntervalMapper()
     }
 
     @Provides
-    @Singleton
     fun taskMapper(
         alarmIntervalMapper: AlarmIntervalMapper
     ): TaskMapper {
@@ -128,14 +126,12 @@ object LocalModule {
     }
 
     @Provides
-    @Singleton
     fun categoryMapper(
     ): CategoryMapper {
         return CategoryMapper()
     }
 
     @Provides
-    @Singleton
     fun taskWithCategoryMapper(
         taskMapper: TaskMapper,
         categoryMapper: CategoryMapper
@@ -144,7 +140,6 @@ object LocalModule {
     }
 
     @Provides
-    @Singleton
     fun databaseProvider(
         @ApplicationContext context: Context,
         coroutineScope: CoroutineScope
@@ -152,7 +147,6 @@ object LocalModule {
         return DatabaseProvider(context,coroutineScope)
     }
     @Provides
-    @Singleton
     fun daoProvider(
         databaseProvider: DatabaseProvider
     ): DaoProvider {

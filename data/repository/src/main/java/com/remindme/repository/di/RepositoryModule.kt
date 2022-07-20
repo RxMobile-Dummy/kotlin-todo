@@ -16,7 +16,6 @@ import com.remindme.repository.mapper.AppThemeOptionsMapper
 import com.remindme.repository.mapper.CategoryMapper
 import com.remindme.repository.mapper.TaskMapper
 import com.remindme.repository.mapper.TaskWithCategoryMapper
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,85 +45,83 @@ import javax.inject.Singleton
 //}
 @Module
 @InstallIn(SingletonComponent::class)
-abstract  class  RepositoryModule {
+ class RepositoryModule {
 
-//    @Binds
-//    abstract fun getTaskRepository(
-//        taskDataSource: TaskDataSource,
-//        taskMapper: TaskMapper
-//    ): TaskRepositoryImpl
-//
-//
+    @Provides
+    fun getTaskRepository(
+        taskDataSource: TaskDataSource,
+        taskMapper: TaskMapper
+    ): TaskRepository{
+        return TaskRepositoryImpl(taskDataSource,taskMapper)
+    }
 
-//    @Provides
-//    fun getCategoryRepository(
-//        categoryDataSource: CategoryDataSource,
-//        categoryMapper: CategoryMapper
-//
-//    ): CategoryRepository {
-//        return CategoryRepositoryImpl(categoryDataSource, categoryMapper)
-//    }
+    @Provides
+     fun getCategoryRepository(
+         categoryDataSource: CategoryDataSource,
+         categoryMapper: CategoryMapper
+    ): CategoryRepository{
+         return CategoryRepositoryImpl(categoryDataSource,categoryMapper)
+     }
 
-//    @Binds
-//    abstract fun bindsLocationRepository(
-//        categoryRepositoryImpl: CategoryRepositoryImpl
-//    ): CategoryRepository
-//
-//    @Binds
-//    abstract fun getTaskWithCategoryRepository(
-//        taskWithCategoryDataSource: TaskWithCategoryDataSource,
-//        taskWithCategoryMapper: TaskWithCategoryMapper,
-//            taskWithCategoryRepositoryImpl: TaskWithCategoryRepositoryImpl
-//
-//    ): TaskWithCategoryRepository
-//
-//
-//    @Binds
-//    abstract fun getSearchRepository(
-//        searchDataSource: SearchDataSource,
-//        taskWithCategoryMapper: TaskWithCategoryMapper,
-//        searchRepository: SearchRepository,
-//
-//    ): SearchRepository
 
-    @Binds
-    abstract fun getPreferencesRepository(
-      preferencesRepositoryImpl: PreferencesRepositoryImpl
-    ): PreferencesRepository
-//
-//
-//    @Provides
-//    fun getAlarmIntervalMapper(
-//    ): AlarmIntervalMapper {
-//        return AlarmIntervalMapper()
-//    }
-//
-//    @Provides
-//    fun getTaskMapper(
-//        alarmIntervalMapper: AlarmIntervalMapper
-//    ): TaskMapper {
-//        return TaskMapper(alarmIntervalMapper   )
-//    }
-//
-//
-//    @Provides
-//    fun getCategoryMapper(
-//    ): CategoryMapper {
-//        return CategoryMapper()
-//    }
-//
-//
-//    @Provides
-//    fun getTaskWithCategoryMapper(
-//        taskMapper: TaskMapper,
-//        categoryMapper: CategoryMapper
-//    ): TaskWithCategoryMapper {
-//        return TaskWithCategoryMapper(taskMapper,categoryMapper)
-//    }
-//
-//    @Provides
-//    fun getAppThemeOptionsMapper(
-//    ): AppThemeOptionsMapper {
-//        return AppThemeOptionsMapper()
-//    }
+    @Provides
+     fun getTaskWithCategoryRepository(
+         dataSource: TaskWithCategoryDataSource,
+         mapper: TaskWithCategoryMapper
+    ): TaskWithCategoryRepository{
+        return TaskWithCategoryRepositoryImpl(dataSource,mapper)
+    }
+
+
+    @Provides
+     fun getSearchRepository(
+         searchDataSource: SearchDataSource,
+         mapper: TaskWithCategoryMapper
+    ): SearchRepository{
+         return SearchRepositoryImpl(searchDataSource,mapper)
+     }
+
+    @Provides
+     fun getPreferencesRepository(
+        dataSource: PreferencesDataSource,
+        mapper: AppThemeOptionsMapper
+    ): PreferencesRepository{
+         return PreferencesRepositoryImpl(dataSource,mapper)
+     }
+
+    @Provides
+     fun getAlarmIntervalMapper(
+    ): AlarmIntervalMapper{
+         return AlarmIntervalMapper()
+     }
+
+    @Provides
+     fun getTaskMapper(
+        alarmIntervalMapper: AlarmIntervalMapper
+    ): TaskMapper{
+         return TaskMapper(alarmIntervalMapper)
+     }
+
+
+    @Provides
+     fun getCategoryMapper(
+    ): CategoryMapper{
+         return CategoryMapper()
+     }
+
+
+    @Provides
+     fun getTaskWithCategoryMapper(
+        taskMapper: TaskMapper,
+        categoryMapper: CategoryMapper
+
+    ): TaskWithCategoryMapper{
+        return TaskWithCategoryMapper(taskMapper,categoryMapper)
+    }
+
+    @Provides
+     fun getAppThemeOptionsMapper(
+    ): AppThemeOptionsMapper{
+         return AppThemeOptionsMapper()
+     }
 }

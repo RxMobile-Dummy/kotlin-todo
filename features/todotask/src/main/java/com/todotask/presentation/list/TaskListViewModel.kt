@@ -19,7 +19,7 @@ import javax.inject.Inject
  * ViewModel responsible to handle the interaction between the presentation and business logic from
  * Task Section.
  */
-
+@HiltViewModel
 class TaskListViewModel @Inject constructor(
     private val loadAllTasksUseCase: LoadUncompletedTasks,
     private val updateTaskStatusUseCase: UpdateTaskStatus,
