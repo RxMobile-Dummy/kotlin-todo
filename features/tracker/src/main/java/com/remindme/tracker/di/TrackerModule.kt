@@ -46,7 +46,6 @@ import javax.inject.Singleton
 class TrackerModule {
 
     @Provides
-    @ViewModelScoped
     fun trackerViewModel(
         loadCompletedTasksByPeriod: LoadCompletedTasksByPeriod,
         trackerMapper: TrackerMapper

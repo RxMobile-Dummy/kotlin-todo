@@ -320,7 +320,7 @@ class DomainModule {
 
     @Provides
     fun getCalendarProvider(
-    ): CalendarProviderImpl {
+    ): CalendarProvider {
         return CalendarProviderImpl()
     }
 }
