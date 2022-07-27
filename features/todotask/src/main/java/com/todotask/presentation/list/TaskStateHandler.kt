@@ -1,6 +1,6 @@
 package com.remindme.task.presentation.list
 
-import com.remindme.task.model.TaskWithCategory
+import com.todotask.model.TaskWithCategory
 import javax.inject.Inject
 
 internal data class TaskStateHandler(

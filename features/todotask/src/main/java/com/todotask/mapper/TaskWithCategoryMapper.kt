@@ -1,8 +1,8 @@
-package com.remindme.task.mapper
+package com.todotask.mapper
 
 import javax.inject.Inject
 import com.remindme.domain.model.TaskWithCategory as DomainTaskWithCategory
-import com.remindme.task.model.TaskWithCategory as ViewTaskWithCategory
+import com.todotask.model.TaskWithCategory as ViewTaskWithCategory
 
 /**
  * Maps Task With Category between View and Domain.

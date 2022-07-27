@@ -9,10 +9,7 @@ import com.remindme.domain.repository.CategoryRepository
 import com.remindme.domain.repository.SearchRepository
 import com.remindme.domain.repository.TaskRepository
 import com.remindme.domain.repository.TaskWithCategoryRepository
-import com.remindme.domain.usecase.alarm.CancelAlarm
-import com.remindme.domain.usecase.alarm.RescheduleFutureAlarms
-import com.remindme.domain.usecase.alarm.ScheduleNextAlarm
-import com.remindme.domain.usecase.alarm.SnoozeAlarm
+import com.remindme.domain.usecase.alarm.*
 import com.remindme.domain.usecase.alarm.implementation.CancelAlarmImpl
 import com.remindme.domain.usecase.alarm.implementation.ScheduleAlarmImpl
 import com.remindme.domain.usecase.alarm.implementation.UpdateTaskAsRepeatingImpl
@@ -276,7 +273,7 @@ class DomainModule {
     fun getScheduleAlarm(
         taskRepository: TaskRepository,
         alarmInteractor: AlarmInteractor
-    ): ScheduleAlarmImpl {
+    ): ScheduleAlarm {
         return ScheduleAlarmImpl(taskRepository, alarmInteractor)
     }
 
@@ -292,7 +289,7 @@ class DomainModule {
     @Provides
     fun getUpdateTaskAsRepeating(
         taskRepository: TaskRepository
-    ): UpdateTaskAsRepeatingImpl {
+    ): UpdateTaskAsRepeating {
         return UpdateTaskAsRepeatingImpl(taskRepository)
     }
 

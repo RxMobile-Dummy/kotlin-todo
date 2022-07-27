@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.remindme.domain.usecase.task.UpdateTaskStatus
 import com.remindme.domain.usecase.taskwithcategory.LoadUncompletedTasks
-import com.remindme.task.mapper.TaskWithCategoryMapper
-import com.remindme.task.model.TaskWithCategory
+import com.todotask.mapper.TaskWithCategoryMapper
+import com.todotask.model.TaskWithCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

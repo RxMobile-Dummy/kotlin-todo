@@ -7,6 +7,7 @@ import com.remindme.domain.usecase.taskwithcategory.LoadUncompletedTasks
 import com.remindme.glance.interactor.GlanceInteractorImpl
 import com.remindme.glance.mapper.TaskMapper
 import com.remindme.glance.presentation.TaskListGlanceViewModel
+import com.remindme.glance.presentation.TaskListGlanceWidget
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,20 +36,25 @@ import javax.inject.Singleton
 class GlanceModule {
 
     @Provides
-    @ViewModelScoped
     fun taskListGlanceViewModel(
         loadUncompletedTasks: LoadUncompletedTasks,
         updateTaskStatus: UpdateTaskStatus,
         taskMapper: TaskMapper
     ): TaskListGlanceViewModel {
-        return TaskListGlanceViewModel(loadUncompletedTasks, updateTaskStatus,taskMapper)
+        return TaskListGlanceViewModel(loadUncompletedTasks, updateTaskStatus, taskMapper)
     }
 
     @Provides
-    fun glanceInteractor(
-    ): GlanceInteractor {
+    fun taskListGlanceWidget(): TaskListGlanceWidget {
+        return TaskListGlanceWidget()
+    }
+
+
+    @Provides
+    fun glanceInteractor(): GlanceInteractor {
         return GlanceInteractorImpl()
     }
+
     @Provides
     fun taskMapper(
     ): TaskMapper {

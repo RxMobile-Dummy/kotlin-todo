@@ -1,6 +1,8 @@
 package com.remindme.categoryapi.presentation
 
 import com.remindme.categoryapi.model.Category
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 
 /**
  * Represents the states of [CategoryListViewModel].
@@ -11,6 +13,7 @@ sealed class CategoryState {
      * Loading state.
      */
     object Loading : CategoryState()
+
 
     /**
      * Loaded state.

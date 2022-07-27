@@ -1,13 +1,13 @@
-package com.remindme.task.mapper
+package com.todotask.mapper
 
-import com.remindme.task.model.AlarmInterval.DAILY
-import com.remindme.task.model.AlarmInterval.HOURLY
-import com.remindme.task.model.AlarmInterval.MONTHLY
-import com.remindme.task.model.AlarmInterval.NEVER
-import com.remindme.task.model.AlarmInterval.WEEKLY
-import com.remindme.task.model.AlarmInterval.YEARLY
+import com.todotask.model.AlarmInterval.DAILY
+import com.todotask.model.AlarmInterval.HOURLY
+import com.todotask.model.AlarmInterval.MONTHLY
+import com.todotask.model.AlarmInterval.NEVER
+import com.todotask.model.AlarmInterval.WEEKLY
+import com.todotask.model.AlarmInterval.YEARLY
 import com.remindme.domain.model.AlarmInterval as DomainInterval
-import com.remindme.task.model.AlarmInterval as ViewDataInterval
+import com.todotask.model.AlarmInterval as ViewDataInterval
 
 /**
  * Maps Alarm Interval between Domain and View.

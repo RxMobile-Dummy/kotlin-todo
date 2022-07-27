@@ -15,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.remindme.navigation.NavGraph
 import com.remindme.presentation.model.AppThemeOptions
 import com.remindme.designsystem.RemindMeTheme
+import com.remindme.glance.presentation.TaskListGlanceViewModel
 import dagger.hilt.android.AndroidEntryPoint
 /**
  * Main RemindMe Activity.
@@ -24,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 internal class MainActivity : ComponentActivity() {
 
     private val mainViewModel : MainViewModel by viewModels()
-
+    private val viewModel: TaskListGlanceViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

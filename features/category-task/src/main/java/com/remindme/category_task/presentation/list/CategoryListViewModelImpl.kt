@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
- class CategoryListViewModelImpl @Inject constructor(
+class CategoryListViewModelImpl @Inject constructor(
     private val loadAllCategories: LoadAllCategories,
     private val categoryMapper: CategoryMapper
 ) : CategoryListViewModel() {

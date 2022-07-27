@@ -1,4 +1,4 @@
-package com.remindme.task.presentation.detail.main
+package com.todotask.presentation.detail.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,14 +7,16 @@ import com.remindme.domain.usecase.task.LoadTask
 import com.remindme.domain.usecase.task.UpdateTaskCategory
 import com.remindme.domain.usecase.task.UpdateTaskDescription
 import com.remindme.domain.usecase.task.UpdateTaskTitle
-import com.remindme.task.mapper.TaskMapper
+import com.todotask.mapper.TaskMapper
+import com.todotask.presentation.detail.main.CategoryId
+import com.todotask.presentation.detail.main.TaskId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-class TaskDetailViewModel (
+@HiltViewModel
+class TaskDetailViewModel @Inject constructor (
     private val loadTaskUseCase: LoadTask,
     private val updateTaskTitle: UpdateTaskTitle,
     private val updateTaskDescription: UpdateTaskDescription,

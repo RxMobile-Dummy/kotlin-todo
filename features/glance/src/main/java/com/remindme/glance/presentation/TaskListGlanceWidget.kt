@@ -1,5 +1,7 @@
 package com.remindme.glance.presentation
 
+import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.compose.material.MaterialTheme
@@ -40,32 +42,49 @@ import androidx.glance.layout.size
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import androidx.hilt.navigation.HiltViewModelFactory
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.remindme.domain.usecase.task.UpdateTaskStatus
+import com.remindme.domain.usecase.taskwithcategory.LoadUncompletedTasks
 import com.remindme.glance.R
+import com.remindme.glance.mapper.TaskMapper
 import com.remindme.glance.model.Task
 import com.remindme.navigation.DestinationDeepLink
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import java.util.EnumSet.of
 import javax.inject.Inject
 
-//import org.koin.core.component.KoinComponent
-//import org.koin.core.component.inject
+ class TaskListGlanceWidget @Inject constructor(): GlanceAppWidget() {
 
-internal class TaskListGlanceWidget : GlanceAppWidget() /*KoinComponent*/ {
+    @Inject
+    lateinit var context: Context
 
-    @Inject lateinit var context: Context
-
-    @Inject lateinit var viewModel: TaskListGlanceViewModel
+    @Inject
+    lateinit var viewModel: TaskListGlanceViewModel
 
     private val coroutineScope: CoroutineScope = MainScope()
 
     private var taskList by mutableStateOf<List<Task>>(emptyList())
 
+
+
+     init {
+
+     }
+    @SuppressLint("CoroutineCreationDuringComposition")
     @OptIn(ExperimentalUnitApi::class)
     @Composable
+    @ExperimentalCoroutinesApi
     override fun Content() {
+
         Column(
             modifier = GlanceModifier
                 .fillMaxSize()
@@ -160,15 +179,25 @@ internal class TaskListGlanceWidget : GlanceAppWidget() /*KoinComponent*/ {
      * For more information about this behavior, please access:
      * https://issuetracker.google.com/issues/211022821
      */
-    fun loadData() {
+    fun loadData(
+    ) {
+
         coroutineScope.launch {
             taskList = viewModel.loadTaskList().first()
             updateAll(context)
         }
+//        coroutineScope.launch {
+//            taskList = viewModel.loadTaskList().first()
+//            updateAll(context)
+//        }
     }
+
 
     override suspend fun onDelete(glanceId: GlanceId) {
         super.onDelete(glanceId)
         coroutineScope.cancel()
     }
 }
+
+
+

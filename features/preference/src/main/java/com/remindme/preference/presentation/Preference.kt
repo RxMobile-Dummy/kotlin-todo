@@ -1,23 +1,11 @@
 package com.remindme.preference.presentation
 
+//import org.koin.androidx.compose.getViewModel
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,16 +14,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.remindme.core.extension.getVersionName
 import com.remindme.core.extension.openUrl
 import com.remindme.designsystem.RemindMeTheme
+import com.remindme.domain.usecase.preferences.LoadAppTheme
+import com.remindme.domain.usecase.preferences.UpdateAppTheme
+import com.remindme.preference.AppThemeOptionsMapper
 import com.remindme.preference.R
 import com.remindme.preference.model.AppThemeOptions
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
-//import org.koin.androidx.compose.getViewModel
-import java.util.Locale
+import java.util.*
+import java.util.concurrent.Future
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * RemindMe Preference Section.
@@ -48,13 +45,19 @@ import java.util.Locale
 fun PreferenceSection(
     modifier: Modifier = Modifier,
     onAboutClick: () -> Unit,
-    onTrackerClick: () -> Unit
+    onTrackerClick: () -> Unit,
+    theme: AppThemeOptions
+
 ) {
-    PreferenceLoader(
-        modifier = modifier,
-        onAboutClick = onAboutClick,
-        onTrackerClick = onTrackerClick
-    )
+
+        PreferenceLoader(
+            modifier = modifier,
+            onAboutClick = onAboutClick,
+            onTrackerClick = onTrackerClick,
+            theme= theme
+        )
+
+
 }
 
 @Composable
@@ -62,9 +65,16 @@ private fun PreferenceLoader(
     modifier: Modifier = Modifier,
     onAboutClick: () -> Unit,
     onTrackerClick: () -> Unit,
-    viewModel: PreferenceViewModel = hiltViewModel()
+    theme: AppThemeOptions,
+   viewModel:PreferenceViewModel = hiltViewModel()
 ) {
-
+//    PreferenceContent(
+//            modifier = modifier,
+//            onAboutClick = onAboutClick,
+//            onTrackerClick = onTrackerClick,
+//            theme = theme,
+//           onThemeUpdate = {}
+//        )
     val theme by remember(viewModel) {
         viewModel.loadCurrentTheme()
     }.collectAsState(initial = AppThemeOptions.SYSTEM)
@@ -75,10 +85,11 @@ private fun PreferenceLoader(
             onAboutClick = onAboutClick,
             onTrackerClick = onTrackerClick,
             theme = theme,
-            onThemeUpdate = viewModel::updateTheme
+           onThemeUpdate = viewModel::updateTheme
         )
     }
 }
+
 
 @Composable
 internal fun PreferenceContent(
@@ -196,6 +207,6 @@ private const val EasterEggUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 @Composable
 fun PreferencePreview() {
     RemindMeTheme {
-        PreferenceSection(onAboutClick = {}, onTrackerClick = {})
+       // PreferenceSection(onAboutClick = {}, onTrackerClick = {}, theme = )
     }
 }

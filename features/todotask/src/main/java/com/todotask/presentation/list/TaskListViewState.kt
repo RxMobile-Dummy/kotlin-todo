@@ -1,6 +1,6 @@
 package com.remindme.task.presentation.list
 
-import com.remindme.task.model.TaskWithCategory
+import com.todotask.model.TaskWithCategory
 
 /**
  * Presentation entity to represent the view states of Task Section.

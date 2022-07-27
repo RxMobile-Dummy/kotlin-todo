@@ -1,4 +1,4 @@
-package com.remindme.task.presentation.detail.main
+package com.todotask.presentation.detail.main
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
@@ -31,13 +31,15 @@ import com.remindme.designsystem.RemindMeTheme
 import com.remindme.designsystem.components.RemindMeLoadingContent
 import com.remindme.designsystem.components.RemindMeToolbar
 import com.remindme.designsystem.components.DefaultIconTextContent
-import com.remindme.task.model.Task
-import com.remindme.task.presentation.category.CategorySelection
-import com.remindme.task.presentation.detail.LeadingIcon
-import com.remindme.task.presentation.detail.TaskDetailActions
-import com.remindme.task.presentation.detail.TaskDetailSectionContent
-import com.remindme.task.presentation.detail.alarm.AlarmSelection
-import com.remindme.task.presentation.detail.alarm.TaskAlarmViewModel
+import com.todotask.model.Task
+import com.todotask.presentation.category.CategorySelection
+import com.todotask.presentation.detail.LeadingIcon
+import com.todotask.presentation.detail.TaskDetailActions
+import com.todotask.presentation.detail.TaskDetailSectionContent
+import com.todotask.presentation.detail.alarm.AlarmSelection
+import com.todotask.presentation.detail.alarm.TaskAlarmViewModel
+import com.todotask.presentation.detail.main.TaskDetailState
+import com.todotask.presentation.detail.main.TaskDetailViewModel
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -59,7 +61,7 @@ private fun TaskDetailLoader(
     detailViewModel: TaskDetailViewModel = hiltViewModel(),
     categoryViewModel: CategoryListViewModel = hiltViewModel(),
     alarmViewModel: TaskAlarmViewModel = hiltViewModel(),
-//    alarmPermission: AlarmPermission
+ //   alarmPermission: AlarmPermission
 ) {
     val id = TaskId(taskId)
     val detailViewState by

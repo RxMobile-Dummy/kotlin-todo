@@ -1,4 +1,4 @@
-package com.remindme.task.presentation.detail
+package com.todotask.presentation.detail
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box

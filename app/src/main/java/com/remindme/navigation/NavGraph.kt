@@ -14,13 +14,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.remindme.presentation.home.Home
+import com.remindme.ui.theme.presentation.home.Home
 import com.remindme.preference.presentation.About
 import com.remindme.splitinstall.LoadFeature
-import com.remindme.task.presentation.detail.main.TaskDetailSection
+import com.todotask.presentation.detail.main.TaskDetailSection
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.remindme.preference.model.AppThemeOptions
 
 /**
  * Navigation Graph to control the RemindMe navigation.
@@ -33,7 +34,7 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 fun NavGraph(startDestination: String = Destinations.Home) {
     val navController = rememberAnimatedNavController()
     val context = LocalContext.current
-
+    val appThemeOptions:AppThemeOptions = AppThemeOptions.LIGHT
     val actions = remember(navController) { Actions(navController, context) }
     AnimatedNavHost(navController = navController, startDestination = startDestination) {
 
@@ -56,7 +57,8 @@ fun NavGraph(startDestination: String = Destinations.Home) {
             Home(
                 onTaskClick = actions.openTaskDetail,
                 onAboutClick = actions.openAbout,
-                onTrackerClick = actions.openTracker
+                onTrackerClick = actions.openTracker,
+                appThemeOptions = appThemeOptions
             )
         }
 

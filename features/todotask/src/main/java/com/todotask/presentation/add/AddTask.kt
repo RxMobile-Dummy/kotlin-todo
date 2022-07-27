@@ -31,8 +31,8 @@ import com.remindme.categoryapi.presentation.CategoryListViewModel
 import com.remindme.categoryapi.presentation.CategoryState
 import com.remindme.designsystem.RemindMeTheme
 import com.remindme.designsystem.components.RemindMeInputTextField
-import com.remindme.task.presentation.category.CategorySelection
-import com.remindme.task.presentation.detail.main.CategoryId
+import com.todotask.presentation.category.CategorySelection
+import com.todotask.presentation.detail.main.CategoryId
 import kotlinx.coroutines.delay
 
 /**

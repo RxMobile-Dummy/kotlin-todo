@@ -24,8 +24,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.remindme.categoryapi.model.Category
-import com.remindme.task.model.Task
-import com.remindme.task.model.TaskWithCategory
+import com.todotask.model.Task
+import com.todotask.model.TaskWithCategory
 import java.util.Calendar
 
 /**

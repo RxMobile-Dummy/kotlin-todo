@@ -1,9 +1,8 @@
-package com.remindme.task.presentation.detail
+package com.todotask.presentation.detail
 
-import com.remindme.task.model.AlarmInterval
-import com.remindme.task.presentation.detail.main.CategoryId
+import com.todotask.model.AlarmInterval
+import com.todotask.presentation.detail.main.CategoryId
 import java.util.Calendar
-import javax.inject.Inject
 
 internal data class TaskDetailActions(
     val onTitleChange: (String) -> Unit = {},
