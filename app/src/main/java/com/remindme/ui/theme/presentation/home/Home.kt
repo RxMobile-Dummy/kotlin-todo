@@ -1,6 +1,7 @@
 package com.remindme.ui.theme.presentation.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
@@ -58,7 +59,7 @@ import kotlinx.coroutines.launch
  * RemidMe Home screen.
  */
 @Composable
-fun Home(onTaskClick: (Int?) -> Unit, onAboutClick: () -> Unit, onTrackerClick: () -> Unit,appThemeOptions: AppThemeOptions) {
+fun Home(onTaskClick: (Int?) -> Unit, onAboutClick: () -> Unit, onTrackerClick: () -> Unit,appThemeOptions: AppThemeOptions,context: Context) {
     val (currentSection, setCurrentSection) = rememberSaveable { mutableStateOf(Tasks) }
     val navItems = values().toList()
     val homeModifier = Modifier.padding(bottom = 56.dp)
@@ -76,7 +77,7 @@ fun Home(onTaskClick: (Int?) -> Unit, onAboutClick: () -> Unit, onTrackerClick: 
             modifier = homeModifier,
             navItems = navItems,
             actions = actions,
-            appThemeOptions= appThemeOptions
+            appThemeOptions= appThemeOptions, context = context
         )
     }
 }
@@ -89,7 +90,7 @@ private fun RemindMeHomeScaffold(
     modifier: Modifier,
     navItems: List<HomeSection>,
     actions: HomeActions,
-    appThemeOptions: AppThemeOptions
+    appThemeOptions: AppThemeOptions,context: Context
 ) {
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -142,13 +143,14 @@ private fun RemindMeHomeScaffold(
     }
 }
 
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun RemindMeBottomSheetLayout(
     modalSheetState: ModalBottomSheetState,
     sheetContentState: SheetContentState,
     onHideBottomSheet: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     ModalBottomSheetLayout(
         sheetState = modalSheetState,

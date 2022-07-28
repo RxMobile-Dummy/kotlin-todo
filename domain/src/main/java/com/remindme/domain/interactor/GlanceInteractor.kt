@@ -1,5 +1,8 @@
 package com.remindme.domain.interactor
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+
 /**
  * Interface to interact with the glance feature.
  */

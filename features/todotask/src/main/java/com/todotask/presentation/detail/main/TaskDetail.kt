@@ -1,6 +1,7 @@
 package com.todotask.presentation.detail.main
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Parcelable
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
@@ -49,8 +50,8 @@ import kotlinx.parcelize.Parcelize
  * @param onUpPress action to be called when the back button is pressed
  */
 @Composable
-fun TaskDetailSection(taskId: Int, onUpPress: () -> Unit) {
-    TaskDetailLoader(taskId = taskId, onUpPress = onUpPress)
+fun TaskDetailSection(taskId: Int, onUpPress: () -> Unit,context: Context) {
+    TaskDetailLoader(taskId = taskId, onUpPress = onUpPress, context = context)
 }
 
 @Suppress("LongParameterList")
@@ -61,6 +62,7 @@ private fun TaskDetailLoader(
     detailViewModel: TaskDetailViewModel = hiltViewModel(),
     categoryViewModel: CategoryListViewModel = hiltViewModel(),
     alarmViewModel: TaskAlarmViewModel = hiltViewModel(),
+    context: Context
  //   alarmPermission: AlarmPermission
 ) {
     val id = TaskId(taskId)
@@ -75,7 +77,7 @@ private fun TaskDetailLoader(
     val taskDetailActions = TaskDetailActions(
         onTitleChange = { title -> detailViewModel.updateTitle(id, title) },
         onDescriptionChange = { desc -> detailViewModel.updateDescription(id, desc) },
-        onCategoryChange = { categoryId -> detailViewModel.updateCategory(id, categoryId) },
+        onCategoryChange = { categoryId -> detailViewModel.updateCategory(id, categoryId,) },
         onAlarmUpdate = { calendar -> alarmViewModel.updateAlarm(id, calendar) },
         onIntervalSelect = { interval -> alarmViewModel.setRepeating(id, interval) },
 //        hasAlarmPermission = { alarmPermission.hasExactAlarmPermission() },

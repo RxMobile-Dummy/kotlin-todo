@@ -46,6 +46,8 @@ import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.remindme.domain.usecase.task.UpdateTaskStatus
@@ -62,13 +64,11 @@ import kotlinx.coroutines.flow.first
 import java.util.EnumSet.of
 import javax.inject.Inject
 
- class TaskListGlanceWidget @Inject constructor(): GlanceAppWidget() {
+ class TaskListGlanceWidget @Inject constructor(): GlanceAppWidget(), ViewModelStoreOwner {
 
-    @Inject
-    lateinit var context: Context
+   // var context: Context = appContext
 
-    @Inject
-    lateinit var viewModel: TaskListGlanceViewModel
+    var viewModel: TaskListGlanceViewModel = ViewModelProvider(this).get(TaskListGlanceViewModel::class.java)
 
     private val coroutineScope: CoroutineScope = MainScope()
 
@@ -184,7 +184,7 @@ import javax.inject.Inject
 
         coroutineScope.launch {
             taskList = viewModel.loadTaskList().first()
-            updateAll(context)
+           // updateAll(context)
         }
 //        coroutineScope.launch {
 //            taskList = viewModel.loadTaskList().first()
@@ -197,7 +197,11 @@ import javax.inject.Inject
         super.onDelete(glanceId)
         coroutineScope.cancel()
     }
-}
+
+     override fun getViewModelStore(): ViewModelStore {
+         return ViewModelStore().apply {  }
+     }
+ }
 
 
 

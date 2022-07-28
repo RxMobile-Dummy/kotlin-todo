@@ -31,7 +31,7 @@ import com.remindme.preference.model.AppThemeOptions
 @OptIn(ExperimentalAnimationApi::class)
 @Suppress("LongMethod", "MagicNumber")
 @Composable
-fun NavGraph(startDestination: String = Destinations.Home) {
+fun NavGraph(startDestination: String,context: Context) {
     val navController = rememberAnimatedNavController()
     val context = LocalContext.current
     val appThemeOptions:AppThemeOptions = AppThemeOptions.LIGHT
@@ -58,7 +58,7 @@ fun NavGraph(startDestination: String = Destinations.Home) {
                 onTaskClick = actions.openTaskDetail,
                 onAboutClick = actions.openAbout,
                 onTrackerClick = actions.openTracker,
-                appThemeOptions = appThemeOptions
+                appThemeOptions = appThemeOptions,context=context
             )
         }
 
@@ -82,7 +82,8 @@ fun NavGraph(startDestination: String = Destinations.Home) {
             val arguments = requireNotNull(backStackEntry.arguments)
             TaskDetailSection(
                 taskId = arguments.getInt(DestinationArgs.TaskId),
-                onUpPress = actions.onUpPress
+                onUpPress = actions.onUpPress,
+                context = context
             )
         }
 

@@ -1,6 +1,7 @@
 package com.remindme.task.presentation.list
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -60,7 +61,7 @@ private fun TaskListLoader(
     onItemClick: (Int?) -> Unit,
     onAddClick: () -> Unit,
     taskListViewModel: TaskListViewModel = hiltViewModel(),
-    categoryViewModel: CategoryListViewModel = hiltViewModel(),
+    categoryViewModel: CategoryListViewModel = hiltViewModel()
 ) {
     val (currentCategory, setCategory) = rememberSaveable { mutableStateOf<CategoryId?>(null) }
 

@@ -1,5 +1,6 @@
 package com.remindme.task.presentation.add
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,8 +41,8 @@ import kotlinx.coroutines.delay
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddTaskBottomSheet(onHideBottomSheet: () -> Unit,) {
-    AddTaskLoader(onHideBottomSheet = onHideBottomSheet)
+fun AddTaskBottomSheet(onHideBottomSheet: () -> Unit) {
+    AddTaskLoader(onHideBottomSheet = onHideBottomSheet,)
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -100,9 +101,8 @@ private const val FocusDelay = 300L
 
 @OptIn(ExperimentalMaterialApi::class)
 @Suppress("UndocumentedPublicFunction")
-@Preview
 @Composable
-fun TaskListScaffoldError() {
+fun TaskListScaffoldError(context: Context) {
     RemindMeTheme {
         Surface(
             modifier = Modifier

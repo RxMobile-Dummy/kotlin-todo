@@ -1,5 +1,6 @@
 package com.remindme.task.presentation.add
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.remindme.domain.model.Task
@@ -18,7 +19,7 @@ class AddTaskViewModel @Inject constructor(
 
         viewModelScope.launch {
             val task = Task(title = title, categoryId = categoryId?.value)
-            addTaskUseCase.invoke(task)
+            addTaskUseCase.invoke(task )
         }
     }
 }
