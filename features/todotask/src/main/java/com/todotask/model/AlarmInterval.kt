@@ -1,4 +1,4 @@
-package com.remindme.task.model
+package com.todotask.model
 
 import javax.inject.Inject
 

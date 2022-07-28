@@ -1,6 +1,7 @@
 package com.remindme.task.presentation.list
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.remindme.R
 import com.remindme.categoryapi.model.Category
 import com.remindme.categoryapi.presentation.CategoryListViewModel
@@ -29,10 +31,10 @@ import com.remindme.designsystem.RemindMeTheme
 import com.remindme.designsystem.components.AddFloatingButton
 import com.remindme.designsystem.components.DefaultIconTextContent
 import com.remindme.designsystem.components.RemindMeLoadingContent
-import com.remindme.task.model.Task
-import com.remindme.task.model.TaskWithCategory
-import com.remindme.task.presentation.category.CategorySelection
-import com.remindme.task.presentation.detail.main.CategoryId
+import com.todotask.model.Task
+import com.todotask.model.TaskWithCategory
+import com.todotask.presentation.category.CategorySelection
+import com.todotask.presentation.detail.main.CategoryId
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -59,7 +61,7 @@ private fun TaskListLoader(
     onItemClick: (Int?) -> Unit,
     onAddClick: () -> Unit,
     taskListViewModel: TaskListViewModel = hiltViewModel(),
-    categoryViewModel: CategoryListViewModel = hiltViewModel(),
+    categoryViewModel: CategoryListViewModel = hiltViewModel()
 ) {
     val (currentCategory, setCategory) = rememberSaveable { mutableStateOf<CategoryId?>(null) }
 

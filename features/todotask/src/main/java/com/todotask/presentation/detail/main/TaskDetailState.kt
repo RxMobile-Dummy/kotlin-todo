@@ -1,6 +1,6 @@
-package com.remindme.task.presentation.detail.main
+package com.todotask.presentation.detail.main
 
-import com.remindme.task.model.Task
+import com.todotask.model.Task
 
 
 sealed class TaskDetailState {

@@ -6,7 +6,7 @@ import com.remindme.domain.usecase.alarm.ScheduleAlarm
 import java.util.Calendar
 import javax.inject.Inject
 
-class ScheduleAlarmImpl(
+class ScheduleAlarmImpl @Inject constructor(
     private val taskRepository: TaskRepository,
     private val alarmInteractor: AlarmInteractor
 ) : ScheduleAlarm {

@@ -1,4 +1,4 @@
-package com.remindme.task.presentation.detail.alarm
+package com.todotask.presentation.detail.alarm
 
 import android.content.Context
 import android.content.Intent
@@ -41,8 +41,8 @@ import com.remindme.core.view.DateTimePickerDialog
 import com.remindme.designsystem.RemindMeTheme
 import com.remindme.designsystem.components.RemindMeDialog
 import com.remindme.designsystem.components.DialogArguments
-import com.remindme.task.model.AlarmInterval
-import com.remindme.task.presentation.detail.TaskDetailSectionContent
+import com.todotask.model.AlarmInterval
+import com.todotask.presentation.detail.TaskDetailSectionContent
 import java.util.Calendar
 
 @Composable

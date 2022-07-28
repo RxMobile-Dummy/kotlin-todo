@@ -1,11 +1,14 @@
 package com.remindme.task.presentation.list
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.remindme.domain.usecase.task.UpdateTaskStatus
 import com.remindme.domain.usecase.taskwithcategory.LoadUncompletedTasks
-import com.remindme.task.mapper.TaskWithCategoryMapper
-import com.remindme.task.model.TaskWithCategory
+import com.todotask.mapper.TaskWithCategoryMapper
+import com.todotask.model.TaskWithCategory
+import dagger.Provides
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -23,9 +26,8 @@ import javax.inject.Inject
 class TaskListViewModel @Inject constructor(
     private val loadAllTasksUseCase: LoadUncompletedTasks,
     private val updateTaskStatusUseCase: UpdateTaskStatus,
-    private val taskWithCategoryMapper: TaskWithCategoryMapper
+    private val taskWithCategoryMapper: TaskWithCategoryMapper,
 ) : ViewModel() {
-
     fun loadTaskList(categoryId: Long? = null): Flow<TaskListViewState> = flow {
         loadAllTasksUseCase(categoryId = categoryId)
             .map { task -> taskWithCategoryMapper.toView(task) }

@@ -1,6 +1,7 @@
-package com.remindme.presentation.home
+package com.remindme.ui.theme.presentation.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
@@ -37,21 +38,28 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.remindme.category.presentation.bottomsheet.CategoryBottomSheet
+import com.remindme.category.presentation.list.CategoryListSection
 import com.remindme.model.HomeSection
 
-import com.remindme.designsystem.RemindMeTheme
 import com.remindme.model.HomeSection.*
+import com.remindme.preference.model.AppThemeOptions
+import com.remindme.preference.presentation.PreferenceSection
+import com.remindme.preference.presentation.PreferenceViewModel
+import com.remindme.presentation.home.HomeActions
+import com.remindme.presentation.home.SheetContentState
+import com.remindme.search.presentation.SearchSection
 
 import com.remindme.task.presentation.add.AddTaskBottomSheet
 import com.remindme.task.presentation.list.TaskListSection
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
  * RemidMe Home screen.
  */
 @Composable
-fun Home(onTaskClick: (Int?) -> Unit, onAboutClick: () -> Unit, onTrackerClick: () -> Unit) {
+fun Home(onTaskClick: (Int?) -> Unit, onAboutClick: () -> Unit, onTrackerClick: () -> Unit,appThemeOptions: AppThemeOptions,context: Context) {
     val (currentSection, setCurrentSection) = rememberSaveable { mutableStateOf(Tasks) }
     val navItems = values().toList()
     val homeModifier = Modifier.padding(bottom = 56.dp)
@@ -68,7 +76,8 @@ fun Home(onTaskClick: (Int?) -> Unit, onAboutClick: () -> Unit, onTrackerClick: 
             homeSection = homeSection,
             modifier = homeModifier,
             navItems = navItems,
-            actions = actions
+            actions = actions,
+            appThemeOptions= appThemeOptions, context = context
         )
     }
 }
@@ -80,7 +89,8 @@ private fun RemindMeHomeScaffold(
     homeSection: HomeSection,
     modifier: Modifier,
     navItems: List<HomeSection>,
-    actions: HomeActions
+    actions: HomeActions,
+    appThemeOptions: AppThemeOptions,context: Context
 ) {
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -112,14 +122,15 @@ private fun RemindMeHomeScaffold(
     RemindMeBottomSheetLayout(
         modalSheetState = modalSheetState,
         sheetContentState = sheetContentState,
-        onHideBottomSheet = onHideBottomSheet
+        onHideBottomSheet = onHideBottomSheet,
+
     ) {
         Scaffold(
             topBar = {
                 RemindMeTopBar(currentSection = homeSection)
             },
             content = {
-                RemindMeContent(homeSection, modifier, actions, onShowBottomSheet)
+                RemindMeContent(homeSection, modifier, actions, onShowBottomSheet,appThemeOptions)
             },
             bottomBar = {
                 RemindMeBottomNav(
@@ -132,13 +143,14 @@ private fun RemindMeHomeScaffold(
     }
 }
 
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun RemindMeBottomSheetLayout(
     modalSheetState: ModalBottomSheetState,
     sheetContentState: SheetContentState,
     onHideBottomSheet: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     ModalBottomSheetLayout(
         sheetState = modalSheetState,
@@ -153,11 +165,11 @@ private fun RemindMeBottomSheetLayout(
                 when (sheetContentState) {
                     SheetContentState.TaskListSheet ->
                         AddTaskBottomSheet(onHideBottomSheet = onHideBottomSheet)
-//                    is SheetContentState.CategorySheet ->
-//                        CategoryBottomSheet(
-//                            category = sheetContentState.category,
-//                            onHideBottomSheet = onHideBottomSheet
-//                        )
+                    is SheetContentState.CategorySheet ->
+                        CategoryBottomSheet(
+                            category = sheetContentState.category,
+                            onHideBottomSheet = onHideBottomSheet
+                        )
                     SheetContentState.Empty ->
                         Box(modifier = Modifier.fillMaxSize())
                     else -> {}
@@ -175,8 +187,10 @@ private fun RemindMeContent(
     homeSection: HomeSection,
     modifier: Modifier,
     actions: HomeActions,
-    onShowBottomSheet: (SheetContentState) -> Unit
+    onShowBottomSheet: (SheetContentState) -> Unit,
+    appThemeOptions: AppThemeOptions
 ) {
+
     when (homeSection) {
         Tasks ->
             TaskListSection(
@@ -184,24 +198,23 @@ private fun RemindMeContent(
                 onItemClick = actions.onTaskClick,
                 onBottomShow = { onShowBottomSheet(SheetContentState.TaskListSheet) }
             )
-//        HomeSection.Search ->
-//          //  SearchSection(modifier = modifier, onItemClick = actions.onTaskClick)
-//        HomeSection.Categories ->
-////            CategoryListSection(
-////                modifier = modifier,
-////                onShowBottomSheet = { category ->
-////                    onShowBottomSheet(SheetContentState.CategorySheet(category))
-////                }
-////            )
-//        HomeSection.Settings ->
-//            PreferenceSection(
-//                modifier = modifier,
-//                onAboutClick = actions.onAboutClick,
-//                onTrackerClick = actions.onTrackerClick
-//            )
-        Search -> TODO()
-        Categories -> TODO()
-        Settings -> TODO()
+        HomeSection.Search ->
+            SearchSection(modifier = modifier, onItemClick = actions.onTaskClick)
+        HomeSection.Categories ->
+            CategoryListSection(
+                modifier = modifier,
+                onShowBottomSheet = { category ->
+                    onShowBottomSheet(SheetContentState.CategorySheet(category))
+                }
+            )
+        HomeSection.Settings ->
+            PreferenceSection(
+                modifier = modifier,
+                onAboutClick = actions.onAboutClick,
+                onTrackerClick = actions.onTrackerClick,
+                theme = appThemeOptions
+            )
+
     }
 }
 

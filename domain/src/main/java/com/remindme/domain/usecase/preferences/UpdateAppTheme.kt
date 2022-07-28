@@ -2,6 +2,7 @@ package com.remindme.domain.usecase.preferences
 
 import com.remindme.domain.model.AppThemeOptions
 import com.remindme.domain.repository.TaskWithCategoryRepository
+import dagger.Provides
 import javax.inject.Inject
 
 /**
@@ -16,6 +17,6 @@ class UpdateAppTheme @Inject constructor(private val preferencesRepository: Pref
      *
      * @param theme the theme to be updated
      */
-    suspend operator fun invoke(theme: AppThemeOptions) =
+     suspend operator fun invoke(theme: AppThemeOptions) =
         preferencesRepository.updateAppTheme(theme)
 }

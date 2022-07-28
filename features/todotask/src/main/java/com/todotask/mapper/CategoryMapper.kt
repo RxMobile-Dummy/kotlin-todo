@@ -1,4 +1,4 @@
-package com.remindme.task.mapper
+package com.todotask.mapper
 
 import android.graphics.Color
 import com.remindme.categoryapi.model.Category as ViewCategory

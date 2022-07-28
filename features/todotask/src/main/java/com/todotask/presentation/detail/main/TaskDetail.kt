@@ -1,6 +1,7 @@
-package com.remindme.task.presentation.detail.main
+package com.todotask.presentation.detail.main
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Parcelable
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
@@ -31,13 +32,15 @@ import com.remindme.designsystem.RemindMeTheme
 import com.remindme.designsystem.components.RemindMeLoadingContent
 import com.remindme.designsystem.components.RemindMeToolbar
 import com.remindme.designsystem.components.DefaultIconTextContent
-import com.remindme.task.model.Task
-import com.remindme.task.presentation.category.CategorySelection
-import com.remindme.task.presentation.detail.LeadingIcon
-import com.remindme.task.presentation.detail.TaskDetailActions
-import com.remindme.task.presentation.detail.TaskDetailSectionContent
-import com.remindme.task.presentation.detail.alarm.AlarmSelection
-import com.remindme.task.presentation.detail.alarm.TaskAlarmViewModel
+import com.todotask.model.Task
+import com.todotask.presentation.category.CategorySelection
+import com.todotask.presentation.detail.LeadingIcon
+import com.todotask.presentation.detail.TaskDetailActions
+import com.todotask.presentation.detail.TaskDetailSectionContent
+import com.todotask.presentation.detail.alarm.AlarmSelection
+import com.todotask.presentation.detail.alarm.TaskAlarmViewModel
+import com.todotask.presentation.detail.main.TaskDetailState
+import com.todotask.presentation.detail.main.TaskDetailViewModel
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -47,8 +50,8 @@ import kotlinx.parcelize.Parcelize
  * @param onUpPress action to be called when the back button is pressed
  */
 @Composable
-fun TaskDetailSection(taskId: Int, onUpPress: () -> Unit) {
-    TaskDetailLoader(taskId = taskId, onUpPress = onUpPress)
+fun TaskDetailSection(taskId: Int, onUpPress: () -> Unit,context: Context) {
+    TaskDetailLoader(taskId = taskId, onUpPress = onUpPress, context = context)
 }
 
 @Suppress("LongParameterList")
@@ -59,7 +62,8 @@ private fun TaskDetailLoader(
     detailViewModel: TaskDetailViewModel = hiltViewModel(),
     categoryViewModel: CategoryListViewModel = hiltViewModel(),
     alarmViewModel: TaskAlarmViewModel = hiltViewModel(),
-//    alarmPermission: AlarmPermission
+    context: Context
+ //   alarmPermission: AlarmPermission
 ) {
     val id = TaskId(taskId)
     val detailViewState by
@@ -73,7 +77,7 @@ private fun TaskDetailLoader(
     val taskDetailActions = TaskDetailActions(
         onTitleChange = { title -> detailViewModel.updateTitle(id, title) },
         onDescriptionChange = { desc -> detailViewModel.updateDescription(id, desc) },
-        onCategoryChange = { categoryId -> detailViewModel.updateCategory(id, categoryId) },
+        onCategoryChange = { categoryId -> detailViewModel.updateCategory(id, categoryId,) },
         onAlarmUpdate = { calendar -> alarmViewModel.updateAlarm(id, calendar) },
         onIntervalSelect = { interval -> alarmViewModel.setRepeating(id, interval) },
 //        hasAlarmPermission = { alarmPermission.hasExactAlarmPermission() },

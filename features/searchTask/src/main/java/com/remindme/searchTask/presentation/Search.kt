@@ -101,6 +101,7 @@ internal fun SearchScaffold(
                         taskList = state.taskList,
                         onItemClick = onItemClick
                     )
+                    else -> {}
                 }
             }
         }

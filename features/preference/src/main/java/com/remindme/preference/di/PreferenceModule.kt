@@ -1,16 +1,18 @@
+package com.remindme.preference.di
+
 import com.remindme.domain.usecase.preferences.LoadAppTheme
+import com.remindme.domain.usecase.preferences.PreferencesRepository
 import com.remindme.domain.usecase.preferences.UpdateAppTheme
 import com.remindme.preference.AppThemeOptionsMapper
 import com.remindme.preference.presentation.PreferenceViewModel
+import com.remindme.repository.PreferencesRepositoryImpl
+import com.remindme.repository.datasource.PreferencesDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
-//package com.remindme.preference.di
-//
+
 //import com.remindme.domain.usecase.category.LoadAllCategories
 //import com.remindme.domain.usecase.preferences.LoadAppTheme
 //import com.remindme.domain.usecase.preferences.UpdateAppTheme
@@ -37,7 +39,7 @@ import javax.inject.Singleton
 ////}
 @Module
 @InstallIn(SingletonComponent::class)
-class PreferenceModule {
+class  PreferenceModule {
 
     @Provides
     fun getPreferenceViewModel(
@@ -45,8 +47,10 @@ class PreferenceModule {
         loadAppTheme: LoadAppTheme,
         appThemeOptionsMapper: AppThemeOptionsMapper
     ): PreferenceViewModel {
-        return PreferenceViewModel(updateAppTheme, loadAppTheme,appThemeOptionsMapper)
+        return PreferenceViewModel(updateAppTheme,loadAppTheme,appThemeOptionsMapper)
     }
+
+
 
     @Provides
     fun appThemeOptionsMapper(

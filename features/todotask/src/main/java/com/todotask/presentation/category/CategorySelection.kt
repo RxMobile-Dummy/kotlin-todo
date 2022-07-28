@@ -1,4 +1,4 @@
-package com.remindme.task.presentation.category
+package com.todotask.presentation.category
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -32,7 +32,7 @@ import com.remindme.categoryapi.model.Category
 import com.remindme.categoryapi.presentation.CategoryState
 import com.remindme.designsystem.RemindMeTheme
 import com.remindme.designsystem.components.RemindMeLoadingContent
-import com.remindme.task.presentation.detail.main.CategoryId
+import com.todotask.presentation.detail.main.CategoryId
 
 @Composable
 internal fun CategorySelection(

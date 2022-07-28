@@ -1,5 +1,7 @@
 package com.remindme.preference
 
+import dagger.Provides
+import javax.inject.Singleton
 import com.remindme.domain.model.AppThemeOptions as DomainThemeOptions
 import com.remindme.preference.model.AppThemeOptions as ViewDataThemeOptions
 
