@@ -18,7 +18,7 @@ import javax.inject.Inject
  * @property alarmInterval the interval between the repeating
  */
 data class Task @Inject constructor(
-    val id: Int? = 0,
+    val id: Long = 0,
     val completed: Boolean = false,
     val title: String,
     val description: String? = null,

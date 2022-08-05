@@ -13,10 +13,7 @@ import com.remindme.domain.usecase.alarm.*
 import com.remindme.domain.usecase.alarm.implementation.CancelAlarmImpl
 import com.remindme.domain.usecase.alarm.implementation.ScheduleAlarmImpl
 import com.remindme.domain.usecase.alarm.implementation.UpdateTaskAsRepeatingImpl
-import com.remindme.domain.usecase.category.AddCategory
-import com.remindme.domain.usecase.category.DeleteCategory
-import com.remindme.domain.usecase.category.LoadAllCategories
-import com.remindme.domain.usecase.category.UpdateCategory
+import com.remindme.domain.usecase.category.*
 import com.remindme.domain.usecase.category.implementation.AddCategoryImpl
 import com.remindme.domain.usecase.category.implementation.DeleteCategoryImpl
 import com.remindme.domain.usecase.category.implementation.LoadAllCategoriesImpl
@@ -200,12 +197,12 @@ class DomainModule {
         return LoadAllCategoriesImpl(categoryRepository)
     }
 
-//    @Provides
-//     fun getLoadCategory(
-//        categoryRepository: CategoryRepository
-//    ): CategoryRepository{
-//         return CategoryRepository
-//     }
+    @Provides
+     fun getLoadCategory(
+        categoryRepository: CategoryRepository
+    ): LoadCategory{
+         return LoadCategory(categoryRepository)
+     }
 
     @Provides
     fun getAddCategory(

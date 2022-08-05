@@ -1,4 +1,4 @@
-package com.remindme.task.presentation.list
+package com.todotask.presentation.list
 
 import android.text.format.DateUtils
 import androidx.compose.foundation.background
@@ -40,7 +40,7 @@ import java.util.Calendar
 internal fun    TaskItem(
     modifier: Modifier = Modifier,
     task: TaskWithCategory,
-    onItemClick: (Int?) -> Unit,
+    onItemClick: (Long?) -> Unit,
     onCheckedChange: (TaskWithCategory) -> Unit
 ) {
     Card(

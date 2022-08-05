@@ -13,5 +13,5 @@ interface UpdateTaskTitle {
      * @param taskId the task id to be updated
      * @param title the title to be set
      */
-    suspend operator fun invoke(taskId: Int?, title: String)
+    suspend operator fun invoke(taskId: Long?, title: String)
 }

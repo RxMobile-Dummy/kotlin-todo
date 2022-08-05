@@ -1,7 +1,7 @@
-package com.remindme.task.presentation.list
+package com.todotask.presentation.list
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.remindme.R
 import com.remindme.categoryapi.model.Category
 import com.remindme.categoryapi.presentation.CategoryListViewModel
@@ -35,6 +35,8 @@ import com.todotask.model.Task
 import com.todotask.model.TaskWithCategory
 import com.todotask.presentation.category.CategorySelection
 import com.todotask.presentation.detail.main.CategoryId
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -49,25 +51,28 @@ import java.util.*
 @Composable
 fun TaskListSection(
     modifier: Modifier = Modifier,
-    onItemClick: (Int?) -> Unit,
-    onBottomShow: () -> Unit
-) {
-    TaskListLoader(modifier = modifier, onItemClick = onItemClick, onAddClick = onBottomShow)
+    onItemClick: (Long?) -> Unit,
+    onBottomShow: () -> Unit,navController: NavController
+    ) {
+    TaskListLoader(modifier = modifier, onItemClick = onItemClick, onAddClick = onBottomShow,
+        navController = navController)
 }
 
 @Composable
 private fun TaskListLoader(
     modifier: Modifier = Modifier,
-    onItemClick: (Int?) -> Unit,
+    onItemClick: (Long?) -> Unit,
     onAddClick: () -> Unit,
     taskListViewModel: TaskListViewModel = hiltViewModel(),
-    categoryViewModel: CategoryListViewModel = hiltViewModel()
+    categoryViewModel: CategoryListViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val (currentCategory, setCategory) = rememberSaveable { mutableStateOf<CategoryId?>(null) }
 
     val taskViewState by remember(taskListViewModel, currentCategory) {
         taskListViewModel.loadTaskList(currentCategory?.value)
     }.collectAsState(initial = TaskListViewState.Loading)
+
 
     val categoryViewState by remember(categoryViewModel) { categoryViewModel.loadCategories() }
         .collectAsState(initial = CategoryState.Loading)
@@ -76,7 +81,7 @@ private fun TaskListLoader(
         state = taskViewState,
         onCheckedChange = taskListViewModel::updateTaskStatus,
         onItemClick = onItemClick,
-        onAddClick = onAddClick
+        onAddClick =  onAddClick
     )
 
     val categoryHandler = CategoryStateHandler(
@@ -89,6 +94,7 @@ private fun TaskListLoader(
         taskHandler = taskHandler,
         categoryHandler = categoryHandler,
         modifier = modifier,
+        //navController = navController
     )
 }
 
@@ -98,6 +104,7 @@ internal fun TaskListScaffold(
     taskHandler: TaskStateHandler,
     categoryHandler: CategoryStateHandler,
     modifier: Modifier = Modifier,
+  //  navController: NavController
 ) {
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
@@ -122,11 +129,15 @@ internal fun TaskListScaffold(
             modifier = modifier.fillMaxSize(),
             scaffoldState = scaffoldState,
             backgroundColor = MaterialTheme.colors.background,
-            topBar = { TaskFilter(categoryHandler = categoryHandler) },
+           // topBar = { TaskFilter(categoryHandler = categoryHandler) },
             floatingActionButton = {
                 AddFloatingButton(
                     contentDescription = R.string.task_cd_add_task,
-                    onClick = { taskHandler.onAddClick() }
+                    onClick = {
+                        Log.e("on click","on click")
+                        taskHandler.onAddClick()
+                      //  navController.navigate("add_task")
+                    }
                 )
             },
             floatingActionButtonPosition = fabPosition
@@ -147,7 +158,6 @@ internal fun TaskListScaffold(
                         )
                     }
                     TaskListViewState.Empty -> TaskListEmpty()
-                    else -> {}
                 }
             }
         }
@@ -168,7 +178,7 @@ private fun TaskFilter(categoryHandler: CategoryStateHandler) {
 @Composable
 private fun TaskListContent(
     taskList: List<TaskWithCategory>,
-    onItemClick: (Int?) -> Unit,
+    onItemClick: (Long?) -> Unit,
     onCheckedChange: (TaskWithCategory) -> Unit
 ) {
     BoxWithConstraints(modifier = Modifier.padding(start = 8.dp, end = 8.dp)) {
@@ -213,7 +223,9 @@ private fun TaskListError() {
 @Suppress("UndocumentedPublicFunction")
 @Preview
 @Composable
-fun TaskListScaffoldLoaded() {
+fun TaskListScaffoldLoaded(
+    //navController: NavController
+) {
     val task1 = Task(title = "Buy milk", dueDate = null)
     val task2 = Task(title = "Call Mark", dueDate = Calendar.getInstance())
     val task3 = Task(title = "Watch Moonlight", dueDate = Calendar.getInstance())
@@ -234,6 +246,7 @@ fun TaskListScaffoldLoaded() {
             taskHandler = TaskStateHandler(state = state),
             categoryHandler = CategoryStateHandler(),
             modifier = Modifier,
+//            navController = navController
         )
     }
 }
@@ -242,7 +255,9 @@ fun TaskListScaffoldLoaded() {
 @Suppress("UndocumentedPublicFunction")
 @Preview
 @Composable
-fun TaskListScaffoldEmpty() {
+fun TaskListScaffoldEmpty(
+    //navController: NavController
+) {
     val state = TaskListViewState.Empty
 
     RemindMeTheme {
@@ -250,6 +265,7 @@ fun TaskListScaffoldEmpty() {
             taskHandler = TaskStateHandler(state = state),
             categoryHandler = CategoryStateHandler(),
             modifier = Modifier,
+            //navController =navController
         )
     }
 }
@@ -258,7 +274,9 @@ fun TaskListScaffoldEmpty() {
 @Suppress("UndocumentedPublicFunction")
 @Preview
 @Composable
-fun TaskListScaffoldError() {
+fun TaskListScaffoldError(
+    //navController: NavController
+) {
     val state = TaskListViewState.Error(cause = IllegalAccessException())
 
     RemindMeTheme {
@@ -266,6 +284,7 @@ fun TaskListScaffoldError() {
             taskHandler = TaskStateHandler(state = state),
             categoryHandler = CategoryStateHandler(),
             modifier = Modifier,
+          //  navController = navController
         )
     }
 }

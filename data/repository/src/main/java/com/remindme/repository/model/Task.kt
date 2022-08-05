@@ -17,7 +17,7 @@ import java.util.Calendar
  * @property alarmInterval the interval between the repeating
  */
 data class Task(
-    val id: Int? = 0,
+    val id: Long = 0,
     val completed: Boolean = false,
     val title: String,
     val description: String?,

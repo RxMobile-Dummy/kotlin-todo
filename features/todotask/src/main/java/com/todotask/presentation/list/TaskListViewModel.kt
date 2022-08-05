@@ -1,18 +1,14 @@
-package com.remindme.task.presentation.list
+package com.todotask.presentation.list
 
-import android.annotation.SuppressLint
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.remindme.domain.usecase.task.UpdateTaskStatus
 import com.remindme.domain.usecase.taskwithcategory.LoadUncompletedTasks
 import com.todotask.mapper.TaskWithCategoryMapper
 import com.todotask.model.TaskWithCategory
-import dagger.Provides
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch

@@ -13,5 +13,5 @@ interface UpdateTaskAsRepeating {
      * @param taskId task id to be updated
      * @param interval repeating alarm interval
      */
-    suspend operator fun invoke(taskId: Int?, interval: AlarmInterval?)
+    suspend operator fun invoke(taskId: Long?, interval: AlarmInterval?)
 }

@@ -1,4 +1,4 @@
-package com.remindme.category.presentation.bottomsheet
+package com.remindme.category_task.presentation.bottomsheet
 
 import androidx.compose.ui.graphics.Color
 import javax.inject.Inject

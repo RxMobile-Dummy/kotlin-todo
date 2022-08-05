@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -45,6 +46,10 @@ dependencies {
     implementation(project(":libraries:core"))
     implementation(project(":libraries:navigation"))
     implementation(project(":domain"))
+    implementation(project(":features:preference"))
+    implementation ("androidx.datastore:datastore-preferences:1.0.0-alpha01")
+    implementation  ("androidx.datastore:datastore-core:1.0.0-alpha01")
+
     //logcat
     implementation("com.squareup.logcat:logcat:0.1")
     //hilt

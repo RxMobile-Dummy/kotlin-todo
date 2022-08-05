@@ -29,6 +29,6 @@ class TaskLocalDataSource @Inject constructor(daoProvider: DaoProvider, private 
     override suspend fun findAllTasksWithDueDate(): List<Task> =
         taskDao.findAllTasksWithDueDate().map { taskMapper.toRepo(it) }
 
-    override suspend fun findTaskById(taskId: Int?): Task? =
+    override suspend fun findTaskById(taskId: Long?): Task? =
         taskDao.getTaskById(taskId)?.let { taskMapper.toRepo(it) }
 }

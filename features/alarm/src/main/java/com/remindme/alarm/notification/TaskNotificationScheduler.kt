@@ -25,16 +25,28 @@ class TaskNotificationScheduler @Inject constructor(private val context: Context
             action = TaskReceiver.ALARM_ACTION
             putExtra(TaskReceiver.EXTRA_TASK, taskId)
         }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                taskId.toInt(),
+                receiverIntent,
+                 PendingIntent.FLAG_IMMUTABLE
+            )
+            logcat { "Scheduling notification for '$taskId' at '$timeInMillis'" }
+            context.setExactAlarm(timeInMillis, pendingIntent)
+        }else{
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                taskId.toInt(),
+                receiverIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
+            logcat { "Scheduling notification for '$taskId' at '$timeInMillis'" }
+            context.setExactAlarm(timeInMillis, pendingIntent)
+        }
 
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            taskId.toInt(),
-            receiverIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
 
-        logcat { "Scheduling notification for '$taskId' at '$timeInMillis'" }
-        context.setExactAlarm(timeInMillis, pendingIntent)
+
     }
 
     /**

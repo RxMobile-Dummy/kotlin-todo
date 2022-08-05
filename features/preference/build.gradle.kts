@@ -55,11 +55,20 @@ dependencies {
     implementation ("androidx.compose.ui:ui:1.2.0-rc03")
     implementation ("androidx.compose.material:material:1.2.0-rc03")
     implementation ("androidx.compose.ui:ui-tooling-preview:1.2.0-rc03")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
 
+// Preferences DataStore
+   // implementation ("androidx.datastore:datastore-preferences:1.0.0-alpha01")
+    implementation ("androidx.datastore:datastore-preferences:1.0.0-rc01")
+
+
+// Proto DataStore
+    implementation  ("androidx.datastore:datastore-core:1.0.0-alpha01")
     implementation(project(":domain"))
     implementation(project(":libraries:designsystem"))
     implementation(project(":libraries:core"))
     implementation(project(":data:repository"))
+    implementation(project(":features:todotask"))
 
 
     //hilt

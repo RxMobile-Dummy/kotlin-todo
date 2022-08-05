@@ -17,7 +17,7 @@ class ScheduleAlarmImpl @Inject constructor(
      * @param taskId the alarm id
      * @param calendar the time to the alarm be scheduled
      */
-    override suspend operator fun invoke(taskId: Int?, calendar: Calendar) {
+    override suspend operator fun invoke(taskId: Long?, calendar: Calendar) {
         val task = taskRepository.findTaskById(taskId) ?: return
         val updatedTask = task.copy(dueDate = calendar)
         taskRepository.updateTask(updatedTask)

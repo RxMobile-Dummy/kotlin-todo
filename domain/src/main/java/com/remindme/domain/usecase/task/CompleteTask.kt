@@ -16,6 +16,9 @@ class CompleteTask @Inject constructor(
     private val notificationInteractor: NotificationInteractor,
     private val calendarProvider: CalendarProvider
 ) {
+    companion object instance {
+
+    }
 
     /**
      * Completes the given task.
@@ -24,7 +27,7 @@ class CompleteTask @Inject constructor(
      *
      * @return observable to be subscribe
      */
-    suspend operator fun invoke(taskId: Int?) {
+    suspend operator fun invoke(taskId: Long?) {
         val task = taskRepository.findTaskById(taskId) ?: return
         invoke(task)
     }
@@ -39,8 +42,8 @@ class CompleteTask @Inject constructor(
     suspend operator fun invoke(task: Task) {
         val updatedTask = updateTaskAsCompleted(task)
         taskRepository.updateTask(updatedTask)
-        task.id?.let { alarmInteractor.cancel(it.toLong()) }
-        task.id?.let { notificationInteractor.dismiss(it.toLong()) }
+        task.id.let { alarmInteractor.cancel(it) }
+        task.id.let { notificationInteractor.dismiss(it) }
     }
 
     private fun updateTaskAsCompleted(task: Task) =

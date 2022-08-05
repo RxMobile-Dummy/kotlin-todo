@@ -14,5 +14,5 @@ interface UpdateTaskStatus {
      *
      * @return observable to be subscribe
      */
-    suspend operator fun invoke(taskId: Int?)
+    suspend operator fun invoke(taskId: Long?)
 }

@@ -5,8 +5,9 @@ import com.remindme.alarm.notification.TaskNotification
 import com.remindme.domain.interactor.NotificationInteractor
 import com.remindme.domain.model.Task
 import logcat.logcat
+import javax.inject.Inject
 
-internal class NotificationInteractorImpl(
+internal class NotificationInteractorImpl @Inject constructor(
     private val taskNotification: TaskNotification,
     private val taskMapper: TaskMapper
 ) : NotificationInteractor {

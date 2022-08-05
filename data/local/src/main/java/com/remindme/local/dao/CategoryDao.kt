@@ -59,7 +59,7 @@ interface CategoryDao {
      * Cleans the entire table.
      */
     @Query("DELETE FROM category")
-    suspend fun cleanTable()
+     fun cleanTable()
 
     /**
      * Gets a specific category by name.
@@ -76,4 +76,7 @@ interface CategoryDao {
      */
     @Query("SELECT * FROM category WHERE category_id = :categoryId")
     suspend fun findCategoryById(categoryId: Long): Category?
+
+    @Query("SELECT * FROM category")
+     fun getAllCategory(): List<Category>?
 }

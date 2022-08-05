@@ -4,8 +4,8 @@ import android.app.AlarmManager
 import android.content.Context
 import com.remindme.core.extension.getAlarmManager
 import com.remindme.domain.usecase.preferences.LoadAppTheme
-import com.remindme.presentation.MainViewModel
-import com.remindme.presentation.mapper.AppThemeOptionsMapper
+import com.remindme.ui.theme.presentation.MainViewModel
+import com.remindme.ui.theme.presentation.mapper.AppThemeOptionsMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

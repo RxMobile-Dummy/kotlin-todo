@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class LoadTaskImpl @Inject constructor(private val taskRepository: TaskRepository) : LoadTask {
 
-    override suspend operator fun invoke(taskId: Int?): Task? =
+    override suspend operator fun invoke(taskId: Long?): Task? =
         taskRepository.findTaskById(taskId)
 }

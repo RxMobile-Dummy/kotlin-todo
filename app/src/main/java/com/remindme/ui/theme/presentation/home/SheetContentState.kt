@@ -1,10 +1,11 @@
-package com.remindme.presentation.home
+package com.remindme.ui.theme.presentation.home
 
 import android.os.Parcelable
 import com.remindme.categoryapi.model.Category
 import kotlinx.parcelize.Parcelize
+import javax.inject.Inject
 
-internal sealed class SheetContentState {
+internal sealed class SheetContentState  {
 
     @Parcelize
     object Empty : SheetContentState(), Parcelable

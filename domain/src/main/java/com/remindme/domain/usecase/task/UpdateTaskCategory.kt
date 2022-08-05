@@ -13,5 +13,5 @@ interface UpdateTaskCategory {
      * @param taskId the task id to be updated
      * @param categoryId the category id to be set
      */
-    suspend operator fun invoke(taskId: Int?, categoryId: Long?)
+    suspend operator fun invoke(taskId: Long?, categoryId: Long?)
 }

@@ -1,4 +1,4 @@
-package com.remindme.category.presentation.list
+package com.remindme.category_task.presentation.list
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -30,10 +29,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.outlined.ThumbUp
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -81,6 +77,7 @@ private fun CategoryListLoader(
     onItemClick: (Category) -> Unit,
     onAddClick: () -> Unit
 ) {
+
     val viewState by remember(viewModel) { viewModel.loadCategories() }
         .collectAsState(initial = CategoryState.Loading)
 

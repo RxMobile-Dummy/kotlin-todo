@@ -1,4 +1,4 @@
-package com.remindme.search.presentation
+package com.remindme.searchTask.presentation
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
@@ -39,11 +39,18 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.remindme.categoryapi.presentation.CategoryListViewModel
+import com.remindme.categoryapi.presentation.CategoryState
 import com.remindme.designsystem.RemindMeTheme
 import com.remindme.designsystem.components.RemindMeLoadingContent
 import com.remindme.designsystem.components.DefaultIconTextContent
-import com.remindme.search.model.TaskSearchItem
+import com.remindme.searchTask.model.TaskSearchItem
 import com.remindme.searchTask.R
+import com.todotask.presentation.category.CategorySelection
+import com.todotask.presentation.detail.main.CategoryId
+import com.todotask.presentation.list.CategoryStateHandler
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 //import org.koin.androidx.compose.getViewModel
 
@@ -54,26 +61,38 @@ import com.remindme.searchTask.R
  * @param onItemClick action to be called when the item is clicked
  */
 @Composable
-fun SearchSection(modifier: Modifier = Modifier, onItemClick: (Int?) -> Unit) {
+fun SearchSection(modifier: Modifier = Modifier, onItemClick: (Long?) -> Unit) {
     SearchLoader(modifier = modifier, onItemClick = onItemClick)
 }
 
 @Composable
 private fun SearchLoader(
     modifier: Modifier = Modifier,
-    onItemClick: (Int?) -> Unit,
-    viewModel: SearchViewModel = hiltViewModel()
+    onItemClick: (Long?) -> Unit,
+    viewModel: SearchViewModel = hiltViewModel(),
+    categoryViewModel: CategoryListViewModel = hiltViewModel()
+
 ) {
     val (query, setQuery) = rememberSaveable { mutableStateOf("") }
     val viewState by remember(viewModel, query) { viewModel.findTasksByName(query) }
         .collectAsState(initial = SearchViewState.Loading)
+    val (currentCategory, setCategory) = rememberSaveable { mutableStateOf<CategoryId?>(null) }
+
+    val categoryViewState by remember(categoryViewModel) { categoryViewModel.loadCategories() }
+        .collectAsState(initial = CategoryState.Loading)
+    val categoryHandler = CategoryStateHandler(
+        state = categoryViewState,
+        currentCategory = currentCategory,
+        onCategoryChange = setCategory,
+    )
 
     SearchScaffold(
         viewState = viewState,
         modifier = modifier,
         onItemClick = onItemClick,
         query = query,
-        setQuery = setQuery
+        setQuery = setQuery,
+        categoryHandler = categoryHandler
     )
 }
 
@@ -82,13 +101,17 @@ private fun SearchLoader(
 internal fun SearchScaffold(
     modifier: Modifier = Modifier,
     viewState: SearchViewState,
-    onItemClick: (Int?) -> Unit,
+    onItemClick: (Long?) -> Unit,
     query: String,
-    setQuery: (String) -> Unit
-) {
+    setQuery: (String) -> Unit,
+    categoryHandler: CategoryStateHandler
+
+    ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = MaterialTheme.colors.background,
+        topBar = { TaskFilter(categoryHandler = categoryHandler) },
+
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             SearchTextField(query, onTextChange = setQuery)
@@ -101,13 +124,20 @@ internal fun SearchScaffold(
                         taskList = state.taskList,
                         onItemClick = onItemClick
                     )
-                    else -> {}
                 }
             }
         }
     }
 }
-
+@Composable
+private fun TaskFilter(categoryHandler: CategoryStateHandler) {
+    CategorySelection(
+        state = categoryHandler.state,
+        currentCategory = categoryHandler.currentCategory?.value,
+        onCategoryChange = categoryHandler.onCategoryChange,
+        modifier = Modifier.padding(start = 16.dp)
+    )
+}
 @Composable
 private fun SearchTextField(text: String, onTextChange: (String) -> Unit) {
     TextField(
@@ -136,7 +166,7 @@ private fun SearchEmptyContent() {
 }
 
 @Composable
-private fun SearchListContent(taskList: List<TaskSearchItem>, onItemClick: (Int?) -> Unit) {
+private fun SearchListContent(taskList: List<TaskSearchItem>, onItemClick: (Long?) -> Unit) {
     LazyColumn {
         items(
             items = taskList,
@@ -146,7 +176,7 @@ private fun SearchListContent(taskList: List<TaskSearchItem>, onItemClick: (Int?
 }
 
 @Composable
-private fun SearchItem(task: TaskSearchItem, onItemClick: (Int?) -> Unit) {
+private fun SearchItem(task: TaskSearchItem, onItemClick: (Long?) -> Unit) {
     Column(
         modifier = Modifier
             .height(48.dp)
@@ -211,7 +241,8 @@ fun SearchLoadedListPreview() {
             viewState = SearchViewState.Loaded(taskList),
             onItemClick = {},
             query = "",
-            setQuery = {}
+            setQuery = {},
+            categoryHandler = CategoryStateHandler()
         )
     }
 }
@@ -226,7 +257,8 @@ fun SearchEmptyListPreview() {
             viewState = SearchViewState.Empty,
             onItemClick = {},
             query = "",
-            setQuery = {}
+            setQuery = {},
+            categoryHandler = CategoryStateHandler()
         )
     }
 }

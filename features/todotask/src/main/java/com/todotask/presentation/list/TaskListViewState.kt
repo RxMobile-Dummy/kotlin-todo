@@ -1,4 +1,4 @@
-package com.remindme.task.presentation.list
+package com.todotask.presentation.list
 
 import com.todotask.model.TaskWithCategory
 

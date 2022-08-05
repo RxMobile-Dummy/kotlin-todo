@@ -19,7 +19,7 @@ class ShowAlarm @Inject constructor(
      *
      * @param taskId the alarm id to be shown
      */
-    suspend operator fun invoke(taskId: Int?) {
+    suspend operator fun invoke(taskId: Long?) {
         val task = taskRepository.findTaskById(taskId) ?: return
 
         if (task.completed) {

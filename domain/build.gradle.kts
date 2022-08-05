@@ -41,14 +41,14 @@ dependencies {
     implementation("com.google.android.material:material:1.6.1")
 
     //coroutines
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+    //implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
     // hilt
     implementation ("com.google.dagger:hilt-android:2.42")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
     kapt ("com.google.dagger:hilt-compiler:2.42")
     //logging
 
-    //core
+    //coroutines core
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
     //logcat
     implementation("com.squareup.logcat:logcat:0.1")

@@ -25,6 +25,6 @@ class TaskRepositoryImpl @Inject constructor(
     override suspend fun findAllTasksWithDueDate(): List<Task> =
         taskDataSource.findAllTasksWithDueDate().map { taskMapper.toDomain(it) }
 
-    override suspend fun findTaskById(taskId: Int?): Task? =
+    override suspend fun findTaskById(taskId: Long?): Task? =
         taskDataSource.findTaskById(taskId)?.let { taskMapper.toDomain(it) }
 }

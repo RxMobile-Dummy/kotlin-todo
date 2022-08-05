@@ -1,8 +1,8 @@
-package com.remindme.presentation
+package com.remindme.ui.theme.presentation
 
 import androidx.lifecycle.ViewModel
-import com.remindme.presentation.mapper.AppThemeOptionsMapper
-import com.remindme.presentation.model.AppThemeOptions
+import com.remindme.ui.theme.presentation.mapper.AppThemeOptionsMapper
+import com.remindme.ui.theme.presentation.model.AppThemeOptions
 import com.remindme.domain.usecase.preferences.LoadAppTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

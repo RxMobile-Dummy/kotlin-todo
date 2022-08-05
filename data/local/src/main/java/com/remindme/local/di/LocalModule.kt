@@ -78,7 +78,7 @@ import javax.inject.Singleton
 //}
 @Module
 @InstallIn(SingletonComponent::class)
-object LocalModule {
+class LocalModule {
     @Provides
     fun getTaskDataSource(
         daoProvider: DaoProvider,

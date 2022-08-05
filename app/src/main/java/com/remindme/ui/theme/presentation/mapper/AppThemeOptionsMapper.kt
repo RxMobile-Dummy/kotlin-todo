@@ -1,7 +1,7 @@
-package com.remindme.presentation.mapper
+package com.remindme.ui.theme.presentation.mapper
 
 import javax.inject.Inject
-import com.remindme.presentation.model.AppThemeOptions as ViewDataThemeOptions
+import com.remindme.ui.theme.presentation.model.AppThemeOptions as ViewDataThemeOptions
 import com.remindme.domain.model.AppThemeOptions as DomainThemeOptions
 
 /**

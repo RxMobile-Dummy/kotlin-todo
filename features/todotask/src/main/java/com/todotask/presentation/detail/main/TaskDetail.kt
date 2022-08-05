@@ -4,36 +4,36 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.remindme.R
+import com.remindme.alarmapi.AlarmPermission
 import com.remindme.categoryapi.model.Category
 import com.remindme.categoryapi.presentation.CategoryListViewModel
 import com.remindme.categoryapi.presentation.CategoryState
+import com.remindme.core.view.DateTimePickerDialog
 import com.remindme.designsystem.RemindMeTheme
 import com.remindme.designsystem.components.RemindMeLoadingContent
 import com.remindme.designsystem.components.RemindMeToolbar
 import com.remindme.designsystem.components.DefaultIconTextContent
 import com.todotask.model.Task
 import com.todotask.presentation.category.CategorySelection
+import com.todotask.presentation.category.editCategorySelection
 import com.todotask.presentation.detail.LeadingIcon
 import com.todotask.presentation.detail.TaskDetailActions
 import com.todotask.presentation.detail.TaskDetailSectionContent
@@ -41,7 +41,12 @@ import com.todotask.presentation.detail.alarm.AlarmSelection
 import com.todotask.presentation.detail.alarm.TaskAlarmViewModel
 import com.todotask.presentation.detail.main.TaskDetailState
 import com.todotask.presentation.detail.main.TaskDetailViewModel
+import dagger.hilt.android.internal.migration.InjectedByHilt
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.parcelize.Parcelize
+import javax.inject.Inject
 
 /**
  * RemindMe Task Detail Section.
@@ -50,21 +55,22 @@ import kotlinx.parcelize.Parcelize
  * @param onUpPress action to be called when the back button is pressed
  */
 @Composable
-fun TaskDetailSection(taskId: Int, onUpPress: () -> Unit,context: Context) {
-    TaskDetailLoader(taskId = taskId, onUpPress = onUpPress, context = context)
+fun TaskDetailSection(taskId: Long, onUpPress: () -> Unit,alarmPermission: AlarmPermission) {
+    TaskDetailLoader(taskId = taskId, onUpPress = onUpPress,alarmPermission)
 }
 
 @Suppress("LongParameterList")
 @Composable
 private fun TaskDetailLoader(
-    taskId: Int,
+    taskId: Long,
     onUpPress: () -> Unit,
+    alarmPermission: AlarmPermission,
     detailViewModel: TaskDetailViewModel = hiltViewModel(),
     categoryViewModel: CategoryListViewModel = hiltViewModel(),
     alarmViewModel: TaskAlarmViewModel = hiltViewModel(),
-    context: Context
- //   alarmPermission: AlarmPermission
 ) {
+
+
     val id = TaskId(taskId)
     val detailViewState by
     remember(detailViewModel, taskId) { detailViewModel.loadTaskInfo(taskId = id) }
@@ -80,7 +86,7 @@ private fun TaskDetailLoader(
         onCategoryChange = { categoryId -> detailViewModel.updateCategory(id, categoryId,) },
         onAlarmUpdate = { calendar -> alarmViewModel.updateAlarm(id, calendar) },
         onIntervalSelect = { interval -> alarmViewModel.setRepeating(id, interval) },
-//        hasAlarmPermission = { alarmPermission.hasExactAlarmPermission() },
+        hasAlarmPermission = { alarmPermission.hasExactAlarmPermission() },
         onUpPress = onUpPress
     )
 
@@ -109,7 +115,6 @@ internal fun TaskDetailRouter(
                         categoryViewState = categoryViewState,
                         actions = actions
                     )
-                else -> {}
             }
         }
     }
@@ -119,24 +124,29 @@ internal fun TaskDetailRouter(
 private fun TaskDetailContent(
     task: Task,
     categoryViewState: CategoryState,
-    actions: TaskDetailActions
+    actions: TaskDetailActions,
 ) {
+    var enabledEdittext by remember { mutableStateOf(false)}
     Surface(color = MaterialTheme.colors.background) {
         Column {
-            TaskTitleTextField(text = task.title, onTitleChange = actions.onTitleChange)
+            EditTaskTitleTextField(text = task.title, onTitleChange = actions.onTitleChange, onEditClick = {
+                enabledEdittext = true;
+            },enabledEdittext)
             TaskDetailSectionContent(
                 imageVector = Icons.Outlined.Bookmark,
                 contentDescription = R.string.task_detail_cd_icon_category,
             ) {
-                CategorySelection(
+                editCategorySelection(
                     state = categoryViewState,
                     currentCategory = task.categoryId,
-                    onCategoryChange = actions.onCategoryChange
+                    onCategoryChange = actions.onCategoryChange,
+                    isEditTextEnabled = enabledEdittext
                 )
             }
             TaskDescriptionTextField(
                 text = task.description,
-                onDescriptionChange = actions.onDescriptionChange
+                onDescriptionChange = actions.onDescriptionChange,
+                enabledEdittext
             )
             AlarmSelection(
                 calendar = task.dueDate,
@@ -173,9 +183,47 @@ private fun TaskTitleTextField(text: String, onTitleChange: (String) -> Unit) {
         colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
     )
 }
+@Composable
+private fun EditTaskTitleTextField(text: String, onTitleChange: (String) -> Unit,onEditClick: () -> Unit,isEditTextEnabled:Boolean) {
+    val textState = remember { mutableStateOf(TextFieldValue(text)) }
+  //  val isEdit = remember { mutableStateOf(isEditTextEnabled) }
+
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment= Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp),
+    ){
+        TextField(
+            modifier = Modifier.weight(1f),
+            value = textState.value,
+            enabled = isEditTextEnabled,
+            onValueChange = {
+                onTitleChange(it.text)
+                textState.value = it
+            },
+
+            textStyle = MaterialTheme.typography.h4,
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
+        )
+        IconButton(onClick = onEditClick) {
+            Icon(
+                modifier = Modifier.weight(1f).padding(10.dp).clickable (onClick = onEditClick),
+                imageVector = Icons.Outlined.Edit,
+                tint = MaterialTheme.colors.secondary,
+                contentDescription = stringResource(
+                    id = R.string.edit_task_detail
+                )
+            )
+        }
+
+    }
+
+}
 
 @Composable
-private fun TaskDescriptionTextField(text: String?, onDescriptionChange: (String) -> Unit) {
+private fun TaskDescriptionTextField(text: String?, onDescriptionChange: (String) -> Unit,isEditTextEnabled:Boolean) {
     val textState = remember { mutableStateOf(TextFieldValue(text ?: "")) }
 
     TextField(
@@ -187,6 +235,7 @@ private fun TaskDescriptionTextField(text: String?, onDescriptionChange: (String
             )
         },
         value = textState.value,
+        enabled = isEditTextEnabled,
         onValueChange = {
             onDescriptionChange(it.text)
             textState.value = it
@@ -199,7 +248,7 @@ private fun TaskDescriptionTextField(text: String?, onDescriptionChange: (String
 @Suppress("ModifierOrder")
 @JvmInline
 @Parcelize
-value class TaskId(val value: Int?) : Parcelable
+value class TaskId(val value: Long?) : Parcelable
 
 @Suppress("ModifierOrder")
 @JvmInline

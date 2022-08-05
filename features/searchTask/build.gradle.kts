@@ -59,10 +59,12 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":libraries:designsystem"))
     implementation(project(":libraries:core"))
-
+    implementation(project(":features:category-api"))
+    implementation(project(":features:todotask"))
     //hilt
 
     implementation ("com.google.dagger:hilt-android:2.42")
+    implementation(project(mapOf("path" to ":features:todotask")))
     kapt ("com.google.dagger:hilt-compiler:2.42")
     implementation( "androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("com.google.android.play:core:1.10.3")
