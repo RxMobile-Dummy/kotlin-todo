@@ -1,17 +1,12 @@
-package com.remindme.search.di
+package com.remindme.searchTask.di
 
-import com.remindme.domain.usecase.category.LoadAllCategories
 import com.remindme.domain.usecase.search.SearchTasksByName
-import com.remindme.domain.usecase.task.UpdateTaskStatus
-import com.remindme.domain.usecase.taskwithcategory.LoadUncompletedTasks
-import com.remindme.search.mapper.TaskSearchMapper
-import com.remindme.search.presentation.SearchViewModel
+import com.remindme.searchTask.mapper.TaskSearchMapper
+import com.remindme.searchTask.presentation.SearchViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 //import org.koin.androidx.viewmodel.dsl.viewModel
 //import org.koin.dsl.module

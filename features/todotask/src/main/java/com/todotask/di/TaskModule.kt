@@ -1,14 +1,12 @@
 package com.todotask.di
 
-import android.content.Context
 import com.remindme.domain.usecase.alarm.CancelAlarm
 import com.remindme.domain.usecase.alarm.ScheduleAlarm
 import com.remindme.domain.usecase.alarm.UpdateTaskAsRepeating
-import com.remindme.domain.usecase.category.LoadAllCategories
 import com.remindme.domain.usecase.task.*
 import com.remindme.domain.usecase.taskwithcategory.LoadUncompletedTasks
 import com.remindme.task.presentation.add.AddTaskViewModel
-import com.remindme.task.presentation.list.TaskListViewModel
+import com.todotask.presentation.list.TaskListViewModel
 import com.todotask.mapper.AlarmIntervalMapper
 import com.todotask.mapper.CategoryMapper
 import com.todotask.mapper.TaskMapper
@@ -18,11 +16,7 @@ import com.todotask.presentation.detail.main.TaskDetailViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Inject
-import javax.inject.Singleton
 
 //import org.koin.androidx.viewmodel.dsl.viewModel
 //import org.koin.dsl.module

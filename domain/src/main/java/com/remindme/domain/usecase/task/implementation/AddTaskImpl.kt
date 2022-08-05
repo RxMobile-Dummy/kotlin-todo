@@ -1,6 +1,5 @@
 package com.remindme.domain.usecase.task.implementation
 
-import android.content.Context
 import com.remindme.domain.interactor.GlanceInteractor
 import com.remindme.domain.model.Task
 import com.remindme.domain.repository.TaskRepository
@@ -8,7 +7,7 @@ import com.remindme.domain.usecase.task.AddTask
 import mu.KLogging
 import javax.inject.Inject
 
-class AddTaskImpl(
+class AddTaskImpl @Inject constructor(
     private val taskRepository: TaskRepository,
     private val glanceInteractor: GlanceInteractor
 ) : AddTask {

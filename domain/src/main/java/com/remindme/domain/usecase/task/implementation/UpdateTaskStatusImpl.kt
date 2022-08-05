@@ -15,7 +15,7 @@ class UpdateTaskStatusImpl @Inject constructor(
     private val uncompleteTask: UncompleteTask
 ) : UpdateTaskStatus {
 
-    override suspend operator fun invoke(taskId: Int?) {
+    override suspend operator fun invoke(taskId: Long?) {
         val task = taskRepository.findTaskById(taskId) ?: return
         when (task.completed.not()) {
             true -> completeTask(task)

@@ -13,5 +13,5 @@ interface UpdateTaskDescription {
      * @param taskId the task id to be updated
      * @param description the description to be set
      */
-    suspend operator fun invoke(taskId: Int?, description: String)
+    suspend operator fun invoke(taskId: Long?, description: String)
 }

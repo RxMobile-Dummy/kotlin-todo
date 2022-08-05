@@ -1,12 +1,13 @@
 package com.remindme.local.mapper
 
+import javax.inject.Inject
 import com.remindme.local.model.Category as LocalCategory
 import com.remindme.repository.model.Category as RepoCategory
 
 /**
  * Maps Category between Repository and Local.
  */
-class CategoryMapper {
+class CategoryMapper @Inject constructor() {
 
     /**
      * Maps Category from Repo to Local.

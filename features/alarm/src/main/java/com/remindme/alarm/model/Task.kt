@@ -11,7 +11,7 @@ import java.util.Calendar
  * @property isCompleted indicates if the task is completed
  */
 data class Task(
-    val id: Int?,
+    val id: Long,
     val title: String,
     val dueDate: Calendar?,
     val isCompleted: Boolean

@@ -7,6 +7,7 @@ import com.remindme.domain.usecase.taskwithcategory.LoadUncompletedTasks
 import com.remindme.glance.mapper.TaskMapper
 import com.remindme.glance.presentation.TaskListGlanceViewModel
 import com.remindme.glance.presentation.TaskListGlanceWidget
+import dagger.assisted.Assisted
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -19,6 +20,7 @@ class GlanceInteractorImpl @Inject constructor() :
     override suspend fun onTaskListUpdated() {
         TaskListGlanceWidget().loadData()
     }
+
 
 
 }

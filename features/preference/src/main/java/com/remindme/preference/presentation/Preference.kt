@@ -3,16 +3,22 @@ package com.remindme.preference.presentation
 //import org.koin.androidx.compose.getViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
@@ -25,6 +31,7 @@ import com.remindme.domain.usecase.preferences.UpdateAppTheme
 import com.remindme.preference.AppThemeOptionsMapper
 import com.remindme.preference.R
 import com.remindme.preference.model.AppThemeOptions
+import com.todotask.presentation.detail.TaskDetailActions
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
@@ -46,18 +53,17 @@ fun PreferenceSection(
     modifier: Modifier = Modifier,
     onAboutClick: () -> Unit,
     onTrackerClick: () -> Unit,
-    theme: AppThemeOptions
+    theme: AppThemeOptions,
+    actions1: TaskDetailActions
 
 ) {
-
         PreferenceLoader(
             modifier = modifier,
             onAboutClick = onAboutClick,
             onTrackerClick = onTrackerClick,
-            theme= theme
+            theme= theme,
+            actions = actions1
         )
-
-
 }
 
 @Composable
@@ -66,15 +72,9 @@ private fun PreferenceLoader(
     onAboutClick: () -> Unit,
     onTrackerClick: () -> Unit,
     theme: AppThemeOptions,
-   viewModel:PreferenceViewModel = hiltViewModel()
+   viewModel:PreferenceViewModel = hiltViewModel(),
+    actions: TaskDetailActions
 ) {
-//    PreferenceContent(
-//            modifier = modifier,
-//            onAboutClick = onAboutClick,
-//            onTrackerClick = onTrackerClick,
-//            theme = theme,
-//           onThemeUpdate = {}
-//        )
     val theme by remember(viewModel) {
         viewModel.loadCurrentTheme()
     }.collectAsState(initial = AppThemeOptions.SYSTEM)
@@ -85,7 +85,8 @@ private fun PreferenceLoader(
             onAboutClick = onAboutClick,
             onTrackerClick = onTrackerClick,
             theme = theme,
-           onThemeUpdate = viewModel::updateTheme
+            onThemeUpdate = viewModel::updateTheme,
+            actions = actions
         )
     }
 }
@@ -97,16 +98,27 @@ internal fun PreferenceContent(
     onAboutClick: () -> Unit,
     onTrackerClick: () -> Unit,
     theme: AppThemeOptions,
-    onThemeUpdate: (AppThemeOptions) -> Unit
+    onThemeUpdate: (AppThemeOptions) -> Unit,
+    actions: TaskDetailActions
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        PreferenceTitle(title = stringResource(id = R.string.preference_title_features))
-        TrackerItem(onTrackerClick)
+
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        NotificationPreferenceItem(
+            title = stringResource(id = R.string.preference_title_notification),
+            change = false,
+            onCheckedChange = {
+
+            }
+        )
         Separator()
-        PreferenceTitle(title = stringResource(id = R.string.preference_title_settings))
-        ThemeItem(currentTheme = theme, onThemeUpdate = onThemeUpdate)
-        AboutItem(onAboutClick)
-        VersionItem()
+        PreferenceAlertSettingItem(
+            title = stringResource(id = R.string.preference_title_settings),
+            actions = actions
+
+        )
+        Separator()
+
+        ThemeItem(currentTheme = theme, onThemeUpdate = onThemeUpdate,)
     }
 }
 
@@ -120,73 +132,33 @@ private fun PreferenceTitle(title: String) {
         contentAlignment = Alignment.CenterStart
     ) {
         Text(
-            text = title.uppercase(Locale.getDefault()),
+            text = title.lowercase(Locale.getDefault()),
+            fontSize = 15.sp,
             style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colors.primary
+            color = Color.Black
         )
     }
 }
 
 @Composable
-private fun TrackerItem(onTrackerClick: () -> Unit) {
-    PreferenceItem(
-        title = stringResource(id = R.string.preference_title_tracker),
-        onItemClick = onTrackerClick
-    )
-}
-
-@Composable
-@Suppress("MagicNumber")
-private fun VersionItem() {
-    val title = stringResource(id = R.string.preference_title_version)
-    val context = LocalContext.current
-    val version = context.getVersionName()
-    var numberOfClicks by remember { mutableStateOf(0) }
-    val onClick = {
-        if (++numberOfClicks == 7) {
-            context.openUrl(EasterEggUrl)
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        snapshotFlow { numberOfClicks }
-            .filter { it > 0 }
-            .collectLatest {
-                delay(1_000)
-                numberOfClicks = 0
-            }
-    }
-
-    PreferenceItem(title = title, description = version, onItemClick = onClick)
-}
-
-@Composable
-private fun AboutItem(onAboutClick: () -> Unit) {
-    PreferenceItem(
-        title = stringResource(id = R.string.preference_title_about),
-        onItemClick = onAboutClick
-    )
-}
-
-@Composable
 private fun ThemeItem(
     currentTheme: AppThemeOptions,
-    onThemeUpdate: (AppThemeOptions) -> Unit
+    onThemeUpdate: (AppThemeOptions) -> Unit,
 ) {
     var isDialogOpen by remember { mutableStateOf(false) }
 
     PreferenceItem(
         title = stringResource(id = R.string.preference_title_app_theme),
         description = stringResource(id = currentTheme.titleRes),
-        onItemClick = { isDialogOpen = true }
+        onItemClick = { isDialogOpen = true },
     )
-
-    AppThemeDialog(
-        isDialogOpen = isDialogOpen,
-        onDismissRequest = { isDialogOpen = false },
-        currentTheme = currentTheme,
-        onThemeUpdate = onThemeUpdate
-    )
+  AppTheme(currentTheme = currentTheme, onThemeUpdate = onThemeUpdate)
+//    AppThemeDialog(
+//        isDialogOpen = isDialogOpen,
+//        onDismissRequest = { isDialogOpen = false },
+//        currentTheme = currentTheme,
+//        onThemeUpdate = onThemeUpdate
+//    )
 }
 
 @Composable
@@ -198,6 +170,42 @@ private fun Separator() {
             .fillMaxWidth()
             .background(MaterialTheme.colors.onSecondary.copy(alpha = 0.7F))
     )
+}
+
+@Composable
+private  fun AppTheme( currentTheme: AppThemeOptions,
+                       onThemeUpdate: (AppThemeOptions) -> Unit){
+    Column(modifier=Modifier.padding(bottom = 60.dp)) {
+
+        AppThemeOptions.values().forEach { item ->
+            val isSelected = currentTheme.id == item.id
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                    .selectable(
+                        selected = isSelected,
+                        onClick = {
+                            onThemeUpdate(item)
+                        }
+                    )
+            ) {
+                RadioButton(
+                    selected = isSelected,
+                    onClick = {
+                        onThemeUpdate(item)
+                    }
+                )
+                Text(
+                    text = stringResource(id = item.titleRes),
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier.padding(start = 10.dp)
+                )
+            }
+        }
+    }
 }
 
 private const val EasterEggUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"

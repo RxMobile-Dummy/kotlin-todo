@@ -1,6 +1,6 @@
-package com.remindme.search.presentation
+package com.remindme.searchTask.presentation
 
-import com.remindme.search.model.TaskSearchItem
+import com.remindme.searchTask.model.TaskSearchItem
 
 /**
  * Represents the possible UI stated of Search screen.

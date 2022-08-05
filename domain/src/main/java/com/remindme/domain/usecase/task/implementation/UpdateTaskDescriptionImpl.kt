@@ -11,7 +11,7 @@ class UpdateTaskDescriptionImpl @Inject constructor(
     private val updateTask: UpdateTask
 ) : UpdateTaskDescription {
 
-    override suspend fun invoke(taskId: Int?, description: String) {
+    override suspend fun invoke(taskId: Long?, description: String) {
         val task = loadTask(taskId) ?: return
         val updatedTask = task.copy(description = description)
         updateTask(updatedTask)

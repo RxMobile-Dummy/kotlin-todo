@@ -11,7 +11,7 @@ class UpdateTaskCategoryImpl @Inject constructor(
     private val updateTask: UpdateTask
 ) : UpdateTaskCategory {
 
-    override suspend fun invoke(taskId: Int?, categoryId: Long?) {
+    override suspend fun invoke(taskId: Long?, categoryId: Long?) {
         val task = loadTask(taskId) ?: return
         val updatedTask = task.copy(categoryId = categoryId)
         updateTask(updatedTask)

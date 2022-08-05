@@ -4,38 +4,69 @@ import android.app.AlarmManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import com.remindme.domain.interactor.NotificationInteractor
+import com.remindme.domain.repository.TaskRepository
 import com.remindme.domain.usecase.alarm.RescheduleFutureAlarms
+import com.remindme.domain.usecase.alarm.ScheduleNextAlarm
 import com.remindme.domain.usecase.alarm.ShowAlarm
 import com.remindme.domain.usecase.alarm.SnoozeAlarm
 import com.remindme.domain.usecase.task.CompleteTask
+import com.remindme.preference.localData.Notification
+import com.remindme.preference.localData.NotificationImpl
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
 //import org.koin.core.component.KoinComponent
 //import org.koin.core.component.inject
 import javax.inject.Inject
+import androidx.datastore.preferences.preferencesDataStore
 
 /**
  * [BroadcastReceiver] to be notified by the [android.app.AlarmManager].
  */
-internal class TaskReceiver : BroadcastReceiver() /*KoinComponent*/ {
+@AndroidEntryPoint
+class TaskReceiver @Inject constructor() : HiltBroadcastReceiver() /*KoinComponent*/ {
 
-    @Inject lateinit var coroutineScope: CoroutineScope
 
-    @Inject lateinit var completeTaskUseCase: CompleteTask
+    //lateinit var prefsDataStore: DataStore<Preferences>
 
-    @Inject lateinit var showAlarmUseCase: ShowAlarm
+    @Inject
+    lateinit var coroutineScope: CoroutineScope
 
-    @Inject lateinit var snoozeAlarmUseCase: SnoozeAlarm
+    @Inject
+    lateinit var completeTaskUseCase: CompleteTask
 
-    @Inject lateinit var rescheduleUseCase: RescheduleFutureAlarms
+    @Inject
+    lateinit var showAlarmUseCase: ShowAlarm
+
+    @Inject
+    lateinit var snoozeAlarmUseCase: SnoozeAlarm
+
+    @Inject
+    lateinit var rescheduleUseCase: RescheduleFutureAlarms
+    private var notification: Notification? = null
+    private val Context.appManagerDataStore
+            by preferencesDataStore(name = "Notification")
 
     override fun onReceive(context: Context?, intent: Intent?) {
+        super.onReceive(context, intent)
         logcat { "onReceive() - intent ${intent?.action}" }
 
+        coroutineScope = CoroutineScope(Dispatchers.Default)
+        notification = NotificationImpl(context!!.appManagerDataStore)
+
         coroutineScope.launch {
-            handleIntent(intent)
+            notification?.getNotificationState()?.collect { state ->
+                logcat { "status() - intent ${state}" }
+                if (state) {
+                    handleIntent(intent)
+                }
+            }
         }
     }
 
@@ -43,13 +74,13 @@ internal class TaskReceiver : BroadcastReceiver() /*KoinComponent*/ {
         when (intent?.action) {
             ALARM_ACTION -> getTaskId(intent)?.let { showAlarmUseCase(it) }
             COMPLETE_ACTION -> getTaskId(intent)?.let { completeTaskUseCase(it) }
-            SNOOZE_ACTION -> getTaskId(intent)?.let { snoozeAlarmUseCase(it.toLong()) }
+            SNOOZE_ACTION -> getTaskId(intent)?.let { snoozeAlarmUseCase(it) }
             Intent.ACTION_BOOT_COMPLETED,
             AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED -> rescheduleUseCase()
             else -> logcat(LogPriority.ERROR) { "Action not supported" }
         }
 
-    private fun getTaskId(intent: Intent?) = intent?.getIntExtra(EXTRA_TASK, 0)
+    private fun getTaskId(intent: Intent?) = intent?.getLongExtra(EXTRA_TASK, 0)
 
     companion object {
 
@@ -62,3 +93,9 @@ internal class TaskReceiver : BroadcastReceiver() /*KoinComponent*/ {
         const val SNOOZE_ACTION = "com.remindme.SNOOZE"
     }
 }
+
+
+
+
+
+

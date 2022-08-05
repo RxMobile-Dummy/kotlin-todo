@@ -1,11 +1,10 @@
-package com.remindme.category.presentation.list
+package com.remindme.category_task.presentation.list
 
-import com.remindme.category.mapper.CategoryMapper
+import com.remindme.category_task.mapper.CategoryMapper
 import com.remindme.categoryapi.presentation.CategoryListViewModel
 import com.remindme.categoryapi.presentation.CategoryState
 import com.remindme.domain.usecase.category.LoadAllCategories
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -24,4 +23,6 @@ class CategoryListViewModelImpl @Inject constructor(
             }
         }
     }
+
+
 }

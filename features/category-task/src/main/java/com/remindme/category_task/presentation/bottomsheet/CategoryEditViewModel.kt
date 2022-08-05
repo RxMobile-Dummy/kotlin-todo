@@ -1,8 +1,8 @@
-package com.remindme.category.presentation.bottomsheet
+package com.remindme.category_task.presentation.bottomsheet
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.remindme.category.mapper.CategoryMapper
+import com.remindme.category_task.mapper.CategoryMapper
 import com.remindme.categoryapi.model.Category
 import com.remindme.domain.usecase.category.DeleteCategory
 import com.remindme.domain.usecase.category.UpdateCategory

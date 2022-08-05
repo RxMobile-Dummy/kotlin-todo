@@ -1,12 +1,13 @@
 package com.remindme.local.mapper
 
+import javax.inject.Inject
 import com.remindme.local.model.TaskWithCategory as LocalTaskWithCategory
 import com.remindme.repository.model.TaskWithCategory as RepoTaskWithCategory
 
 /**
  * Maps Task With Category between Repository and Local.
  */
-class TaskWithCategoryMapper(
+class TaskWithCategoryMapper @Inject constructor(
     private val taskMapper: TaskMapper,
     private val categoryMapper: CategoryMapper
 ) {

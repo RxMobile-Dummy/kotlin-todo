@@ -38,13 +38,16 @@ class DatabaseProvider @Inject constructor(
     private fun buildDatabase(): TaskDatabase =
         Room.databaseBuilder(context, TaskDatabase::class.java, "todo-db")
             .addCallback(onCreateDatabase())
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,)
             .build()
 
     private fun onCreateDatabase() =
         object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
+                    if(database != null && database?.categoryDao()?.getAllCategory()?.size!! > 0){
+                        database?.categoryDao()?.cleanTable()
+                    }
                 coroutineScope.launch {
                     database?.categoryDao()?.insertCategory(getDefaultCategoryList())
                 }

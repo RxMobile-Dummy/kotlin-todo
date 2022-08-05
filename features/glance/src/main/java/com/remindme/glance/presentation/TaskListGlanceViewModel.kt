@@ -22,9 +22,9 @@ class TaskListGlanceViewModel @Inject constructor(
 ): ViewModel() {
 
 
-    fun loadTaskList(categoryId: Long? = null): Flow<List<Task>> =
+    fun loadTaskList(categoryId: Long? = 0): Flow<List<Task>> =
         loadAllTasksUseCase(categoryId = categoryId).map { taskMapper.toView(it) }
 
-    suspend fun updateTaskAsCompleted(taskId: Int?) =
+    suspend fun updateTaskAsCompleted(taskId: Long?) =
         updateTaskStatus(taskId)
 }

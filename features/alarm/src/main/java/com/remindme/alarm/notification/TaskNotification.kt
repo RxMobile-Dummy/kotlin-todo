@@ -4,6 +4,8 @@ import android.app.PendingIntent
 import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.remindme.alarm.R
 import com.remindme.alarm.TaskReceiver
@@ -30,7 +32,7 @@ class TaskNotification @Inject constructor(
         logcat { "Showing notification for '${task.title}'" }
         val builder = buildNotification(task)
         builder.addAction(getCompleteAction(task))
-        task.id?.let { context.getNotificationManager()?.notify(it?.toInt()!!, builder.build()) }
+         context.getNotificationManager()?.notify(task.id.toInt(), builder.build())
     }
 
     /**
@@ -41,7 +43,7 @@ class TaskNotification @Inject constructor(
     fun showRepeating(task: Task) {
         logcat { "Showing repeating notification for '${task.title}'" }
         val builder = buildNotification(task)
-        context.getNotificationManager()?.notify(task.id!!.toInt(), builder.build())
+        context.getNotificationManager()?.notify(task.id.toInt(), builder.build())
     }
 
     /**
@@ -72,10 +74,19 @@ class TaskNotification @Inject constructor(
 
         return TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(openTaskIntent)
-            getPendingIntent(
-                REQUEST_CODE_OPEN_TASK,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                getPendingIntent(
+                    REQUEST_CODE_OPEN_TASK,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+                getPendingIntent(
+                    REQUEST_CODE_OPEN_TASK,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+
+            }
+
         }
     }
 

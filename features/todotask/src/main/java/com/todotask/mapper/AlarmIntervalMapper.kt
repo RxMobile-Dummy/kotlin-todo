@@ -6,13 +6,14 @@ import com.todotask.model.AlarmInterval.MONTHLY
 import com.todotask.model.AlarmInterval.NEVER
 import com.todotask.model.AlarmInterval.WEEKLY
 import com.todotask.model.AlarmInterval.YEARLY
+import javax.inject.Inject
 import com.remindme.domain.model.AlarmInterval as DomainInterval
 import com.todotask.model.AlarmInterval as ViewDataInterval
 
 /**
  * Maps Alarm Interval between Domain and View.
  */
-class AlarmIntervalMapper {
+class AlarmIntervalMapper @Inject constructor() {
 
     /**
      * Maps Alarm Interval from View Data to Domain.

@@ -35,7 +35,7 @@ import com.remindme.designsystem.components.RemindMeLoadingContent
 import com.todotask.presentation.detail.main.CategoryId
 
 @Composable
-internal fun CategorySelection(
+ fun CategorySelection(
     state: CategoryState,
     currentCategory: Long?,
     onCategoryChange: (CategoryId) -> Unit,
@@ -56,7 +56,30 @@ internal fun CategorySelection(
         }
     }
 }
-
+@Composable
+fun editCategorySelection(
+    state: CategoryState,
+    currentCategory: Long?,
+    onCategoryChange: (CategoryId) -> Unit,
+    modifier: Modifier = Modifier,
+    isEditTextEnabled:Boolean,
+) {
+    Box(
+        modifier = modifier.height(56.dp),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        when (state) {
+            CategoryState.Loading -> RemindMeLoadingContent()
+            is CategoryState.Loaded -> editLoadedCategoryList(
+                categoryList = state.categoryList,
+                currentCategory = currentCategory,
+                isEditTextEnabled,
+                onCategoryChange = onCategoryChange
+            )
+            CategoryState.Empty -> EmptyCategoryList()
+        }
+    }
+}
 @Composable
 private fun LoadedCategoryList(
     categoryList: List<Category>,
@@ -76,6 +99,46 @@ private fun LoadedCategoryList(
                     selectedState,
                     onCategoryChange = { id -> onCategoryChange(CategoryId(id)) }
                 )
+            }
+        )
+    }
+}
+
+@Composable
+private fun editLoadedCategoryList(
+    categoryList: List<Category>,
+    currentCategory: Long?,
+    isEditTextEnabled: Boolean,
+    onCategoryChange: (CategoryId) -> Unit
+) {
+    val currentItem = categoryList.find { category -> category.id == currentCategory }
+    val selectedState = remember { mutableStateOf(currentItem) }
+    LazyRow {
+        items(
+            items = categoryList,
+            itemContent = { category ->
+                val isSelected = category == selectedState.value
+                if(isEditTextEnabled){
+                    CategoryItemChip(
+                        category = category,
+                        isSelected = isSelected,
+                        selectedState,
+                         onCategoryChange = { id -> onCategoryChange(CategoryId(id)) }
+                    )
+                }else
+                {
+                    if(isSelected)
+                    {
+                        editCategoryItemChip(
+                            category = category,
+                            isSelected = isSelected,
+                            selectedState,
+                            // onCategoryChange = { id -> onCategoryChange(CategoryId(id)) }
+                        )
+                    }
+                }
+
+
             }
         )
     }
@@ -112,6 +175,44 @@ private fun CategoryItemChip(
                         val newCategory = toggleChip(selectedState, category)
                         selectedState.value = newCategory
                         onCategoryChange(newCategory?.id)
+                    }
+                )
+        ) {
+            Text(
+                modifier = Modifier.padding(8.dp),
+                color = if (isSelected) {
+                    MaterialTheme.colors.background
+                } else {
+                    MaterialTheme.colors.onSecondary
+                },
+                text = category.name
+            )
+        }
+    }
+}
+@Composable
+private fun editCategoryItemChip(
+    category: Category,
+    isSelected: Boolean = false,
+    selectedState: MutableState<Category?>,
+   // onCategoryChange: (Long?) -> Unit
+) {
+    Surface(
+        modifier = Modifier.padding(end = 8.dp),
+        shape = CircleShape,
+        color = if (isSelected) Color(category.color) else MaterialTheme.colors.background,
+        border = chipBorder(isSelected)
+    ) {
+        Row(
+            modifier = Modifier
+                .semantics { chipName = category.name }
+                .toggleable(
+                    value = isSelected,
+                    role = Role.RadioButton,
+                    onValueChange = {
+                        val newCategory = toggleChip(selectedState, category)
+                        selectedState.value = newCategory
+                     //   onCategoryChange(newCategory?.id)
                     }
                 )
         ) {

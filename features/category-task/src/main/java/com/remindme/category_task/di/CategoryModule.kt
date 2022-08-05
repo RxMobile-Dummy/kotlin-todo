@@ -1,23 +1,18 @@
-package com.remindme.category.di
+package com.remindme.category_task.di
 
-import com.remindme.category.mapper.CategoryMapper
-import com.remindme.category.presentation.bottomsheet.CategoryAddViewModel
-import com.remindme.category.presentation.bottomsheet.CategoryEditViewModel
-import com.remindme.category.presentation.list.CategoryListViewModelImpl
+import com.remindme.category_task.mapper.CategoryMapper
+import com.remindme.category_task.presentation.bottomsheet.CategoryAddViewModel
+import com.remindme.category_task.presentation.bottomsheet.CategoryEditViewModel
+import com.remindme.category_task.presentation.list.CategoryListViewModelImpl
 import com.remindme.categoryapi.presentation.CategoryListViewModel
 import com.remindme.domain.usecase.category.AddCategory
 import com.remindme.domain.usecase.category.DeleteCategory
 import com.remindme.domain.usecase.category.LoadAllCategories
 import com.remindme.domain.usecase.category.UpdateCategory
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
-import dagger.hilt.migration.DisableInstallInCheck
-import javax.inject.Singleton
 
 //import org.koin.androidx.viewmodel.dsl.viewModel
 //import org.koin.dsl.module
@@ -57,7 +52,7 @@ class CategoryModule {
     fun getCategoryEditViewModel(
         updateCategory: UpdateCategory,
         deleteCategory: DeleteCategory,
-        categoryMapper:CategoryMapper
+        categoryMapper: CategoryMapper
     ): CategoryEditViewModel {
         return CategoryEditViewModel(updateCategory, deleteCategory,categoryMapper)
     }

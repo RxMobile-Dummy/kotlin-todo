@@ -1,4 +1,4 @@
-package com.remindme.category.mapper
+package com.remindme.category_task.mapper
 
 import android.graphics.Color
 import com.remindme.core.extension.toStringColor

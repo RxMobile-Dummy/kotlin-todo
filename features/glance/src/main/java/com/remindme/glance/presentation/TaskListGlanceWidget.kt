@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import androidx.activity.ComponentActivity
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -53,32 +54,34 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.remindme.domain.usecase.task.UpdateTaskStatus
 import com.remindme.domain.usecase.taskwithcategory.LoadUncompletedTasks
 import com.remindme.glance.R
-import com.remindme.glance.mapper.TaskMapper
 import com.remindme.glance.model.Task
 import com.remindme.navigation.DestinationDeepLink
+import dagger.Module
+import dagger.Provides
+import dagger.assisted.Assisted
+import dagger.hilt.EntryPoints
+import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import java.util.EnumSet.of
 import javax.inject.Inject
 
- class TaskListGlanceWidget @Inject constructor(): GlanceAppWidget(), ViewModelStoreOwner {
+class TaskListGlanceWidget @Inject constructor() : GlanceAppWidget() {
 
-   // var context: Context = appContext
-
-    var viewModel: TaskListGlanceViewModel = ViewModelProvider(this).get(TaskListGlanceViewModel::class.java)
+        companion object{
+            lateinit var viewModel: TaskListGlanceViewModel
+            lateinit var context:Context
+        }
 
     private val coroutineScope: CoroutineScope = MainScope()
 
     private var taskList by mutableStateOf<List<Task>>(emptyList())
 
 
-
-     init {
-
-     }
     @SuppressLint("CoroutineCreationDuringComposition")
     @OptIn(ExperimentalUnitApi::class)
     @Composable
@@ -169,7 +172,7 @@ import javax.inject.Inject
     private fun getHomeIntent(): Intent =
         Intent(Intent.ACTION_VIEW, DestinationDeepLink.getTaskHomeUri())
 
-    private fun getTaskIntent(taskId: Int?): Intent =
+    private fun getTaskIntent(taskId: Long?): Intent =
         Intent(Intent.ACTION_VIEW, DestinationDeepLink.getTaskDetailUri(taskId))
 
     /**
@@ -179,17 +182,12 @@ import javax.inject.Inject
      * For more information about this behavior, please access:
      * https://issuetracker.google.com/issues/211022821
      */
-    fun loadData(
-    ) {
 
+    fun loadData() {
         coroutineScope.launch {
             taskList = viewModel.loadTaskList().first()
-           // updateAll(context)
+            updateAll(context)
         }
-//        coroutineScope.launch {
-//            taskList = viewModel.loadTaskList().first()
-//            updateAll(context)
-//        }
     }
 
 
@@ -198,10 +196,8 @@ import javax.inject.Inject
         coroutineScope.cancel()
     }
 
-     override fun getViewModelStore(): ViewModelStore {
-         return ViewModelStore().apply {  }
-     }
- }
+
+}
 
 
 

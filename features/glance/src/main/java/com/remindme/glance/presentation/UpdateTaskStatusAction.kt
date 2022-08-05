@@ -9,7 +9,7 @@ import com.remindme.domain.interactor.GlanceInteractor
 //import org.koin.core.component.inject
 import javax.inject.Inject
 
-internal class UpdateTaskStatusAction : ActionCallback /*KoinComponent*/ {
+internal class UpdateTaskStatusAction @Inject constructor() : ActionCallback /*KoinComponent*/ {
 
     @Inject lateinit var viewModel: TaskListGlanceViewModel
 
@@ -17,7 +17,7 @@ internal class UpdateTaskStatusAction : ActionCallback /*KoinComponent*/ {
 
 
     override suspend fun onRun(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        val taskId = parameters[TaskIdKey]?.toInt() ?: return
+        val taskId = parameters[TaskIdKey]?.toLong() ?: return
         viewModel.updateTaskAsCompleted(taskId)
         glanceInteractor.onTaskListUpdated()
     }

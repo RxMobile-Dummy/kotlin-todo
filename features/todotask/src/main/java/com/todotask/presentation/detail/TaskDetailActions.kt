@@ -4,7 +4,7 @@ import com.todotask.model.AlarmInterval
 import com.todotask.presentation.detail.main.CategoryId
 import java.util.Calendar
 
-internal data class TaskDetailActions(
+data class TaskDetailActions(
     val onTitleChange: (String) -> Unit = {},
     val onDescriptionChange: (String) -> Unit = {},
     val onCategoryChange: (CategoryId) -> Unit = {},

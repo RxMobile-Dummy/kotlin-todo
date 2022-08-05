@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 @HiltViewModel
 class AddTaskViewModel @Inject constructor(
-    private val addTaskUseCase: AddTask
+    private val addTaskUseCase: AddTask,
 ) : ViewModel() {
 
     fun addTask(title: String, categoryId: CategoryId?) {
@@ -19,7 +19,7 @@ class AddTaskViewModel @Inject constructor(
 
         viewModelScope.launch {
             val task = Task(title = title, categoryId = categoryId?.value)
-            addTaskUseCase.invoke(task )
+            addTaskUseCase.invoke(task)
         }
     }
 }

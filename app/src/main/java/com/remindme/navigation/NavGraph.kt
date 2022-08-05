@@ -3,6 +3,7 @@ package com.remindme.navigation
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.window.SplashScreen
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -21,7 +22,11 @@ import com.todotask.presentation.detail.main.TaskDetailSection
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.remindme.alarmapi.AlarmPermission
 import com.remindme.preference.model.AppThemeOptions
+import com.remindme.ui.theme.presentation.home.SplashScreen
+import com.todotask.presentation.add.AddTaskBottomSheet
+import com.todotask.presentation.detail.TaskDetailActions
 
 /**
  * Navigation Graph to control the RemindMe navigation.
@@ -31,7 +36,8 @@ import com.remindme.preference.model.AppThemeOptions
 @OptIn(ExperimentalAnimationApi::class)
 @Suppress("LongMethod", "MagicNumber")
 @Composable
-fun NavGraph(startDestination: String,context: Context) {
+fun NavGraph(startDestination: String,alarmPermission: AlarmPermission,actions1: TaskDetailActions,
+) {
     val navController = rememberAnimatedNavController()
     val context = LocalContext.current
     val appThemeOptions:AppThemeOptions = AppThemeOptions.LIGHT
@@ -58,7 +64,9 @@ fun NavGraph(startDestination: String,context: Context) {
                 onTaskClick = actions.openTaskDetail,
                 onAboutClick = actions.openAbout,
                 onTrackerClick = actions.openTracker,
-                appThemeOptions = appThemeOptions,context=context
+                appThemeOptions = appThemeOptions,
+                actions1 =actions1,
+                navController = navController
             )
         }
 
@@ -81,10 +89,48 @@ fun NavGraph(startDestination: String,context: Context) {
         ) { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
             TaskDetailSection(
-                taskId = arguments.getInt(DestinationArgs.TaskId),
+                taskId = arguments.getLong(DestinationArgs.TaskId),
                 onUpPress = actions.onUpPress,
-                context = context
+                alarmPermission = alarmPermission
+
             )
+        }
+        composable(
+            route = Destinations.Splash,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            },
+        ) { backStackEntry ->
+            SplashScreen(navController =navController )
+        }
+        composable(
+            route = Destinations.AddTask,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    animationSpec = tween(500)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    animationSpec = tween(500)
+                )
+            },
+        ) { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            AddTaskBottomSheet(onUpPress = {
+                navController.popBackStack()
+            },navController)
         }
 
         composable(
@@ -125,7 +171,7 @@ fun NavGraph(startDestination: String,context: Context) {
 
 internal data class Actions(val navController: NavHostController, val context: Context) {
 
-    val openTaskDetail: (Int?) -> Unit = { taskId ->
+    val openTaskDetail: (Long?) -> Unit = { taskId ->
         navController.navigate("${Destinations.TaskDetail}/$taskId")
     }
 

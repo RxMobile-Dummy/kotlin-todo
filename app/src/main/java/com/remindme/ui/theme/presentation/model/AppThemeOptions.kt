@@ -1,4 +1,4 @@
-package com.remindme.presentation.model
+package com.remindme.ui.theme.presentation.model
 
 /**
  * Enum to represent the app theme selected by the user.

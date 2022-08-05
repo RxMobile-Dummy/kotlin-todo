@@ -21,6 +21,17 @@ object Destinations {
     const val TaskDetail = "task_detail"
 
     /**
+     * Add Task destination.
+     */
+    const val AddTask = "add_task"
+
+
+    /**
+     * Splash destination.
+     */
+    const val Splash = "splash"
+
+    /**
      * About destination.
      */
     const val About = "about"
@@ -64,7 +75,7 @@ object DestinationDeepLink {
      *
      * @return the [Destinations.TaskDetail] deep link with the argument set
      */
-    fun getTaskDetailUri(taskId: Int?): Uri =
+    fun getTaskDetailUri(taskId: Long?): Uri =
         "$BaseUri/${DestinationArgs.TaskId}=$taskId".toUri()
 
     /**

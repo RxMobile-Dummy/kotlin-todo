@@ -9,5 +9,5 @@ interface CancelAlarm {
      *
      * @param taskId the task id
      */
-    suspend operator fun invoke(taskId: Int?)
+    suspend operator fun invoke(taskId: Long?)
 }
