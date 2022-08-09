@@ -18,26 +18,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
-//import org.koin.androidx.viewmodel.dsl.viewModel
-//import org.koin.dsl.module
 //
-///**
+//**
 // * Task dependency injection module.
 // */
-////val taskModule = module {
-////
-////    // Presentation
-////    viewModel { TaskListViewModel(get(), get(), get()) }
-////    viewModel { TaskDetailViewModel(get(), get(), get(), get(), get()) }
-////    viewModel { TaskAlarmViewModel(get(), get(), get(), get()) }
-////    viewModel { AddTaskViewModel(get()) }
-////
-////    // Mappers
-////    factory { AlarmIntervalMapper() }
-////    factory { TaskMapper(get()) }
-////    factory { TaskWithCategoryMapper(get(), get()) }
-////    factory { CategoryMapper() }
-////}
 @Module
 @InstallIn(SingletonComponent::class)
 class TaskModule {

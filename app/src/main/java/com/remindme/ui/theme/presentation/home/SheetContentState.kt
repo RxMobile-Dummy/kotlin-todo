@@ -5,7 +5,7 @@ import com.remindme.categoryapi.model.Category
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
-internal sealed class SheetContentState  {
+   sealed class SheetContentState  {
 
     @Parcelize
     object Empty : SheetContentState(), Parcelable

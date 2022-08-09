@@ -21,17 +21,6 @@ import javax.inject.Singleton
 /**
  * Glance dependency injection module.
  */
-//val glanceModule = module {
-//
-//    // Presentation
-//    factory { TaskListGlanceViewModel(get(), get(), get()) }
-//
-//    // Interactor
-//    factory<GlanceInteractor> { GlanceInteractorImpl() }
-//
-//    // Mapper
-//    factory { TaskMapper() }
-//}
 @Module
 @InstallIn(SingletonComponent::class)
 class GlanceModule {

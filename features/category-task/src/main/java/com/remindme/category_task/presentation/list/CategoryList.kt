@@ -1,6 +1,7 @@
 package com.remindme.category_task.presentation.list
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -40,9 +41,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.remindme.category_task.R
 import com.remindme.categoryapi.model.Category
-import com.remindme.categoryapi.presentation.CategoryListViewModel
 import com.remindme.categoryapi.presentation.CategoryState
 import com.remindme.designsystem.RemindMeTheme
 import com.remindme.designsystem.components.AddFloatingButton
@@ -61,23 +63,26 @@ import kotlin.math.roundToInt
 @Composable
 fun CategoryListSection(
     modifier: Modifier,
-    onShowBottomSheet: (Category?) -> Unit
+    onEditClick:(Category?) -> Unit,
+    onShowBottomSheet: (Category?) -> Unit,
+    navController: NavController
 ) {
     CategoryListLoader(
         modifier = modifier,
-        onItemClick = onShowBottomSheet,
-        onAddClick = { onShowBottomSheet(null) }
+        onItemClick = onEditClick,
+        onAddClick = { onShowBottomSheet(null) },
+        navController = navController
     )
 }
 
 @Composable
 private fun CategoryListLoader(
     modifier: Modifier,
-    viewModel: CategoryListViewModel = hiltViewModel(),
+    viewModel: CategoryListViewModelImpl = hiltViewModel(),
     onItemClick: (Category) -> Unit,
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
+    navController: NavController
 ) {
-
     val viewState by remember(viewModel) { viewModel.loadCategories() }
         .collectAsState(initial = CategoryState.Loading)
 
@@ -85,7 +90,8 @@ private fun CategoryListLoader(
         modifier = modifier,
         viewState = viewState,
         onItemClick = onItemClick,
-        onAddClick = onAddClick
+        onAddClick = onAddClick,
+        navController = navController
     )
 }
 
@@ -95,7 +101,8 @@ private fun CategoryListScaffold(
     modifier: Modifier,
     viewState: CategoryState,
     onItemClick: (Category) -> Unit,
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
+    navController: NavController
 ) {
     BoxWithConstraints {
         val fabPosition = if (this.maxHeight > maxWidth) FabPosition.Center else FabPosition.End
@@ -113,7 +120,10 @@ private fun CategoryListScaffold(
                 when (state) {
                     CategoryState.Loading -> RemindMeLoadingContent()
                     CategoryState.Empty -> CategoryListEmpty()
-                    is CategoryState.Loaded -> CategoryListContent(state.categoryList, onItemClick)
+                     is CategoryState.Loaded  ->{
+                        val categoryList = state.categoryList
+                        CategoryListContent(categoryList, onItemClick, navController =navController )
+                    }
                 }
             }
         }
@@ -123,14 +133,20 @@ private fun CategoryListScaffold(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Suppress("MagicNumber")
-private fun CategoryListContent(categoryList: List<Category>, onItemClick: (Category) -> Unit) {
+private fun CategoryListContent(categoryList: List<Category>, onItemClick: (Category) -> Unit,navController: NavController) {
     BoxWithConstraints(modifier = Modifier.padding(start = 8.dp, end = 8.dp)) {
         val cellCount: Int = max(2F, maxWidth.value / 250).roundToInt()
         LazyVerticalGrid(columns = GridCells.Fixed(cellCount)) {
             items(
                 items = categoryList,
                 itemContent = { category ->
-                    CategoryItem(category = category, onItemClick = onItemClick)
+                    CategoryItem(category = category, onItemClick = {
+                        navController.currentBackStackEntry?.savedStateHandle?.apply {
+                       set("category",category)
+                        }
+                        navController.navigate("add_category/${category}")
+
+                    })
                 }
             )
         }
@@ -148,7 +164,9 @@ private fun CategoryItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(all = 8.dp)
-            .clickable { onItemClick(category) }
+            .clickable {
+                onItemClick(category)
+            }
     ) {
         Column(
             verticalArrangement = Arrangement.Center,

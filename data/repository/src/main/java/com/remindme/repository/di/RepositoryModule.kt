@@ -24,27 +24,10 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-//import org.koin.dsl.module
-
 /**
  * Repository dependency injection module.
  */
-//val repositoryModule = module {
-//
-//    // Repositories
-//    single<TaskRepository> { TaskRepositoryImpl(get(), get()) }
-//    single<CategoryRepository> { CategoryRepositoryImpl(get(), get()) }
-//    single<TaskWithCategoryRepository> { TaskWithCategoryRepositoryImpl(get(), get()) }
-//    single<SearchRepository> { SearchRepositoryImpl(get(), get()) }
-//    single<PreferencesRepository> { PreferencesRepositoryImpl(get(), get()) }
-//
-//    // Mappers
-//    factory { AlarmIntervalMapper() }
-//    factory { TaskMapper(get()) }
-//    factory { CategoryMapper() }
-//    factory { TaskWithCategoryMapper(get(), get()) }
-//    factory { AppThemeOptionsMapper() }
-//}
+
 @Module
 @InstallIn(SingletonComponent::class)
  class RepositoryModule {

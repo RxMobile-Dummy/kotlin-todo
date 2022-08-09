@@ -1,5 +1,8 @@
 package com.remindme.preference.presentation
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,6 +12,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -17,27 +21,42 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStoreFile
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.datastore.preferences.preferencesDataStoreFile
 import com.remindme.preference.R
 import com.remindme.preference.localData.NotificationImpl
 import com.todotask.model.AlarmInterval
 import com.todotask.presentation.detail.TaskDetailActions
 import androidx.lifecycle.lifecycleScope
+import com.remindme.preference.localData.Notification
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-internal fun NotificationPreferenceItem(
+internal  fun NotificationPreferenceItem(
     title: String,
     description: String? = null,
     onItemClick: () -> Unit = { },
-    change: Boolean, onCheckedChange: (Boolean) -> Unit
+    change: Boolean, onCheckedChange: (Boolean) -> Unit,    prefsDataStore: DataStore<Preferences>
 ) {
     val mCheckedState = remember { mutableStateOf(false) }
-    var notificationImpl: NotificationImpl? = null
     val coroutineScope: CoroutineScope = MainScope()
+    var notificationImpl: Notification? = null
+    notificationImpl = NotificationImpl(prefsDataStore)
 
+    coroutineScope.launch {
+        notificationImpl.getNotificationState().collect {state->
+            mCheckedState.value = state;
+            Log.e("value",state.toString())
+        }
+    }
     Column(
         modifier = Modifier
             .clickable { onItemClick() }
@@ -65,14 +84,14 @@ internal fun NotificationPreferenceItem(
                 checked = mCheckedState.value,
                 onCheckedChange = {
                     mCheckedState.value = it
-                    if (mCheckedState.value) {
+                    if (it) {
                         coroutineScope.launch {
-                            notificationImpl?.saveNotificationState(true)
+                            notificationImpl.saveNotificationState(it)
 
                         }
                     } else {
                         coroutineScope.launch {
-                            notificationImpl?.saveNotificationState(false)
+                            notificationImpl.saveNotificationState(it)
                         }
 
                     }
@@ -87,6 +106,8 @@ internal fun NotificationPreferenceItem(
         }
     }
 }
+
+
 
 @Composable
 internal fun PreferenceItem(
@@ -198,7 +219,6 @@ private fun AlarmListItem(
                 selected = title == selectedOption,
                 onClick = {
                     onOptionSelected(title)
-
                 }
             )
     ) {

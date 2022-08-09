@@ -21,26 +21,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-//import org.koin.android.ext.koin.androidContext
-//import org.koin.dsl.module
-
 /**
  * Alarm dependency injection module.
  */
-//val alarmModule = module {
-//
-//    factory { TaskNotificationScheduler(androidContext()) }
-//    factory { TaskNotificationChannel(androidContext()) }
-//    factory { TaskNotification(androidContext(), get()) }
-//
-//    factory { TaskMapper() }
-//
-//    factory<AlarmInteractor> { AlarmInteractorImpl(get()) }
-//    factory<NotificationInteractor> { NotificationInteractorImpl(get(), get()) }
-//
-//    factory<AndroidVersion> { AndroidVersionImpl() }
-//    factory<AlarmPermission> { AlarmPermissionImpl(get(), get()) }
-//}
 @Module
 @InstallIn(SingletonComponent::class)
 class AlarmModule{

@@ -4,10 +4,11 @@ import com.remindme.category_task.mapper.CategoryMapper
 import com.remindme.categoryapi.presentation.CategoryListViewModel
 import com.remindme.categoryapi.presentation.CategoryState
 import com.remindme.domain.usecase.category.LoadAllCategories
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
-
+@HiltViewModel
 class CategoryListViewModelImpl @Inject constructor(
     private val loadAllCategories: LoadAllCategories,
     private val categoryMapper: CategoryMapper
@@ -23,6 +24,7 @@ class CategoryListViewModelImpl @Inject constructor(
             }
         }
     }
+
 
 
 }

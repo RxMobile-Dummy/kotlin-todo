@@ -1,6 +1,7 @@
 package com.remindme.ui.theme.presentation.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
@@ -33,9 +34,13 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavController
 import com.remindme.category_task.presentation.bottomsheet.CategoryBottomSheet
 import com.remindme.category_task.presentation.list.CategoryListSection
+import com.remindme.categoryapi.presentation.CategoryListViewModel
 import com.remindme.model.HomeSection
 
 import com.remindme.model.HomeSection.*
@@ -53,7 +58,8 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun Home(onTaskClick: (Long?) -> Unit, onAboutClick: () -> Unit,
-         onTrackerClick: () -> Unit,appThemeOptions: AppThemeOptions,actions1: TaskDetailActions,navController: NavController) {
+         onTrackerClick: () -> Unit,appThemeOptions: AppThemeOptions,actions1: TaskDetailActions,navController: NavController, prefsDataStore: DataStore<Preferences>,
+) {
     val (currentSection, setCurrentSection) = rememberSaveable { mutableStateOf(Tasks) }
     val navItems = values().toList()
     val homeModifier = Modifier.padding(bottom = 56.dp)
@@ -73,7 +79,8 @@ fun Home(onTaskClick: (Long?) -> Unit, onAboutClick: () -> Unit,
             actions = actions,
             appThemeOptions= appThemeOptions,
             actions1 =actions1
-        , navController = navController
+        ,   navController = navController,
+           prefsDataStore =prefsDataStore,
         )
     }
 }
@@ -89,8 +96,8 @@ private fun RemindMeHomeScaffold(
     appThemeOptions: AppThemeOptions,
     actions1: TaskDetailActions,
   //  onBottomShow: (@Composable () -> Unit),
-    navController: NavController
-
+    navController: NavController,
+    prefsDataStore: DataStore<Preferences>,
     ) {
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -123,14 +130,14 @@ private fun RemindMeHomeScaffold(
         modalSheetState = modalSheetState,
         sheetContentState = sheetContentState,
         onHideBottomSheet = onHideBottomSheet,
-        navController =  navController
+        navController =  navController,
     ) {
         Scaffold(
             topBar = {
                 RemindMeTopBar(currentSection = homeSection)
             },
             content = {
-                RemindMeContent(homeSection, modifier, actions, onShowBottomSheet,appThemeOptions,actions1,navController)
+                RemindMeContent(homeSection, modifier, actions, onShowBottomSheet,appThemeOptions,actions1,navController,prefsDataStore)
             },
             bottomBar = {
                 RemindMeBottomNav(
@@ -166,17 +173,14 @@ private fun RemindMeBottomSheetLayout(
             ) {
                 when (sheetContentState) {
                     SheetContentState.TaskListSheet ->
-                        //Log.e("click","click")
                         navController.navigate("add_task")
-                   // AddTaskBottomSheet(onHideBottomSheet)
-
-
-                        //AddTaskBottomSheet(onHideBottomSheet = onHideBottomSheet)
                     is SheetContentState.CategorySheet ->
-                        CategoryBottomSheet(
-                            category = sheetContentState.category,
-                            onHideBottomSheet = onHideBottomSheet
-                        )
+                        navController.navigate("add_category")
+
+//                        CategoryBottomSheet(
+//                            category = sheetContentState.category,
+//                            //onHideBottomSheet = onHideBottomSheet,
+//                        )
                     SheetContentState.Empty ->
                         Box(modifier = Modifier.fillMaxSize())
                 }
@@ -198,7 +202,8 @@ private fun RemindMeContent(
   // navigationClick: (@Composable () -> Unit),
     onShowBottomSheet: (SheetContentState) -> Unit,
     appThemeOptions: AppThemeOptions,actions1: TaskDetailActions,
-    navController: NavController
+    navController: NavController,
+    prefsDataStore: DataStore<Preferences>
 ) {
     when (homeSection) {
         Tasks ->
@@ -216,9 +221,18 @@ private fun RemindMeContent(
        Categories ->
             CategoryListSection(
                 modifier = modifier,
+                onEditClick = {category ->
+                   // navController.navigate("add_category/${category}")
+
+                },
                 onShowBottomSheet = { category ->
-                    onShowBottomSheet(SheetContentState.CategorySheet(category))
-                }
+                    navController.currentBackStackEntry?.savedStateHandle?.apply {
+                        set("category",null)
+                    }
+                    navController.navigate("add_category/${null}")
+                    // onShowBottomSheet(SheetContentState.CategorySheet(category))
+                },
+                navController =navController
             )
        Settings ->
             PreferenceSection(
@@ -226,7 +240,8 @@ private fun RemindMeContent(
                 onAboutClick = actions.onAboutClick,
                 onTrackerClick = actions.onTrackerClick,
                 theme = appThemeOptions,
-                actions1 = actions1
+                actions1 = actions1,
+                prefsDataStore = prefsDataStore
             )
 
     }

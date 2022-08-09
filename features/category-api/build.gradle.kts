@@ -41,6 +41,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.4.2")
     implementation("com.google.android.material:material:1.6.1")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0")
+
     // hilt
     implementation ("com.google.dagger:hilt-android:2.42")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")

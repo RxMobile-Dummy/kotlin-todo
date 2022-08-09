@@ -24,8 +24,14 @@ object Destinations {
      * Add Task destination.
      */
     const val AddTask = "add_task"
-
-
+    /**
+     * Add Category destination.
+     */
+    const val AddCategory = "add_category"
+    /**
+     * Add Category destination.
+     */
+    const val EditCategory = "edit_category"
     /**
      * Splash destination.
      */
@@ -51,6 +57,9 @@ object DestinationArgs {
      * Argument to be passed to [Destinations.TaskDetail] representing the task id to be detailed.
      */
     const val TaskId = "task_id"
+
+    const val Category = "category"
+
 }
 
 /**

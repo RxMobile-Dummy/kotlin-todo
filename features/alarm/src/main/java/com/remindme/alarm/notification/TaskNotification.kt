@@ -31,7 +31,7 @@ class TaskNotification @Inject constructor(
     fun show(task: Task) {
         logcat { "Showing notification for '${task.title}'" }
         val builder = buildNotification(task)
-        builder.addAction(getCompleteAction(task))
+       // builder.addAction(getCompleteAction(task))
          context.getNotificationManager()?.notify(task.id.toInt(), builder.build())
     }
 
@@ -64,6 +64,7 @@ class TaskNotification @Inject constructor(
             setContentIntent(buildPendingIntent(task))
             setAutoCancel(true)
             addAction(getSnoozeAction(task))
+            addAction(getCompleteAction(task))
         }
 
     private fun buildPendingIntent(task: Task): PendingIntent {

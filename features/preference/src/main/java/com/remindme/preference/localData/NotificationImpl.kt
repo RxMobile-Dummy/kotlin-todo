@@ -1,5 +1,6 @@
 package com.remindme.preference.localData
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -24,10 +25,13 @@ class NotificationImpl @Inject constructor(private val prefsDataStore: DataStore
             if (exception is IOException) {
                 emit(emptyPreferences())
             } else {
+                Log.e("exception",exception.printStackTrace().toString())
                 throw exception
+
             }
         }.map { preferences ->
             preferences[PrefManager.Is_Notification_Enable]?:false
+
         }
     }
     }

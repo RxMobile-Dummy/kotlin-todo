@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @Stable
 @Parcelize
-internal class CategoryBottomSheetState @Inject constructor(
+internal class CategoryBottomSheetState(
     private val category: Category
 ) : Parcelable {
 

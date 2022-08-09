@@ -1,35 +1,19 @@
 package com.remindme.category_task.presentation.bottomsheet
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,40 +24,57 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.remindme.category_task.R
+import com.remindme.category_task.presentation.list.CategoryListViewModelImpl
 import com.remindme.categoryapi.model.Category
+import com.remindme.categoryapi.presentation.CategoryListViewModel
+import com.remindme.categoryapi.presentation.CategoryState
 import com.remindme.designsystem.RemindMeTheme
 import com.remindme.designsystem.components.RemindMeDialog
 import com.remindme.designsystem.components.RemindMeInputTextField
 import com.remindme.designsystem.components.DialogArguments
+import com.remindme.designsystem.components.RemindMeToolbar
 import kotlinx.coroutines.delay
 
 /**
  * RemindMe Category Bottom Sheet.
  */
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun CategoryBottomSheet(category: Category?, onHideBottomSheet: () -> Unit) {
-    val colorList = CategoryColors.values().map { it.value }
+fun CategoryBottomSheet(onUpPress: () -> Unit,
+                        category: Category?,
+                        //onHideBottomSheet: () -> Unit,
+navController: NavController
+    ) {
+    Scaffold(
+        topBar = { RemindMeToolbar(onUpPress = onUpPress) },
+        content = {   val colorList = CategoryColors.values().map { it.value }
 
-    val editCategory = category ?: Category(
-        name = "",
-        color = CategoryColors.values()[0].value.toArgb()
+            val editCategory = category ?: Category(
+                name = "",
+                color = CategoryColors.values()[0].value.toArgb()
+            )
+
+            var bottomContent by rememberSaveable(category) {
+                mutableStateOf(CategoryBottomSheetState(editCategory))
+            }
+
+            CategorySheetLoader(
+                colorList = colorList,
+                bottomSheetState = bottomContent,
+                onHideBottomSheet = {
+                    //  onHideBottomSheet()
+                    bottomContent = CategoryBottomSheetState(editCategory)
+                },
+                navController = navController
+            ) }
     )
 
-    var bottomContent by rememberSaveable(category) {
-        mutableStateOf(CategoryBottomSheetState(editCategory))
-    }
-
-    CategorySheetLoader(
-        colorList = colorList,
-        bottomSheetState = bottomContent,
-        onHideBottomSheet = {
-            onHideBottomSheet()
-            bottomContent = CategoryBottomSheetState(editCategory)
-        }
-    )
 }
 
 @Composable
@@ -83,11 +84,15 @@ private fun CategorySheetLoader(
     bottomSheetState: CategoryBottomSheetState,
     colorList: List<Color>,
     onHideBottomSheet: () -> Unit,
+    navController: NavController
 ) {
+
     val onSaveCategory: (CategoryBottomSheetState) -> Unit = if (bottomSheetState.isEditing()) {
         { editCategory -> editViewModel.updateCategory(editCategory.toCategory()) }
     } else {
-        { newCategory -> addViewModel.addCategory(newCategory.toCategory()) }
+        { newCategory -> addViewModel.addCategory(newCategory.toCategory())
+
+        }
     }
 
     CategorySheetContent(
@@ -100,7 +105,8 @@ private fun CategorySheetLoader(
         onCategoryRemove = { category ->
             editViewModel.deleteCategory(category)
             onHideBottomSheet()
-        }
+        },
+        navController = navController
     )
 }
 
@@ -110,7 +116,8 @@ private fun CategorySheetContent(
     state: CategoryBottomSheetState,
     colorList: List<Color>,
     onCategoryChange: (CategoryBottomSheetState) -> Unit,
-    onCategoryRemove: (Category) -> Unit
+    onCategoryRemove: (Category) -> Unit,
+    navController:NavController
 ) {
     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.SpaceAround) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -149,16 +156,21 @@ private fun CategorySheetContent(
                 }
             }
         }
-
+        Spacer(Modifier.height(50.dp))
         CategoryColorSelector(
             colorList = colorList,
             value = Color(state.color),
             onColorChange = { state.color = it.toArgb() }
         )
+        Spacer(Modifier.height(50.dp))
 
         CategorySaveButton(
             currentColor = Color(state.color),
-            onClick = { onCategoryChange(state) }
+            onClick = {
+                onCategoryChange(state)
+                navController.popBackStack()
+
+            }
         )
     }
 }
@@ -258,9 +270,8 @@ private fun CategoryColorItem(
 }
 
 @Suppress("UndocumentedPublicFunction")
-@Preview
 @Composable
-fun CategorySheetContentPreview() {
+fun CategorySheetContentPreview(navController: NavController) {
     RemindMeTheme {
         Surface(modifier = Modifier.height(256.dp)) {
             val category = Category(id = 1L, name = "Movies", color = android.graphics.Color.YELLOW)
@@ -269,7 +280,8 @@ fun CategorySheetContentPreview() {
                 state = state,
                 colorList = CategoryColors.values().map { it.value },
                 onCategoryChange = {},
-                onCategoryRemove = {}
+                onCategoryRemove = {},
+                navController = navController
             )
         }
     }

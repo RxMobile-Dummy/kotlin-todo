@@ -22,60 +22,9 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
-//import org.koin.dsl.module
-
 /**
  * Local dependency injection module.
  */
-//@Module
-//@InstallIn(SingletonComponent::class)
-//class localModule {
-//    @Provides
-//    fun getPreferenceDataStore(): TaskDataSource = TaskLocalDataSource()
-//
-//
-//    @Provides
-//    fun getAppThemeOptionsMapper(): CategoryDataSource = CategoryLocalDataSource(getCategoryMapper(),getDaoProvider())
-//
-//
-//    // Mappers
-//    @Binds
-//    fun getAlarmIntervalMapper(): AlarmIntervalMapper = AlarmIntervalMapper()
-//
-//    @Binds
-//    fun getTaskMapper(): TaskMapper = TaskMapper(getAlarmIntervalMapper())
-//
-//    @Provides
-//    fun getCategoryMapper(): CategoryMapper = CategoryMapper()
-//
-//    @Provides
-//    fun getTaskWithCategoryMapper(): TaskWithCategoryMapper = TaskWithCategoryMapper(get(), get())
-//
-//    // Providers
-//    @Provides
-//    fun getDatabaseProvider(): DatabaseProvider = DatabaseProvider(get(), get())
-//
-//    @Provides
-//    fun getDaoProvider(): DaoProvider = DaoProvider(get())
-//}
-//val localModule = module {
-//
-//    // Data Sources
-//    single<TaskDataSource> { TaskLocalDataSource(get(), get()) }
-//    single<CategoryDataSource> { CategoryLocalDataSource(get(), get()) }
-//    single<TaskWithCategoryDataSource> { TaskWithCategoryLocalDataSource(get(), get()) }
-//    single<SearchDataSource> { SearchLocalDataSource(get(), get()) }
-//
-//    // Mappers
-//    factory { AlarmIntervalMapper() }
-//    factory { TaskMapper(get()) }
-//    factory { CategoryMapper() }
-//    factory { TaskWithCategoryMapper(get(), get()) }
-//
-//    // Providers
-//    single { DatabaseProvider(get(), get()) }
-//    single { DaoProvider(get()) }
-//}
 @Module
 @InstallIn(SingletonComponent::class)
 class LocalModule {

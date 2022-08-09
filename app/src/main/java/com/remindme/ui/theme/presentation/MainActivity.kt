@@ -1,5 +1,6 @@
 package com.remindme.ui.theme.presentation
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.animation.OvershootInterpolator
@@ -12,11 +13,14 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import com.remindme.alarmapi.AlarmPermission
@@ -32,6 +36,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 import  com.remindme.R
+import com.remindme.alarm.TaskReceiver
+import com.remindme.categoryapi.model.Category
+import com.remindme.categoryapi.presentation.CategoryListViewModel
+import com.remindme.preference.localData.PrefClass.Companion.dataStore
+import com.remindme.preference.localData.PrefManager
+import com.remindme.ui.theme.presentation.home.SheetContentState
+import com.todotask.model.Task
+import java.util.prefs.Preferences
 
 /**
  * Main RemindMe Activity.
@@ -45,12 +57,18 @@ internal class MainActivity : ComponentActivity() {
     @Inject
     lateinit var mAlarmPermission: AlarmPermission
 
+    //val Context.datastore by preferencesDataStore(name=PrefManager.PREFERENCES_NOTIFICATION)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TaskListGlanceWidget.viewModel =
             ViewModelProvider(this)[TaskListGlanceViewModel::class.java]
         TaskListGlanceWidget.context = this
+        var category:Category?=null
+        var sheetContentState:SheetContentState = SheetContentState.CategorySheet(category)
+        var task: Task? = null
+        var taskDetailActions:TaskDetailActions = TaskDetailActions()
+
         setContent {
 
             val isDarkTheme = rememberIsDarkTheme()
@@ -59,7 +77,7 @@ internal class MainActivity : ComponentActivity() {
 
 
             RemindMeTheme(darkTheme = isDarkTheme) {
-                NavGraph(Destinations.Splash, mAlarmPermission, action)
+                NavGraph(Destinations.Splash, mAlarmPermission, action,this.dataStore, sheetContentState = sheetContentState,task, taskDetailActions)
             }
         }
     }
@@ -91,3 +109,4 @@ internal class MainActivity : ComponentActivity() {
 
 
 }
+

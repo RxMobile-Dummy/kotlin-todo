@@ -1,14 +1,12 @@
 package com.todotask.presentation.category
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -64,21 +62,23 @@ fun editCategorySelection(
     modifier: Modifier = Modifier,
     isEditTextEnabled:Boolean,
 ) {
-    Box(
-        modifier = modifier.height(56.dp),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        when (state) {
-            CategoryState.Loading -> RemindMeLoadingContent()
-            is CategoryState.Loaded -> editLoadedCategoryList(
-                categoryList = state.categoryList,
-                currentCategory = currentCategory,
-                isEditTextEnabled,
-                onCategoryChange = onCategoryChange
-            )
-            CategoryState.Empty -> EmptyCategoryList()
+
+        Box(
+            modifier = modifier.height(56.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            when (state) {
+                CategoryState.Loading -> RemindMeLoadingContent()
+                is CategoryState.Loaded -> editLoadedCategoryList(
+                    categoryList = state.categoryList,
+                    currentCategory = currentCategory,
+                    isEditTextEnabled,
+                    onCategoryChange = onCategoryChange
+                )
+                CategoryState.Empty -> EmptyCategoryList()
+            }
         }
-    }
+
 }
 @Composable
 private fun LoadedCategoryList(
