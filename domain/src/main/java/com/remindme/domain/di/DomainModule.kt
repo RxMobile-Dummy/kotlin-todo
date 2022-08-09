@@ -40,53 +40,6 @@ import dagger.hilt.components.SingletonComponent
 /**
  * Domain dependency injection module.
  */
-//val domainModule = module {
-//
-//    // Task Use Cases
-//    factory<AddTask> { AddTaskImpl(get(), get()) }
-//    factory { CompleteTask(get(), get(), get(), get()) }
-//    factory { UncompleteTask(get()) }
-//    factory<UpdateTaskStatus> { UpdateTaskStatusImpl(get(), get(), get(), get()) }
-//    factory { DeleteTask(get(), get()) }
-//    factory<LoadTask> { LoadTaskImpl(get()) }
-//    factory<UpdateTask> { UpdateTaskImpl(get(), get()) }
-//    factory<UpdateTaskTitle> { UpdateTaskTitleImpl(get(), get(), get()) }
-//    factory<UpdateTaskDescription> { UpdateTaskDescriptionImpl(get(), get()) }
-//    factory<UpdateTaskCategory> { UpdateTaskCategoryImpl(get(), get()) }
-//
-//    // Category Use Cases
-//    factory<DeleteCategory> { DeleteCategoryImpl(get()) }
-//    factory<LoadAllCategories> { LoadAllCategoriesImpl(get()) }
-//    factory { LoadCategory(get()) }
-//    factory<AddCategory> { AddCategoryImpl(get()) }
-//    factory<UpdateCategory> { UpdateCategoryImpl(get()) }
-//
-//    // Search Use Cases
-//    factory<SearchTasksByName> { SearchTasksByNameImpl(get()) }
-//
-//    // Task With Category Use Cases
-//    factory { LoadCompletedTasks(get()) }
-//    factory<LoadUncompletedTasks> { LoadUncompletedTasksImpl(get()) }
-//
-//    // Alarm Use Cases
-//    factory<CancelAlarm> { CancelAlarmImpl(get(), get()) }
-//    factory { RescheduleFutureAlarms(get(), get(), get(), get()) }
-//    factory<ScheduleAlarm> { ScheduleAlarmImpl(get(), get()) }
-//    factory { ScheduleNextAlarm(get(), get(), get()) }
-//    factory { ShowAlarm(get(), get(), get()) }
-//    factory { SnoozeAlarm(get(), get(), get()) }
-//    factory<UpdateTaskAsRepeating> { UpdateTaskAsRepeatingImpl(get()) }
-//
-//    // Tracker Use Cases
-//    factory<LoadCompletedTasksByPeriod> { LoadCompletedTasksByPeriodImpl(get()) }
-//
-//    // Preferences Use Cases
-//    factory { UpdateAppTheme(get()) }
-//    factory { LoadAppTheme(get()) }
-//
-//    // Providers
-//    factory<CalendarProvider> { CalendarProviderImpl() }
-//}
 @Module
 @InstallIn(SingletonComponent::class)
 class DomainModule {

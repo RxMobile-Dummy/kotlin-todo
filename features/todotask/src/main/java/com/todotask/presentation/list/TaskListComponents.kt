@@ -37,7 +37,7 @@ import java.util.Calendar
  * @param onCheckedChange action to be called when the checked value changes
  */
 @Composable
-internal fun    TaskItem(
+internal fun TaskItem(
     modifier: Modifier = Modifier,
     task: TaskWithCategory,
     onItemClick: (Long?) -> Unit,

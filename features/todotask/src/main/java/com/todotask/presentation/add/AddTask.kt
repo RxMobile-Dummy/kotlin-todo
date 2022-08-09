@@ -32,7 +32,10 @@ import com.remindme.designsystem.RemindMeTheme
 import com.remindme.designsystem.components.RemindMeInputTextField
 import com.remindme.designsystem.components.RemindMeToolbar
 import com.remindme.task.presentation.add.AddTaskViewModel
+import com.todotask.model.Task
 import com.todotask.presentation.category.CategorySelection
+import com.todotask.presentation.detail.TaskDetailActions
+import com.todotask.presentation.detail.alarm.AlarmSelection
 import com.todotask.presentation.detail.main.CategoryId
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -44,10 +47,11 @@ import kotlinx.coroutines.flow.flow
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddTaskBottomSheet(onUpPress: () -> Unit,navController: NavController) {
+fun AddTaskBottomSheet(onUpPress: () -> Unit,navController: NavController,task: Task,
+                       actions: TaskDetailActions,) {
     Scaffold(
         topBar = { RemindMeToolbar(onUpPress = onUpPress) },
-        content = {  AddTaskLoader(navController = navController) }
+        content = {  AddTaskLoader(navController = navController, task = task, actions = actions) }
     )
 
 }
@@ -58,8 +62,11 @@ fun AddTaskBottomSheet(onUpPress: () -> Unit,navController: NavController) {
     addTaskViewModel: AddTaskViewModel = hiltViewModel(),
     categoryViewModel: CategoryListViewModel = hiltViewModel(),
    // onHideBottomSheet: () -> Unit
-    navController: NavController
-) {
+    navController: NavController,
+    task: Task,
+    actions: TaskDetailActions,
+
+    ) {
     Column(
         modifier = Modifier
             .padding(12.dp)
@@ -93,6 +100,15 @@ fun AddTaskBottomSheet(onUpPress: () -> Unit,navController: NavController) {
             state = categoryState,
             currentCategory = currentCategory?.value,
             onCategoryChange = { categoryId -> currentCategory = categoryId }
+        )
+        Spacer(modifier = Modifier.height(30.dp))
+
+        AlarmSelection(
+            calendar = task.dueDate,
+            interval = task.alarmInterval,
+            onAlarmUpdate = actions.onAlarmUpdate,
+            onIntervalSelect = actions.onIntervalSelect,
+            hasAlarmPermission = actions.hasAlarmPermission
         )
         Spacer(modifier = Modifier.height(30.dp))
 

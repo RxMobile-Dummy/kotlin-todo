@@ -14,20 +14,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
-//import org.koin.androidx.viewmodel.dsl.viewModel
-//import org.koin.dsl.module
 
-///**
-// * Category dependency injection module.
-// */
-//val categoryModule = module {
-//    viewModel<CategoryListViewModel> { CategoryListViewModelImpl(get(), get()) }
-//    viewModel { CategoryAddViewModel(get(), get()) }
-//    viewModel { CategoryEditViewModel(get(), get(), get()) }
-//
-//    // Mapper
-//    factory { CategoryMapper() }
-//}
 @Module
 @InstallIn(SingletonComponent::class)
 class CategoryModule {

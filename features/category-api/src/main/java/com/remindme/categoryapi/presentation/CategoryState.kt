@@ -12,7 +12,11 @@ sealed class CategoryState {
     /**
      * Loading state.
      */
-    object Loading : CategoryState()
+    object Loading : CategoryState(), Flow<CategoryState> {
+        override suspend fun collect(collector: FlowCollector<CategoryState>) {
+            TODO("Not yet implemented")
+        }
+    }
 
 
     /**

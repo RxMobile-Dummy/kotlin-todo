@@ -25,6 +25,9 @@ import logcat.logcat
 //import org.koin.core.component.inject
 import javax.inject.Inject
 import androidx.datastore.preferences.preferencesDataStore
+import com.remindme.preference.localData.PrefClass
+import com.remindme.preference.localData.PrefClass.Companion.dataStore
+import com.remindme.preference.localData.PrefManager
 
 /**
  * [BroadcastReceiver] to be notified by the [android.app.AlarmManager].
@@ -49,16 +52,20 @@ class TaskReceiver @Inject constructor() : HiltBroadcastReceiver() /*KoinCompone
 
     @Inject
     lateinit var rescheduleUseCase: RescheduleFutureAlarms
-    private var notification: Notification? = null
-    private val Context.appManagerDataStore
-            by preferencesDataStore(name = "Notification")
+    private var notification: NotificationImpl? = null
+//     val Context.appManagerDataStore
+//               by preferencesDataStore(name = PrefManager.PREFERENCES_NOTIFICATION)
+   // var prefClass:PrefClass = PrefClass()
+
+
 
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
         logcat { "onReceive() - intent ${intent?.action}" }
 
+
         coroutineScope = CoroutineScope(Dispatchers.Default)
-        notification = NotificationImpl(context!!.appManagerDataStore)
+        notification = NotificationImpl(context?.dataStore!!)
 
         coroutineScope.launch {
             notification?.getNotificationState()?.collect { state ->

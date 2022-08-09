@@ -1,6 +1,7 @@
 package com.remindme.preference.presentation
 
 //import org.koin.androidx.compose.getViewModel
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -19,6 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
@@ -54,7 +57,8 @@ fun PreferenceSection(
     onAboutClick: () -> Unit,
     onTrackerClick: () -> Unit,
     theme: AppThemeOptions,
-    actions1: TaskDetailActions
+    actions1: TaskDetailActions,
+    prefsDataStore: DataStore<Preferences>
 
 ) {
         PreferenceLoader(
@@ -62,7 +66,7 @@ fun PreferenceSection(
             onAboutClick = onAboutClick,
             onTrackerClick = onTrackerClick,
             theme= theme,
-            actions = actions1
+            actions = actions1, prefsDataStore = prefsDataStore
         )
 }
 
@@ -73,7 +77,8 @@ private fun PreferenceLoader(
     onTrackerClick: () -> Unit,
     theme: AppThemeOptions,
    viewModel:PreferenceViewModel = hiltViewModel(),
-    actions: TaskDetailActions
+    actions: TaskDetailActions,
+    prefsDataStore: DataStore<Preferences>
 ) {
     val theme by remember(viewModel) {
         viewModel.loadCurrentTheme()
@@ -86,7 +91,8 @@ private fun PreferenceLoader(
             onTrackerClick = onTrackerClick,
             theme = theme,
             onThemeUpdate = viewModel::updateTheme,
-            actions = actions
+            actions = actions,
+            prefsDataStore = prefsDataStore
         )
     }
 }
@@ -99,7 +105,8 @@ internal fun PreferenceContent(
     onTrackerClick: () -> Unit,
     theme: AppThemeOptions,
     onThemeUpdate: (AppThemeOptions) -> Unit,
-    actions: TaskDetailActions
+    actions: TaskDetailActions,
+    prefsDataStore: DataStore<Preferences>
 ) {
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
@@ -108,7 +115,8 @@ internal fun PreferenceContent(
             change = false,
             onCheckedChange = {
 
-            }
+            },
+            prefsDataStore = prefsDataStore
         )
         Separator()
         PreferenceAlertSettingItem(

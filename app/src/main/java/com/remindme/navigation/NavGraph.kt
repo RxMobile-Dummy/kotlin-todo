@@ -10,6 +10,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
@@ -23,8 +25,13 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.remindme.alarmapi.AlarmPermission
+import com.remindme.category_task.presentation.bottomsheet.CategoryBottomSheet
+import com.remindme.categoryapi.model.Category
+import com.remindme.categoryapi.presentation.CategoryListViewModel
 import com.remindme.preference.model.AppThemeOptions
+import com.remindme.ui.theme.presentation.home.SheetContentState
 import com.remindme.ui.theme.presentation.home.SplashScreen
+import com.todotask.model.Task
 import com.todotask.presentation.add.AddTaskBottomSheet
 import com.todotask.presentation.detail.TaskDetailActions
 
@@ -36,11 +43,19 @@ import com.todotask.presentation.detail.TaskDetailActions
 @OptIn(ExperimentalAnimationApi::class)
 @Suppress("LongMethod", "MagicNumber")
 @Composable
-fun NavGraph(startDestination: String,alarmPermission: AlarmPermission,actions1: TaskDetailActions,
-) {
+fun NavGraph(
+    startDestination: String,
+    alarmPermission: AlarmPermission,
+    actions1: TaskDetailActions,
+    prefsDataStore: DataStore<Preferences>,
+    sheetContentState: SheetContentState,
+    task: Task?,
+    taskDetailActions: TaskDetailActions,
+
+    ) {
     val navController = rememberAnimatedNavController()
     val context = LocalContext.current
-    val appThemeOptions:AppThemeOptions = AppThemeOptions.LIGHT
+    val appThemeOptions: AppThemeOptions = AppThemeOptions.LIGHT
     val actions = remember(navController) { Actions(navController, context) }
     AnimatedNavHost(navController = navController, startDestination = startDestination) {
 
@@ -65,8 +80,9 @@ fun NavGraph(startDestination: String,alarmPermission: AlarmPermission,actions1:
                 onAboutClick = actions.openAbout,
                 onTrackerClick = actions.openTracker,
                 appThemeOptions = appThemeOptions,
-                actions1 =actions1,
-                navController = navController
+                actions1 = actions1,
+                navController = navController,
+                prefsDataStore = prefsDataStore,
             )
         }
 
@@ -91,7 +107,8 @@ fun NavGraph(startDestination: String,alarmPermission: AlarmPermission,actions1:
             TaskDetailSection(
                 taskId = arguments.getLong(DestinationArgs.TaskId),
                 onUpPress = actions.onUpPress,
-                alarmPermission = alarmPermission
+                alarmPermission = alarmPermission,
+                navController = navController
 
             )
         }
@@ -110,7 +127,7 @@ fun NavGraph(startDestination: String,alarmPermission: AlarmPermission,actions1:
                 )
             },
         ) { backStackEntry ->
-            SplashScreen(navController =navController )
+            SplashScreen(navController = navController)
         }
         composable(
             route = Destinations.AddTask,
@@ -130,7 +147,34 @@ fun NavGraph(startDestination: String,alarmPermission: AlarmPermission,actions1:
             val arguments = requireNotNull(backStackEntry.arguments)
             AddTaskBottomSheet(onUpPress = {
                 navController.popBackStack()
-            },navController)
+            }, navController,task= task!!,actions= taskDetailActions)
+        }
+        composable(
+            route = "${Destinations.AddCategory}/{${DestinationArgs.Category}}",
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    animationSpec = tween(500)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    animationSpec = tween(500)
+                )
+            },
+        ) { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            if (sheetContentState is SheetContentState.CategorySheet) {
+                CategoryBottomSheet(
+                    onUpPress = {
+                        navController.popBackStack()
+                    },
+                    category = navController.previousBackStackEntry?.savedStateHandle?.get<Category>(DestinationArgs.Category),
+                    //onHideBottomSheet = onHideBottomSheet,
+                navController = navController
+                )
+            }
         }
 
         composable(
