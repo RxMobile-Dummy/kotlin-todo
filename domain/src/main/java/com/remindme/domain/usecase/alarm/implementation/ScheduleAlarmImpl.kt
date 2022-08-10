@@ -22,6 +22,7 @@ class ScheduleAlarmImpl @Inject constructor(
         val updatedTask = task.copy(dueDate = calendar)
         taskRepository.updateTask(updatedTask)
 
-        taskId?.let { it.toLong().let { it1 -> alarmInteractor.schedule(it1, calendar.time.time) } }
+
+        taskId?.let { it.toLong().let { it1 -> alarmInteractor.schedule(it1, calendar.time.time)} }
     }
 }

@@ -226,9 +226,9 @@ private fun TaskListError() {
 fun TaskListScaffoldLoaded(
     //navController: NavController
 ) {
-    val task1 = Task(title = "Buy milk", dueDate = null)
-    val task2 = Task(title = "Call Mark", dueDate = Calendar.getInstance())
-    val task3 = Task(title = "Watch Moonlight", dueDate = Calendar.getInstance())
+    val task1 = Task(title = "Buy milk", dueDate = null, categoryColor = MaterialTheme.colors.background)
+    val task2 = Task(title = "Call Mark", dueDate = Calendar.getInstance(), categoryColor = MaterialTheme.colors.background)
+    val task3 = Task(title = "Watch Moonlight", dueDate = Calendar.getInstance(), categoryColor = MaterialTheme.colors.background)
 
     val category1 = Category(name = "Books", color = android.graphics.Color.GREEN)
     val category2 = Category(name = "Reminders", color = android.graphics.Color.MAGENTA)

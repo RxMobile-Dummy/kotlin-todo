@@ -7,6 +7,8 @@ import com.remindme.alarm.TaskReceiver
 import com.remindme.core.extension.cancelAlarm
 import com.remindme.core.extension.setExactAlarm
 import logcat.logcat
+import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -39,7 +41,7 @@ class TaskNotificationScheduler @Inject constructor(private val context: Context
                 context,
                 taskId.toInt(),
                 receiverIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT
             )
             logcat { "Scheduling notification for '$taskId' at '$timeInMillis'" }
             context.setExactAlarm(timeInMillis, pendingIntent)

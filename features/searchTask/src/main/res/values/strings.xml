@@ -3,5 +3,6 @@
     <string name="search_cd_icon">Search</string>
     <string name="search_cd_empty_list">No tasks</string>
     <string name="search_header_empty">No tasks found</string>
-
+    <string name="task_list_header_error">Ops… That\'s embarrassing…</string>
+    <string name="task_list_cd_error">Something went wrong</string>
 </resources>

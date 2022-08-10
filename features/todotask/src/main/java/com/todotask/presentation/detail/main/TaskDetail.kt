@@ -394,7 +394,7 @@ value class CategoryId(val value: Long?) : Parcelable
 @Suppress("UndocumentedPublicFunction")
 @Composable
 fun TaskDetailPreview(navController: NavController) {
-    val task = Task(title = "Buy milk", description = "This is a amazing task!", dueDate = null)
+    val task = Task(title = "Buy milk", description = "This is a amazing task!", dueDate = null, categoryColor = MaterialTheme.colors.background)
     val category1 = Category(name = "Groceries", color = android.graphics.Color.CYAN)
     val category2 = Category(name = "Books", color = android.graphics.Color.RED)
     val category3 = Category(name = "Movies", color = android.graphics.Color.MAGENTA)

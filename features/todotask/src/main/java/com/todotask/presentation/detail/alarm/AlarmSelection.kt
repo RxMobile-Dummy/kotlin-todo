@@ -59,14 +59,6 @@ internal fun AlarmSelection(
 
     Column {
 
-        Card(
-            elevation = 5.dp,
-            backgroundColor = Color.White,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(horizontal = 15.dp)
-        ) {
             TaskDetailSectionContent(
                 modifier = Modifier
                     .height(56.dp)
@@ -119,7 +111,7 @@ internal fun AlarmSelection(
             )
         }
 
-    }
+
 }
 
 @Composable

@@ -59,6 +59,7 @@ object DestinationArgs {
     const val TaskId = "task_id"
 
     const val Category = "category"
+    const val isAdded = "is_task_added"
 
 }
 

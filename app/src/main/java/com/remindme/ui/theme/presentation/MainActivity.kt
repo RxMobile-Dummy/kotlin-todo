@@ -23,6 +23,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.room.Dao
 import com.remindme.alarmapi.AlarmPermission
 import com.remindme.navigation.NavGraph
 import com.remindme.ui.theme.presentation.model.AppThemeOptions
@@ -39,10 +40,16 @@ import  com.remindme.R
 import com.remindme.alarm.TaskReceiver
 import com.remindme.categoryapi.model.Category
 import com.remindme.categoryapi.presentation.CategoryListViewModel
+import com.remindme.local.provider.DaoProvider
+import com.remindme.local.provider.DatabaseProvider
 import com.remindme.preference.localData.PrefClass.Companion.dataStore
 import com.remindme.preference.localData.PrefManager
 import com.remindme.ui.theme.presentation.home.SheetContentState
 import com.todotask.model.Task
+import com.todotask.presentation.detail.alarm.TaskAlarmViewModel
+import com.todotask.presentation.detail.main.TaskDetailState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.util.prefs.Preferences
 
 /**
@@ -56,6 +63,7 @@ internal class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var mAlarmPermission: AlarmPermission
+    private val taskAlarmViewModel: TaskAlarmViewModel by viewModels()
 
     //val Context.datastore by preferencesDataStore(name=PrefManager.PREFERENCES_NOTIFICATION)
 
@@ -66,8 +74,9 @@ internal class MainActivity : ComponentActivity() {
         TaskListGlanceWidget.context = this
         var category:Category?=null
         var sheetContentState:SheetContentState = SheetContentState.CategorySheet(category)
-        var task: Task? = null
-        var taskDetailActions:TaskDetailActions = TaskDetailActions()
+        var coroutineScope:CoroutineScope = CoroutineScope(Dispatchers.Default)
+        var databaseProvider:DatabaseProvider = DatabaseProvider(this,coroutineScope)
+        var daoProvider:DaoProvider? = DaoProvider(databaseProvider)
 
         setContent {
 
@@ -77,7 +86,7 @@ internal class MainActivity : ComponentActivity() {
 
 
             RemindMeTheme(darkTheme = isDarkTheme) {
-                NavGraph(Destinations.Splash, mAlarmPermission, action,this.dataStore, sheetContentState = sheetContentState,task, taskDetailActions)
+                NavGraph(Destinations.Splash, mAlarmPermission, action,this.dataStore, sheetContentState = sheetContentState,taskAlarmViewModel= taskAlarmViewModel,daoProvider=daoProvider!!)
             }
         }
     }

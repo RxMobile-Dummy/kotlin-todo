@@ -233,7 +233,7 @@ private fun AlarmListItem(
 
         Text(
             text = title,
-            color = Color.Black,
+            style = MaterialTheme.typography.body2,
             modifier = Modifier
                 .clickable {
                     val interval =

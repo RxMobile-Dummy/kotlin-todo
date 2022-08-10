@@ -1,5 +1,6 @@
 package com.remindme.navigation
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -28,18 +29,28 @@ import com.remindme.alarmapi.AlarmPermission
 import com.remindme.category_task.presentation.bottomsheet.CategoryBottomSheet
 import com.remindme.categoryapi.model.Category
 import com.remindme.categoryapi.presentation.CategoryListViewModel
+import com.remindme.local.dao.TaskDao
+import com.remindme.local.provider.DaoProvider
+import com.remindme.local.provider.DatabaseProvider
 import com.remindme.preference.model.AppThemeOptions
 import com.remindme.ui.theme.presentation.home.SheetContentState
 import com.remindme.ui.theme.presentation.home.SplashScreen
 import com.todotask.model.Task
 import com.todotask.presentation.add.AddTaskBottomSheet
 import com.todotask.presentation.detail.TaskDetailActions
+import com.todotask.presentation.detail.alarm.TaskAlarmViewModel
+import com.todotask.presentation.detail.main.TaskId
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * Navigation Graph to control the RemindMe navigation.
  *
  * @param startDestination the start destination of the graph
  */
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalAnimationApi::class)
 @Suppress("LongMethod", "MagicNumber")
 @Composable
@@ -49,8 +60,10 @@ fun NavGraph(
     actions1: TaskDetailActions,
     prefsDataStore: DataStore<Preferences>,
     sheetContentState: SheetContentState,
-    task: Task?,
-    taskDetailActions: TaskDetailActions,
+    taskAlarmViewModel: TaskAlarmViewModel,
+    daoProvider: DaoProvider
+   // task: Task?,
+   // taskDetailActions: TaskDetailActions,
 
     ) {
     val navController = rememberAnimatedNavController()
@@ -83,6 +96,8 @@ fun NavGraph(
                 actions1 = actions1,
                 navController = navController,
                 prefsDataStore = prefsDataStore,
+                taskAlarmViewModel = taskAlarmViewModel,
+                daoProvider=daoProvider
             )
         }
 
@@ -131,6 +146,7 @@ fun NavGraph(
         }
         composable(
             route = Destinations.AddTask,
+           // arguments = listOf(navArgument(DestinationArgs.isAdded) { type = NavType.BoolType }),
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentScope.SlideDirection.Left,
@@ -145,9 +161,24 @@ fun NavGraph(
             },
         ) { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
+            var coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
+            var databaseProvider: DatabaseProvider = DatabaseProvider(context,coroutineScope)
+            var daoProvider:DaoProvider? = DaoProvider(databaseProvider)
+            var isAdded =navController.currentBackStackEntry?.savedStateHandle?.get<Boolean>(DestinationArgs.isAdded)
+            val taskDao = daoProvider?.getTaskDao()
+
+            if(isAdded == true){
+                coroutineScope.launch {
+                    taskAlarmViewModel.updateAlarm(TaskId(taskDao?.getLastTask()) , Calendar.getInstance())
+
+                }
+
+                }
+
+
             AddTaskBottomSheet(onUpPress = {
                 navController.popBackStack()
-            }, navController,task= task!!,actions= taskDetailActions)
+            }, navController, alarmViewModel = taskAlarmViewModel, alarmPermission = alarmPermission)
         }
         composable(
             route = "${Destinations.AddCategory}/{${DestinationArgs.Category}}",
@@ -170,7 +201,7 @@ fun NavGraph(
                     onUpPress = {
                         navController.popBackStack()
                     },
-                    category = navController.previousBackStackEntry?.savedStateHandle?.get<Category>(DestinationArgs.Category),
+                    category = navController.currentBackStackEntry?.savedStateHandle?.get<Category>(DestinationArgs.Category),
                     //onHideBottomSheet = onHideBottomSheet,
                 navController = navController
                 )

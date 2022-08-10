@@ -1,12 +1,12 @@
-package com.todotask.presentation.list
+package com.remindme.searchTask.presentation
 
+import com.remindme.searchTask.model.TaskSearchItem
 import com.todotask.model.TaskWithCategory
 import com.todotask.presentation.list.TaskListViewState
-import javax.inject.Inject
 
-data class TaskStateHandler(
-    val state: TaskListViewState = TaskListViewState.Empty,
+data class SearchStateHandler(
+    val state: SearchViewState = SearchViewState.Empty,
     val onCheckedChange: (TaskWithCategory) -> Unit = {},
     val onItemClick: (Long?) -> Unit = {},
     val onAddClick: () -> Unit = {},
-)
+    )
