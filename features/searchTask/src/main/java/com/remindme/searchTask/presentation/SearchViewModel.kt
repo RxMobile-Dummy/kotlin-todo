@@ -27,7 +27,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun onListLoaded(taskList: List<TaskWithCategory>): SearchViewState {
+    private fun onListLoaded(taskList: List<TaskWithCategory>): SearchViewState {
         val searchList = mapper.toTaskSearch(taskList)
         return SearchViewState.Loaded(searchList)
     }

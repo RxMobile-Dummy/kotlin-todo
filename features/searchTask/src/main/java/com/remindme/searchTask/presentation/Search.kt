@@ -136,26 +136,42 @@ internal fun SearchScaffold(
         Column(modifier = Modifier.fillMaxWidth()) {
             SearchTextField(query, onTextChange = setQuery)
 
-            Crossfade(taskHandler.state) { state ->
-                when (state) {
-                    TaskListViewState.Loading -> RemindMeLoadingContent()
-                    TaskListViewState.Empty -> SearchEmptyContent()
-                    is TaskListViewState.Loaded -> {
-                        val taskList = state.items
-                        SearchListContent(
-                            taskList = taskList,
-                            onItemClick = onItemClick,
-                            onCheckedChange = { taskWithCategory ->
-                                taskHandler.onCheckedChange(taskWithCategory)
-                                //  onShowSnackbar(taskWithCategory)
-                            },
-                            taskHandler = taskHandler
+            if(query.isNotEmpty()){
+                Crossfade(viewState) { state ->
+                    when (state) {
+                        SearchViewState.Loading -> RemindMeLoadingContent()
+                        SearchViewState.Empty -> SearchEmptyContent()
+                        is SearchViewState.Loaded -> SearchTextListContent(
+                            taskList = state.taskList,
+                            onItemClick = onItemClick
                         )
                     }
-                    is TaskListViewState.Error -> TaskSearchError()
+                }
+            }else
+            {
+                Crossfade(taskHandler.state) { state ->
+                    when (state) {
+                        TaskListViewState.Loading -> RemindMeLoadingContent()
+                        TaskListViewState.Empty -> SearchEmptyContent()
+                        is TaskListViewState.Loaded -> {
+                            val taskList = state.items
+                            SearchListContent(
+                                taskList = taskList,
+                                onItemClick = onItemClick,
+                                onCheckedChange = { taskWithCategory ->
+                                    taskHandler.onCheckedChange(taskWithCategory)
+                                    //  onShowSnackbar(taskWithCategory)
+                                },
+                                taskHandler = taskHandler
+                            )
+                        }
+                        is TaskListViewState.Error -> TaskSearchError()
 
+                    }
                 }
             }
+
+
         }
     }
 }
@@ -205,6 +221,68 @@ private fun TaskSearchError() {
         header = R.string.task_list_header_error
     )
 }
+@Composable
+private fun SearchTextListContent(
+    taskList: List<TaskSearchItem>,
+    onItemClick: (Long?) -> Unit,
+
+    ) {
+    LazyColumn {
+        items(
+            items = taskList,
+            itemContent = { task ->
+                SearchTextItem(
+                    task = task, onItemClick = onItemClick
+                    //  onShowSnackbar(taskWithCategory)
+                )
+            }
+        )
+    }
+}
+
+@Composable
+private fun SearchTextItem(
+    task: TaskSearchItem,
+    onItemClick: (Long?) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .height(48.dp)
+            .fillMaxWidth()
+            .clickable { onItemClick(task.task.id) },
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        val textDecoration: TextDecoration
+        val circleColor: Color
+
+        if (task.task.completed) {
+            textDecoration = TextDecoration.LineThrough
+            circleColor = MaterialTheme.colors.onSecondary
+        } else {
+            textDecoration = TextDecoration.None
+            circleColor = task.categoryColor ?: MaterialTheme.colors.background
+        }
+
+        Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clip(CircleShape)
+                    .background(circleColor)
+            )
+            Text(
+                text = task.task.title,
+                textDecoration = textDecoration,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .fillMaxWidth()
+                    .height(24.dp)
+            )
+        }
+    }
+}
+
 
 @Composable
 private fun SearchListContent(

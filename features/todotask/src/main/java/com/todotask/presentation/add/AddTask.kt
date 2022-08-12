@@ -53,10 +53,21 @@ import java.util.*
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddTaskBottomSheet(onUpPress: () -> Unit,navController: NavController,alarmViewModel: TaskAlarmViewModel,alarmPermission: AlarmPermission) {
+fun AddTaskBottomSheet(
+    onUpPress: () -> Unit,
+    navController: NavController,
+    alarmViewModel: TaskAlarmViewModel,
+    alarmPermission: AlarmPermission
+) {
     Scaffold(
         topBar = { RemindMeToolbar(onUpPress = onUpPress) },
-        content = {  AddTaskLoader(navController = navController,alarmViewModel=alarmViewModel, alarmPermission = alarmPermission) }
+        content = {
+            AddTaskLoader(
+                navController = navController,
+                alarmViewModel = alarmViewModel,
+                alarmPermission = alarmPermission
+            )
+        }
     )
 
 }
@@ -64,10 +75,10 @@ fun AddTaskBottomSheet(onUpPress: () -> Unit,navController: NavController,alarmV
 @SuppressLint("RememberReturnType")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
- fun AddTaskLoader(
+fun AddTaskLoader(
     addTaskViewModel: AddTaskViewModel = hiltViewModel(),
     categoryViewModel: CategoryListViewModel = hiltViewModel(),
-   // onHideBottomSheet: () -> Unit
+    // onHideBottomSheet: () -> Unit
     navController: NavController,
     alarmViewModel: TaskAlarmViewModel = hiltViewModel(),
     alarmPermission: AlarmPermission,
@@ -77,10 +88,11 @@ fun AddTaskBottomSheet(onUpPress: () -> Unit,navController: NavController,alarmV
 
     Column(
         modifier = Modifier
-            .padding(12.dp)
-            .fillMaxSize(),
+            .padding(15.dp)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
 
-    ) {
+        ) {
         var taskInputText by rememberSaveable { mutableStateOf("") }
 
         val categoryState by remember(categoryViewModel) { categoryViewModel }.loadCategories()
@@ -91,11 +103,11 @@ fun AddTaskBottomSheet(onUpPress: () -> Unit,navController: NavController,alarmV
 
         LaunchedEffect(Unit) {
             delay(FocusDelay)
-           // focusRequester.requestFocus()
+            // focusRequester.requestFocus()
         }
 
         val taskDetailActions = TaskDetailActions(
-            onAlarmUpdate = { calendar -> alarmViewModel.updateAlarm(id, calendar) },
+            onAlarmUpdate = { calendar -> alarmViewModel.updateAlarm(id, calendar, true) },
             onIntervalSelect = { interval -> alarmViewModel.setRepeating(id, interval) },
             hasAlarmPermission = { alarmPermission.hasExactAlarmPermission() },
         )
@@ -116,21 +128,14 @@ fun AddTaskBottomSheet(onUpPress: () -> Unit,navController: NavController,alarmV
             onCategoryChange = { categoryId -> currentCategory = categoryId }
         )
         Spacer(modifier = Modifier.height(30.dp))
-        Card(
-            elevation = 5.dp,
-            backgroundColor = Color.White,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-        ) {
-            AlarmSelection(
-                calendar = null,
-                interval = null,
-                onAlarmUpdate =  taskDetailActions.onAlarmUpdate ,
-                onIntervalSelect = taskDetailActions.onIntervalSelect,
-                hasAlarmPermission = taskDetailActions.hasAlarmPermission
-            )
-        }
+        AlarmSelection(
+            calendar = null,
+            interval = null,
+            onAlarmUpdate = taskDetailActions.onAlarmUpdate,
+            onIntervalSelect = taskDetailActions.onIntervalSelect,
+            hasAlarmPermission = taskDetailActions.hasAlarmPermission
+        )
+
         Spacer(modifier = Modifier.height(30.dp))
 
         Button(
@@ -142,7 +147,7 @@ fun AddTaskBottomSheet(onUpPress: () -> Unit,navController: NavController,alarmV
                 navController.previousBackStackEntry?.savedStateHandle?.set("is_task_added", true)
                 taskInputText = ""
                 navController.popBackStack()
-              //  onHideBottomSheet()
+                //  onHideBottomSheet()
             }
         ) {
             Text(stringResource(id = R.string.task_add_save))
@@ -164,7 +169,7 @@ fun TaskListScaffoldError() {
                 .height(256.dp)
                 .background(MaterialTheme.colors.background)
         ) {
-          //  AddTaskBottomSheet()
+            //  AddTaskBottomSheet()
         }
     }
 }

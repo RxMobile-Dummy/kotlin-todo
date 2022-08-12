@@ -62,10 +62,10 @@ fun NavGraph(
     sheetContentState: SheetContentState,
     taskAlarmViewModel: TaskAlarmViewModel,
     daoProvider: DaoProvider
-   // task: Task?,
-   // taskDetailActions: TaskDetailActions,
+    // task: Task?,
+    // taskDetailActions: TaskDetailActions,
 
-    ) {
+) {
     val navController = rememberAnimatedNavController()
     val context = LocalContext.current
     val appThemeOptions: AppThemeOptions = AppThemeOptions.LIGHT
@@ -97,7 +97,7 @@ fun NavGraph(
                 navController = navController,
                 prefsDataStore = prefsDataStore,
                 taskAlarmViewModel = taskAlarmViewModel,
-                daoProvider=daoProvider
+                daoProvider = daoProvider
             )
         }
 
@@ -146,7 +146,7 @@ fun NavGraph(
         }
         composable(
             route = Destinations.AddTask,
-           // arguments = listOf(navArgument(DestinationArgs.isAdded) { type = NavType.BoolType }),
+            // arguments = listOf(navArgument(DestinationArgs.isAdded) { type = NavType.BoolType }),
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentScope.SlideDirection.Left,
@@ -162,23 +162,33 @@ fun NavGraph(
         ) { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
             var coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
-            var databaseProvider: DatabaseProvider = DatabaseProvider(context,coroutineScope)
-            var daoProvider:DaoProvider? = DaoProvider(databaseProvider)
-            var isAdded =navController.currentBackStackEntry?.savedStateHandle?.get<Boolean>(DestinationArgs.isAdded)
+            var databaseProvider: DatabaseProvider = DatabaseProvider(context, coroutineScope)
+            var daoProvider: DaoProvider? = DaoProvider(databaseProvider)
+            var isAdded =
+                navController.currentBackStackEntry?.savedStateHandle?.get<Boolean>(DestinationArgs.isAdded)
             val taskDao = daoProvider?.getTaskDao()
 
-            if(isAdded == true){
+            if (isAdded == true) {
                 coroutineScope.launch {
-                    taskAlarmViewModel.updateAlarm(TaskId(taskDao?.getLastTask()) , Calendar.getInstance())
+                    taskAlarmViewModel.updateAlarm(
+                        TaskId(taskDao?.getLastTask()),
+                        Calendar.getInstance(),
+                        true
+                    )
 
                 }
 
-                }
+            }
 
 
-            AddTaskBottomSheet(onUpPress = {
-                navController.popBackStack()
-            }, navController, alarmViewModel = taskAlarmViewModel, alarmPermission = alarmPermission)
+            AddTaskBottomSheet(
+                onUpPress = {
+                    navController.popBackStack()
+                },
+                navController,
+                alarmViewModel = taskAlarmViewModel,
+                alarmPermission = alarmPermission
+            )
         }
         composable(
             route = "${Destinations.AddCategory}/{${DestinationArgs.Category}}",
@@ -201,9 +211,11 @@ fun NavGraph(
                     onUpPress = {
                         navController.popBackStack()
                     },
-                    category = navController.currentBackStackEntry?.savedStateHandle?.get<Category>(DestinationArgs.Category),
+                    category = navController.previousBackStackEntry?.savedStateHandle?.get<Category>(
+                        DestinationArgs.Category
+                    ),
                     //onHideBottomSheet = onHideBottomSheet,
-                navController = navController
+                    navController = navController
                 )
             }
         }

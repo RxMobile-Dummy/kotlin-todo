@@ -69,7 +69,6 @@ class AlarmModule{
     ): AndroidVersion {
         return AndroidVersionImpl()
     }
-
     @Provides
     fun getAlarmPermission(
         alarmManager: AlarmManager?,
@@ -77,5 +76,4 @@ class AlarmModule{
     ): AlarmPermission {
         return AlarmPermissionImpl(alarmManager,androidVersion)
     }
-
 }

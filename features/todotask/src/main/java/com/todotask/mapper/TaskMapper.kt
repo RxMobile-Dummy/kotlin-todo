@@ -29,6 +29,15 @@ class TaskMapper @Inject constructor(private val alarmIntervalMapper: AlarmInter
             creationDate = domainTask.creationDate,
             completedDate = domainTask.completedDate,
             isRepeating = domainTask.isRepeating,
-            alarmInterval = alarmIntervalMapper.toViewData(domainTask.alarmInterval), categoryColor = Color.Blue
+            alarmInterval = alarmIntervalMapper.toViewData(domainTask.alarmInterval),
+            categoryColor = Color.Blue
         )
+
+    private fun getColor(color: String?): Color? {
+        if (color == null) {
+            return null
+        }
+
+        return Color(android.graphics.Color.parseColor(color))
+    }
 }

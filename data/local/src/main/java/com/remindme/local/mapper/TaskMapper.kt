@@ -48,6 +48,6 @@ class TaskMapper @Inject constructor(private val alarmIntervalMapper: AlarmInter
             creationDate = localTask.creationDate,
             completedDate = localTask.completedDate,
             isRepeating = localTask.isRepeating,
-            alarmInterval = localTask.alarmInterval?.let { alarmIntervalMapper.toRepo(it) }
+            alarmInterval = localTask.alarmInterval?.let { alarmIntervalMapper.toRepo(it) },
         )
 }

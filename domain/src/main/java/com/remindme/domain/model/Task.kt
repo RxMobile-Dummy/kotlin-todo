@@ -1,5 +1,6 @@
 package com.remindme.domain.model
 
+import androidx.compose.ui.graphics.Color
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -27,5 +28,6 @@ data class Task @Inject constructor(
     val creationDate: Calendar? = null,
     val completedDate: Calendar? = null,
     val isRepeating: Boolean = false,
-    val alarmInterval: AlarmInterval? = null
-)
+    val alarmInterval: AlarmInterval? = null,
+
+    )

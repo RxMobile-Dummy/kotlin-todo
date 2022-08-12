@@ -59,6 +59,13 @@ internal fun AlarmSelection(
 
     Column {
 
+        Card(
+            elevation = 5.dp,
+            backgroundColor = Color.White,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
             TaskDetailSectionContent(
                 modifier = Modifier
                     .height(56.dp)
@@ -88,9 +95,10 @@ internal fun AlarmSelection(
                         )
                     }
                 }
+
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
         Card(
             elevation = 5.dp,
@@ -98,9 +106,7 @@ internal fun AlarmSelection(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(horizontal = 15.dp)
         ) {
-
             AlarmIntervalSelection(
                 date = date,
                 alarmInterval = alarmInterval,
@@ -110,6 +116,7 @@ internal fun AlarmSelection(
                 }
             )
         }
+    }
 
 
 }

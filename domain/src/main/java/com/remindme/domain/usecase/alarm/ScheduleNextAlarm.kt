@@ -39,7 +39,7 @@ class ScheduleNextAlarm @Inject constructor(
         } while (currentTime.after(task.dueDate))
 
         taskRepository.updateTask(task)
-        task.id?.let { alarmInteractor.schedule(it.toLong(), task.dueDate.time.time) }
+        task.id?.let { alarmInteractor.schedule(it.toLong(), task.dueDate.time.time,false) }
         logger.debug { "ScheduleNextAlarm = Task = '${task.title}' at ${task.dueDate.time} " }
     }
 
