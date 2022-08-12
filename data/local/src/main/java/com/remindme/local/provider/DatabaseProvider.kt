@@ -45,10 +45,11 @@ class DatabaseProvider @Inject constructor(
         object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-//                    if(database != null && database?.categoryDao()?.getAllCategory()?.size!! > 0){
-//                        database?.categoryDao()?.cleanTable()
-//                    }
+
                 coroutineScope.launch {
+                    if(database != null && database?.categoryDao()?.getAllCategory()?.size!! > 0){
+                        database?.categoryDao()?.cleanTable()
+                    }
                     database?.categoryDao()?.insertCategory(getDefaultCategoryList())
                 }
             }

@@ -35,7 +35,7 @@ Features
 
 App Architecture :
 
-Based on mvc architecture and pattern.
+Based on MVVM architecture and pattern.
 
 <img src="https://github.com/mm-itservices/Android-mobile-app/blob/main/media/mvc_architecture.png" width="500" style="max-width:500%;">
 
