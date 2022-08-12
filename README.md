@@ -53,13 +53,13 @@ This app uses multi module architecture.The application also relies heavily in m
 
 Let's take a look in each major module of the application:
 
--app - The Application module. It contains all the initialization logic for the Android environment and starts the Jetpack Navigation Compose Graph.
+- app - The Application module. It contains all the initialization logic for the Android environment and starts the Jetpack Navigation Compose Graph.
 
--features - The module/folder containing all the features (visual or not) from the application
+- features - The module/folder containing all the features (visual or not) from the application
 
--domain - The modules containing the most important part of the application: the business logic. This module depends only on itself and all interaction it does is via dependency inversion.
+- domain - The modules containing the most important part of the application: the business logic. This module depends only on itself and all interaction it does is via dependency inversion.
 
--data - The module containing the data (local, remote, light etc) from the app
+- data - The module containing the data (local, remote, light etc) from the app
 
 Tech components :
 
@@ -86,3 +86,73 @@ Steps to Install Project:
 4) Run the app into device
 
 Package Structure
+
+```sh
+├── app
+|   ├── java
+│   └── com
+│       └── remindme
+│           ├── base
+│           ├── di
+│           ├── extensions
+│           ├── firebase
+│           ├── model
+│           ├── navigation
+│           ├── retrofit
+│           ├── ui
+│           │   └── theme
+│           │       ├── presentation
+│           │       │   ├── home
+│           │       │   ├── mapper
+│           │       │   ├── model
+│           ├── utils
+├── res
+│   ├── drawable
+│   ├── values
+└── AndroidManifest.xml
+├── data
+|   ├── datastore
+│   ├── src
+│   │   │   └── java
+│   │   │       └── com
+│   │   │           └── remindme
+│   │   │               └── datastore
+│   │   │   │               ├── datasource
+│   │   │   │               ├── di
+│   │   │   │               ├── mapper
+│   │   │   │               ├── model
+│   │   │   └── AndroidManifest.xml
+├── local
+│   ├── src
+│   │   ├── main
+│   │   │   ├── java
+│   │   │   │   └── com
+│   │   │   │       └── remindme
+│   │   │   │           └── local
+│   │   │   │               ├── converter
+│   │   │   │               ├── dao
+│   │   │   │               ├── datasource
+│   │   │   │               ├── di
+│   │   │   │               ├── mapper
+│   │   │   │               ├── migration
+│   │   │   │               ├── model
+│   │   │   │               ├── provider
+│   │   │   ├── res
+│   │   │   │   ├── res
+│   │   │   │   ├── values
+│   │   │   └── AndroidManifest.xml
+└── repository
+    │   ├── main
+    │   │   ├── java
+    │   │   │   └── com
+    │   │   │       └── remindme
+    │   │   │           └── repository
+    │   │   │               ├── datasource
+    │   │   │               ├── di
+    │   │   │               ├── mapper
+    │   │   │               ├── model
+    │   │   └── AndroidManifest.xml
+├── domain
+├── features
+
+
