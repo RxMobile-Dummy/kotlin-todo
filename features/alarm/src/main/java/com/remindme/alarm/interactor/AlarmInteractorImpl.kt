@@ -11,16 +11,15 @@ class AlarmInteractorImpl @Inject constructor(private val alarmManager: TaskNoti
 
     override fun schedule(alarmId: Long, timeInMillis: Long,isAdd:Boolean) {
         logcat { "schedule - alarmId = $alarmId" }
-        if(isAdd){
-            if(timeInMillis == 0L){
-                val calendar = Calendar.getInstance()
-                calendar.add(Calendar.SECOND, 2)
-                alarmManager.scheduleTaskAlarm(alarmId, calendar.timeInMillis,isAdd)
-            }else
+        if(isAdd) {
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.SECOND, 3)
+            alarmManager.scheduleTaskAlarm(alarmId, calendar.timeInMillis, isAdd)
+        }
+            else
             {
                 alarmManager.scheduleTaskAlarm(alarmId,timeInMillis,isAdd)
             }
-        }
 
     }
 
