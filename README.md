@@ -5,7 +5,7 @@
 RemindMe :
 - Created a Kotlin based in android with jetpack compose and hilt injection for dependency injection
 
-<img src="https://github.com/mm-itservices/Android-mobile-app/blob/main/media/coupon_list.gif" width="200" style="max-width:100%;">   <img src="https://github.com/mm-itservices/Android-mobile-app/blob/main/media/dashboard_page.png" width="200" style="max-width:100%;"></br></br>
+<img src="https://github.com/RxMobile-Dummy/kotlin-todo/blob/development/app/media/app_ui.gif" width="200" style="max-width:100%;"> <img src="https://github.com/RxMobile-Dummy/kotlin-todo/blob/development/app/media/taskList.jpg" width="200" style="max-width:100%;"><img src="https://github.com/RxMobile-Dummy/kotlin-todo/blob/development/app/media/categoryList.jpg" width="200" style="max-width:100%;"><img src="https://github.com/RxMobile-Dummy/kotlin-todo/blob/development/app/media/searchTask.jpg" width="200" style="max-width:100%;"><img src="https://github.com/RxMobile-Dummy/kotlin-todo/blob/development/app/media/settings.jpg" width="200" style="max-width:100%;"></br></br>
 
 
 Features
@@ -37,7 +37,7 @@ App Architecture :
 
 Based on MVVM architecture and pattern.
 
-<img src="https://github.com/mm-itservices/Android-mobile-app/blob/main/media/mvc_architecture.png" width="500" style="max-width:500%;">
+<img src="https://github.com/RxMobile-Dummy/kotlin-todo/blob/development/app/media/remindme_architecture.png" width="500" style="max-width:500%;">
 
 We have follow MVVM architecture in this project because of it treats Activity's classes and XML files and ViewModel classes are where we write our business logic. & it completely separates an app's UI from its logic.
 
