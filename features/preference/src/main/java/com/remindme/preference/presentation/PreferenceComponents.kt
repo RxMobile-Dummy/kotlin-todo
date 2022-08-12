@@ -183,22 +183,6 @@ private fun AlertSettings(
             )
         }
 
-//        LazyColumn() {
-//            itemsIndexed(
-//                items = intervalList,
-//                itemContent = { index, title ->
-//                    val isSelected = title == intervalList.get(index)
-//                    AlarmListItem(
-//                        title = title,
-//                        index = index,
-//                        onIntervalSelect = onIntervalSelect,
-//                        isSelected= isSelected,
-//                        selectedOption = selectedOption,
-//                        onOptionSelected = onOptionSelected
-//                    )
-//                }
-//            )
-//        }
 
     }
 }
@@ -227,13 +211,12 @@ private fun AlarmListItem(
             onClick = {
                 onOptionSelected(title)
 
-
             }
         )
 
         Text(
             text = title,
-            color = Color.Black,
+            style = MaterialTheme.typography.body2,
             modifier = Modifier
                 .clickable {
                     val interval =

@@ -1,5 +1,6 @@
 package com.todotask.model
 
+import androidx.compose.ui.graphics.Color
 import java.lang.ref.Reference
 import java.util.Calendar
 import javax.inject.Inject
@@ -28,5 +29,6 @@ data class Task @Inject constructor(
     val creationDate: Calendar? = null,
     val completedDate: Calendar? = null,
     val isRepeating: Boolean = false,
+    val categoryColor: Color?,
     val alarmInterval: AlarmInterval? = null
 )

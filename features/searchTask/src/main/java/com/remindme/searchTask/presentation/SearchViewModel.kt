@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.remindme.domain.model.TaskWithCategory
 import com.remindme.domain.usecase.search.SearchTasksByName
 import com.remindme.searchTask.mapper.TaskSearchMapper
+import com.remindme.searchTask.model.TaskSearchItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -30,4 +31,5 @@ class SearchViewModel @Inject constructor(
         val searchList = mapper.toTaskSearch(taskList)
         return SearchViewState.Loaded(searchList)
     }
+
 }

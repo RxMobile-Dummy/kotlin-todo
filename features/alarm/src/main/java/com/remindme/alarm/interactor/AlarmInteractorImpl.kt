@@ -3,14 +3,25 @@ package com.remindme.alarm.interactor
 import com.remindme.alarm.notification.TaskNotificationScheduler
 import com.remindme.domain.interactor.AlarmInteractor
 import logcat.logcat
+import java.util.*
 import javax.inject.Inject
 
- class AlarmInteractorImpl @Inject constructor(private val alarmManager: TaskNotificationScheduler) :
+class AlarmInteractorImpl @Inject constructor(private val alarmManager: TaskNotificationScheduler) :
     AlarmInteractor {
 
-    override fun schedule(alarmId: Long, timeInMillis: Long) {
+    override fun schedule(alarmId: Long, timeInMillis: Long,isAdd:Boolean) {
         logcat { "schedule - alarmId = $alarmId" }
-        alarmManager.scheduleTaskAlarm(alarmId, timeInMillis)
+        if(isAdd){
+            if(timeInMillis == 0L){
+                val calendar = Calendar.getInstance()
+                calendar.add(Calendar.SECOND, 2)
+                alarmManager.scheduleTaskAlarm(alarmId, calendar.timeInMillis,isAdd)
+            }else
+            {
+                alarmManager.scheduleTaskAlarm(alarmId,timeInMillis,isAdd)
+            }
+        }
+
     }
 
     override fun cancel(alarmId: Long) {

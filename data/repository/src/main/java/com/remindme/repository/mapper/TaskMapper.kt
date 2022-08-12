@@ -27,7 +27,7 @@ class TaskMapper @Inject constructor(private val alarmIntervalMapper: AlarmInter
             creationDate = repoTask.creationDate,
             completedDate = repoTask.completedDate,
             isRepeating = repoTask.isRepeating,
-            alarmInterval = repoTask.alarmInterval?.let { alarmIntervalMapper.toDomain(it) }
+            alarmInterval = repoTask.alarmInterval?.let { alarmIntervalMapper.toDomain(it) },
         )
 
     /**
@@ -58,6 +58,6 @@ class TaskMapper @Inject constructor(private val alarmIntervalMapper: AlarmInter
             creationDate = domainTask.creationDate,
             completedDate = domainTask.completedDate,
             isRepeating = domainTask.isRepeating,
-            alarmInterval = domainTask.alarmInterval?.let { alarmIntervalMapper.toRepo(it) }
+            alarmInterval = domainTask.alarmInterval?.let { alarmIntervalMapper.toRepo(it) },
         )
 }

@@ -8,6 +8,8 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
@@ -104,7 +106,7 @@ private fun TaskDetailLoader(
         onTitleChange = { title -> detailViewModel.updateTitle(id, title) },
         onDescriptionChange = { desc -> detailViewModel.updateDescription(id, desc) },
         onCategoryChange = { categoryId -> detailViewModel.updateCategory(id, categoryId) },
-        onAlarmUpdate = { calendar -> alarmViewModel.updateAlarm(id, calendar) },
+        onAlarmUpdate = { calendar -> alarmViewModel.updateAlarm(id, calendar,false) },
         onIntervalSelect = { interval -> alarmViewModel.setRepeating(id, interval) },
         hasAlarmPermission = { alarmPermission.hasExactAlarmPermission() },
         onUpPress = onUpPress
@@ -154,7 +156,7 @@ private fun TaskDetailContent(
     val context = LocalContext.current
 
     Surface(color = MaterialTheme.colors.background) {
-        Column {
+        Column(Modifier.verticalScroll(rememberScrollState()).padding(15.dp)) {
 
             Card(
                 elevation = 5.dp,
@@ -162,7 +164,6 @@ private fun TaskDetailContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(horizontal = 15.dp)
             ) {
                 EditTaskTitleTextField(
                     text = task.title,
@@ -183,7 +184,6 @@ private fun TaskDetailContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(horizontal = 15.dp)
             ) {
                 TaskDetailSectionContent(
                     imageVector = Icons.Outlined.Bookmark,
@@ -205,7 +205,6 @@ private fun TaskDetailContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(horizontal = 15.dp)
             ) {
 
                 TaskDescriptionTextField(
@@ -216,13 +215,15 @@ private fun TaskDetailContent(
             }
             Spacer(modifier = Modifier.height(20.dp))
 
-            AlarmSelection(
-                calendar = task.dueDate,
-                interval = task.alarmInterval,
-                onAlarmUpdate = actions.onAlarmUpdate,
-                onIntervalSelect = actions.onIntervalSelect,
-                hasAlarmPermission = actions.hasAlarmPermission
-            )
+                AlarmSelection(
+                    calendar = task.dueDate,
+                    interval = task.alarmInterval,
+                    onAlarmUpdate = actions.onAlarmUpdate,
+                    onIntervalSelect = actions.onIntervalSelect,
+                    hasAlarmPermission = actions.hasAlarmPermission
+                )
+
+
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
@@ -237,7 +238,7 @@ private fun TaskDetailContent(
                     }
                      },
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
-                modifier = Modifier.padding(horizontal = 15.dp)
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
@@ -315,10 +316,10 @@ private fun EditTaskTitleTextField(
                 textState.value = it
             },
             label = {  Text(text=title)},
-            textStyle = MaterialTheme.typography.h4,
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = MaterialTheme.colors.surface,
-                textColor = Color.Black,focusedIndicatorColor = Color.Transparent,
+            textStyle = MaterialTheme.typography.body1,
+            colors = TextFieldDefaults.textFieldColors(textColor = Color.Black,
+                backgroundColor =Color.White,
+                focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
             )
@@ -355,30 +356,40 @@ private fun TaskDescriptionTextField(
     var desc:String=""
 
     if(isEditTextEnabled){
-        desc=" Enter Description"
+        desc = "Enter Description"
     }else{
         desc=""
     }
-    TextField(
+    Row(
         modifier = Modifier.fillMaxWidth(),
-        leadingIcon = {
-            LeadingIcon(
-                imageVector = Icons.Default.Description,
-                contentDescription = R.string.task_detail_cd_icon_description
+        verticalAlignment = Alignment.CenterVertically) {
+        TextField(
+            modifier = Modifier.fillMaxWidth().align(alignment = Alignment.CenterVertically),
+            leadingIcon = {
+                LeadingIcon(
+                    imageVector = Icons.Default.Description,
+                    contentDescription = R.string.task_detail_cd_icon_description
+
+                )
+            },
+
+            label = { Text(desc) },
+            value = textState.value,
+            enabled = isEditTextEnabled,
+            onValueChange = {
+                onDescriptionChange(it.text)
+                textState.value = it
+            },
+            textStyle = MaterialTheme.typography.body1,
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Color.Black,
+                backgroundColor = Color.White,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
             )
-        },
-        label = { Text(desc) },
-                value = textState.value,
-        enabled = isEditTextEnabled,
-        onValueChange = {
-            onDescriptionChange(it.text)
-            textState.value = it
-        },
-        textStyle = MaterialTheme.typography.body1,
-        colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface,focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent)
-    )
+        )
+    }
 }
 
 @Suppress("ModifierOrder")
@@ -394,7 +405,7 @@ value class CategoryId(val value: Long?) : Parcelable
 @Suppress("UndocumentedPublicFunction")
 @Composable
 fun TaskDetailPreview(navController: NavController) {
-    val task = Task(title = "Buy milk", description = "This is a amazing task!", dueDate = null)
+    val task = Task(title = "Buy milk", description = "This is a amazing task!", dueDate = null, categoryColor = MaterialTheme.colors.background)
     val category1 = Category(name = "Groceries", color = android.graphics.Color.CYAN)
     val category2 = Category(name = "Books", color = android.graphics.Color.RED)
     val category3 = Category(name = "Movies", color = android.graphics.Color.MAGENTA)

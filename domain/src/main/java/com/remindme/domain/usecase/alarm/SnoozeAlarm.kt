@@ -28,7 +28,7 @@ class SnoozeAlarm @Inject constructor(
         require(minutes > 0) { "The delay minutes must be positive" }
 
         val snoozedTime = getSnoozedTask(calendarProvider.getCurrentCalendar(), minutes)
-        alarmInteractor.schedule(taskId, snoozedTime)
+        alarmInteractor.schedule(taskId, snoozedTime,false)
         notificationInteractor.dismiss(taskId)
         logger.debug { "Task snoozed in $minutes minutes" }
     }

@@ -41,6 +41,8 @@ import androidx.navigation.NavController
 import com.remindme.category_task.presentation.bottomsheet.CategoryBottomSheet
 import com.remindme.category_task.presentation.list.CategoryListSection
 import com.remindme.categoryapi.presentation.CategoryListViewModel
+import com.remindme.local.dao.TaskDao
+import com.remindme.local.provider.DaoProvider
 import com.remindme.model.HomeSection
 
 import com.remindme.model.HomeSection.*
@@ -49,9 +51,14 @@ import com.remindme.preference.presentation.PreferenceSection
 import com.remindme.searchTask.presentation.SearchSection
 
 import com.remindme.ui.theme.RemindMeTheme
+import com.todotask.model.TaskWithCategory
 import com.todotask.presentation.detail.TaskDetailActions
+import com.todotask.presentation.detail.alarm.TaskAlarmViewModel
+import com.todotask.presentation.detail.main.TaskId
 import com.todotask.presentation.list.TaskListSection
+import com.todotask.presentation.list.TaskListViewState
 import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * RemidMe Home screen.
@@ -59,6 +66,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun Home(onTaskClick: (Long?) -> Unit, onAboutClick: () -> Unit,
          onTrackerClick: () -> Unit,appThemeOptions: AppThemeOptions,actions1: TaskDetailActions,navController: NavController, prefsDataStore: DataStore<Preferences>,
+         taskAlarmViewModel: TaskAlarmViewModel,daoProvider: DaoProvider
+
 ) {
     val (currentSection, setCurrentSection) = rememberSaveable { mutableStateOf(Tasks) }
     val navItems = values().toList()
@@ -81,6 +90,8 @@ fun Home(onTaskClick: (Long?) -> Unit, onAboutClick: () -> Unit,
             actions1 =actions1
         ,   navController = navController,
            prefsDataStore =prefsDataStore,
+            daoProvider=daoProvider,
+            taskAlarmViewModel= taskAlarmViewModel
         )
     }
 }
@@ -98,7 +109,10 @@ private fun RemindMeHomeScaffold(
   //  onBottomShow: (@Composable () -> Unit),
     navController: NavController,
     prefsDataStore: DataStore<Preferences>,
-    ) {
+    daoProvider: DaoProvider,
+    taskAlarmViewModel: TaskAlarmViewModel
+
+) {
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     var sheetContentState by rememberSaveable {
@@ -137,7 +151,7 @@ private fun RemindMeHomeScaffold(
                 RemindMeTopBar(currentSection = homeSection)
             },
             content = {
-                RemindMeContent(homeSection, modifier, actions, onShowBottomSheet,appThemeOptions,actions1,navController,prefsDataStore)
+                RemindMeContent(homeSection, modifier, actions, onShowBottomSheet,taskAlarmViewModel,appThemeOptions,actions1,navController,prefsDataStore,daoProvider)
             },
             bottomBar = {
                 RemindMeBottomNav(
@@ -201,21 +215,26 @@ private fun RemindMeContent(
     actions: HomeActions,
   // navigationClick: (@Composable () -> Unit),
     onShowBottomSheet: (SheetContentState) -> Unit,
+    taskAlarmViewModel: TaskAlarmViewModel,
     appThemeOptions: AppThemeOptions,actions1: TaskDetailActions,
     navController: NavController,
-    prefsDataStore: DataStore<Preferences>
-) {
+    prefsDataStore: DataStore<Preferences>,
+    daoProvider: DaoProvider,
+
+
+    ) {
     when (homeSection) {
-        Tasks ->
+        Tasks -> {
             TaskListSection(
                 modifier = modifier,
                 onItemClick = actions.onTaskClick,
                 onBottomShow = {
                     navController.navigate("add_task")
                     //  onShowBottomSheet(SheetContentState.TaskListSheet)
-                      },
+                },
                 navController = navController
             )
+        }
         Search ->
             SearchSection(modifier = modifier, onItemClick = actions.onTaskClick)
        Categories ->

@@ -13,5 +13,5 @@ interface ScheduleAlarm {
      * @param taskId the alarm id
      * @param calendar the time to the alarm be scheduled
      */
-    suspend operator fun invoke(taskId: Long?, calendar: Calendar)
+    suspend operator fun invoke(taskId: Long?, calendar: Calendar,isAdd:Boolean)
 }

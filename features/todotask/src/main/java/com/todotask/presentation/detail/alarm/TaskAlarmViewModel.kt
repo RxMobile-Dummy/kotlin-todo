@@ -20,9 +20,9 @@ class TaskAlarmViewModel @Inject constructor(
     private val alarmIntervalMapper: AlarmIntervalMapper
 ) : ViewModel() {
 
-    fun updateAlarm(taskId: TaskId, alarm: Calendar?) = viewModelScope.launch {
+    fun updateAlarm(taskId: TaskId, alarm: Calendar?,isAdd:Boolean) = viewModelScope.launch {
         if (alarm != null) {
-            scheduleAlarmUseCase(taskId.value, alarm)
+            scheduleAlarmUseCase(taskId.value, alarm,isAdd)
         } else {
             cancelAlarmUseCase(taskId.value)
         }

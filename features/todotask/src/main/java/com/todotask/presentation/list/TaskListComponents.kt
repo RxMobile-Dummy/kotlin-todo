@@ -113,7 +113,7 @@ internal fun RelativeDateText(calendar: Calendar?) {
 @Preview
 @Composable
 fun TaskItemPreview() {
-    val task1 = Task(title = "Buy milk", dueDate = null)
+    val task1 = Task(title = "Buy milk", dueDate = null, categoryColor = MaterialTheme.colors.background)
     val category1 = Category(name = "Books", color = android.graphics.Color.BLUE)
     val taskWithCategory = TaskWithCategory(task = task1, category = category1)
 

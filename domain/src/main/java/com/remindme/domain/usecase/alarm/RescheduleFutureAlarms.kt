@@ -42,7 +42,7 @@ class RescheduleFutureAlarms @Inject constructor(
 
     private fun rescheduleFutureTask(task: Task) {
         val futureTime = task.dueDate?.time?.time ?: return
-        task.id?.toLong()?.let { alarmInteractor.schedule(it, futureTime) }
+        task.id?.toLong()?.let { alarmInteractor.schedule(it, futureTime,false) }
         logger.debug { "Task '${task.title} rescheduled to '${task.dueDate}" }
     }
 

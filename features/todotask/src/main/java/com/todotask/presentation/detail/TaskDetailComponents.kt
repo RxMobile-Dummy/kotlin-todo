@@ -22,7 +22,7 @@ internal fun LeadingIcon(
     Icon(
         imageVector = imageVector,
         contentDescription = stringResource(id = contentDescription),
-        tint = MaterialTheme.colors.onSurface.copy(alpha = TrailingLeadingAlpha),
+        tint = MaterialTheme.colors.secondary,
         modifier = modifier
     )
 }
@@ -43,7 +43,7 @@ internal fun TaskDetailSectionContent(
         ) {
             LeadingIcon(
                 imageVector = imageVector,
-                contentDescription = contentDescription
+                contentDescription = contentDescription,
             )
             Box(modifier = Modifier.padding(start = 16.dp)) {
                 content()

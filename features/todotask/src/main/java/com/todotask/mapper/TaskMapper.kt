@@ -1,5 +1,7 @@
 package com.todotask.mapper
 
+import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.graphics.Color
 import javax.inject.Inject
 import com.remindme.domain.model.Task as DomainTask
 import com.todotask.model.Task as ViewTask
@@ -27,6 +29,15 @@ class TaskMapper @Inject constructor(private val alarmIntervalMapper: AlarmInter
             creationDate = domainTask.creationDate,
             completedDate = domainTask.completedDate,
             isRepeating = domainTask.isRepeating,
-            alarmInterval = alarmIntervalMapper.toViewData(domainTask.alarmInterval)
+            alarmInterval = alarmIntervalMapper.toViewData(domainTask.alarmInterval),
+            categoryColor = Color.Blue
         )
+
+    private fun getColor(color: String?): Color? {
+        if (color == null) {
+            return null
+        }
+
+        return Color(android.graphics.Color.parseColor(color))
+    }
 }
